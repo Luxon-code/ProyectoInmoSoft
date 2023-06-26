@@ -3,60 +3,122 @@
     {% include "encabezado.html" %}
 {%endblock %}
 {% block contenido %}
-<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="d-flex justify-content-center align-items-center vh-100" style="margin-top:6rem; margin-bottom: 6rem;">
     <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75" style="width: 30rem;">
-      <form class="was-validated"> 
+      <form action="/registrarUsuario/" enctype="multipart/form-data"  method="post" class="needs-validation" novalidate> 
+        {% csrf_token%}
         <div class="d-flex justify-content-center">
             <h2 class="text-center mb-4">Registrar Usuario</h2>
         </div>
-      <div class="d-flex justify-content-center">
-        <div class="imgPerfil rounded-circle border border-secondary mb-3" style="width: 7rem; height: 7rem; overflow: hidden;">
-          <img src="../media/usuario-icono.png" alt="Avatar" style="width: 100%; height: 100%;">
+        <div class="d-flex justify-content-center">
+          <div class="imgPerfil rounded-circle border border-secondary mb-3" style="width: 7rem; height: 7rem; overflow: hidden;">
+            <img src="../media/usuario-icono.png" alt="Avatar" style="width: 100%; height: 100%;">
+          </div>
         </div>
-      </div>
-      <div class="input-group mb-3">
-        <span class="input-group-text bg-light">
-          <i class="bi bi-person-fill text-secondary"></i>
-        </span>
-        <input class="form-control" type="text" placeholder="Nombre(s)" required/>
-      </div>
-      <div class="input-group mb-3">
-        <span class="input-group-text bg-light">
-          <i class="bi bi-person-fill text-secondary"></i>
-        </span>
-        <input class="form-control" type="text" placeholder="Apellido(s)" required/>
-      </div>
-      <div class="input-group mb-3">
-        <span class="input-group-text bg-light">
-          <i class="bi bi-envelope-fill text-secondary"></i>
-        </span>
-        <input class="form-control" type="email" placeholder="Correo Electrónico" required />
-      </div>
-      <div class="input-group mb-3">
-        <span class="input-group-text bg-light">
-          <i class="bi bi-lock-fill text-secondary"></i>
-        </span>
-        <input class="form-control" type="password" placeholder="Contraseña" required/>
-      </div>
-      <div class="input-group mb-4">
-        <span class="input-group-text bg-light">
-          <i class="bi bi-lock-fill text-secondary"></i>
-        </span>
-        <input class="form-control" type="password" placeholder="Confirmar Contraseña"required/>
-      </div>
-      <div class="form-group row">                
-        <div class="mb-3 col-lg-12">                    
-            <label for="fileFoto" class="fw-bold">Foto de la Persona</label>
-            <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto">
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light">
+            <i class="bi bi-person-vcard text-secondary"></i>
+          </span>
+          <input class="form-control" type="number" placeholder="Cedula" name="txtCedula" required/>
+          <div class="invalid-feedback">
+            Ingrese el numero de cedula.
+          </div>
         </div>
-      </div>
-      <div class="">
-
-      </div>
-      <button class="btn bg-secondary text-white w-100 mb-3">Registrar</button>
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light">
+            <i class="bi bi-person-fill text-secondary"></i>
+          </span>
+          <input class="form-control" type="text" placeholder="Nombre(s)" name="txtNombres" id="txtNombres" required/>
+          <div class="invalid-feedback">
+            Ingrese el Nombre(s).
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light">
+            <i class="bi bi-person-fill text-secondary"></i>
+          </span>
+          <input class="form-control" type="text" placeholder="Apellido(s)" name="txtApellido" required/>
+          <div class="invalid-feedback">
+            Ingrese el Apellido(s).
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light">
+            <i class="bi bi-envelope-fill text-secondary"></i>
+          </span>
+          <input class="form-control" type="email" placeholder="Correo Electrónico" name="txtCorreo" required/>
+          <div class="invalid-feedback">
+            Ingrese el Correo Electrónico.
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-light">
+            <i class="bi  bi-phone text-secondary"></i>
+          </span>
+          <input class="form-control" type="number" placeholder="Telefono" name="txtTelefono" required/>
+          <div class="invalid-feedback">
+            Ingrese el numero de Telefono.
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-person-badge text-secondary"></i></label>
+          <select class="form-select" id="inputGroupSelect01" name="cbRol" required>
+            <option value="">Rol en el sistema</option>
+            {% for rol in roles %}
+              <option value="{{rol.id}}">{{rol.name}}</option>
+            {% endfor %}
+          </select>
+          <div class="invalid-feedback">
+            Seleccione un rol.
+          </div>
+        </div>
+        <div class="form-group row">                
+          <div class="mb-3 col-lg-12">                    
+              <label for="fileFoto" class="fw-bold">Foto de la Persona</label>
+              <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto">
+          </div>
+        </div>
+        <button class="btn bg-secondary text-white w-100 mb-1" type="submit" >Registrar</button>
       </form>
     </div> 
 </div>
+{% if mensaje %}
+ <script>
+  Swal.fire({
+    title: 'Registro de usuario',
+    text: '{{mensaje}}',
+    icon: 'warning',               
+    confirmButtonColor: '#3085d6',             
+    confirmButtonText: 'Aceptar'
+}).then((result) => {
+    if (result.isConfirmed) {
+       
+    }
+})
+</script>
+{% endif %}
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+</script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/registrarUsuario.css' %}">
 <script src="{% static '../static/js/registrarUsuario.js' %}"></script>

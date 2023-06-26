@@ -21,7 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('vistaRegistrarUsuario',views.vistaRegistrarUsuario),
+    path('vistaRegistrarUsuario/',views.vistaRegistrarUsuario),
+    path('registrarUsuario/',views.registrarUsuario),
 ]
 
 if settings.DEBUG:
