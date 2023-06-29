@@ -22,7 +22,12 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('vistaRegistrarUsuario/',views.vistaRegistrarUsuario),
+    path("vistaModificarUsuario/",views.vistaModificarUsuario),
     path('registrarUsuario/',views.registrarUsuario),
+    path('getUsuarios/',views.getUsuarios),
+    path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
+    path('',views.vistaPaginaPrincipal),
+    path("vistaInicioSesion/",views.vistaIniciarSesion),
 ]
 
 if settings.DEBUG:

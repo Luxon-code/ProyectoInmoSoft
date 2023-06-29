@@ -1,0 +1,49 @@
+{% extends "index.html" %}
+{% block encabezado %}
+    {% include "administrador/encabezado.html" %}
+{%endblock %}
+{% block contenido %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="bg-white p-5 rounded-5 text-secondary bg-opacity-75 table-responsive" style="width: 60rem">
+        <div class="d-flex justify-content-center">
+            <h3 class="text-center bg-bold">USUARIOS DEL SISTEMA</h3>
+        </div>
+        <div class="w-100">
+            <table class="mt-3 table table-bordered table-hover" id="tablaInmueble">
+                <thead>
+                    <tr class="text-center bg-secondary text-white">
+                        <th>Cedula</th>
+                        <th>Nombre Completo</th>
+                        <th>Telefono</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tblUsers">
+                   
+                </tbody>
+            </table>
+            <div class="row p-3">
+                <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                </div>
+                <div class="col-4 text-center">
+                    <span class="fw-bold">ADMINISTRADOR</span>
+                </div>
+                <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    cargarDataTable($("#tablaInmueble"),"INMUEBLES SEPARADOS",7);
+</script>
+{% load static%}
+<link rel="stylesheet" href="{% static 'css/body.css' %}">
+<script src="{% static '../static/js/usuarios.js' %}"></script>
+{%endblock %}
+{% block piePagina %}
+    {% include "piePagina.html" %}
+{%endblock %}

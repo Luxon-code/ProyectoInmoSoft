@@ -23,6 +23,13 @@ def vistaRegistrarUsuario(request):
     retorno = {'roles': roles}
     return render(request,'administrador/registrarUsuario.html',retorno)
 
+def vistaModificarUsuario(request):
+    return render(request,'administrador/modificarUsuario.html')
+
+def vistaPaginaPrincipal(request):
+    return render(request,'paginaPrincipal.html')
+def vistaIniciarSesion(request):
+    return render(request,'inicioSesion.html')
 def registrarUsuario(request):
     try:
         cedula = request.POST["txtCedula"]
@@ -54,7 +61,7 @@ def registrarUsuario(request):
             # se actualiza el user
             user.save()
             mensaje = "Usuario Agregado Correctamente"
-            retorno = {"mensaje": mensaje}
+            retorno = {"mensaje": mensaje,"estado":True}
             # enviar correo al usuario
             asunto = 'Registro Sistema InmoSoft'
             mensaje = f'Cordial saludo, <b>{user.first_name} {user.last_name}</b>, nos permitimos.\
@@ -67,12 +74,12 @@ def registrarUsuario(request):
             thread = threading.Thread(
                 target=enviarCorreo, args=(asunto, mensaje, user.email))
             thread.start()
-            return redirect("/vistaRegistrarUsuario/", retorno)
+            return render(request, 'administrador/registrarUsuario.html',retorno)
     except Error as error:
         transaction.rollback()
         mensaje = f"{error}"
-    retorno = {"mensaje": mensaje}
-    return render(request, "administrador/registrarUsuario.html", retorno)
+    retorno = {"mensaje": mensaje,"estado":False}
+    return render(request, "administrador/registrarUsuario.html",retorno)
 
 def enviarCorreo(asunto=None, mensaje=None, destinatario=None):
     remitente = settings.EMAIL_HOST_USER
@@ -107,3 +114,35 @@ def generarPassword():
     for i in range(longitud):
         password += ''.join(random.choice(caracteres))
     return password
+
+def getUsuarios(request):
+    try:
+        retorno = {
+            "usuarios":list(User.objects.all().values()),
+        }
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje=f"{error}"
+        
+def cambiarEstadoUsuario(request,id):
+    estado = False
+    try:
+        with transaction.atomic():
+            user = User.objects.get(pk=id)
+            if user.is_active:
+                user.is_active = False
+            else:
+                user.is_active = True
+            user.save()
+            estado = True
+            mensaje = "Estado del usuario modificado"
+    except Error as error:
+        transaction.rollback()
+        mensaje = f"{error}"
+    retorno = {
+        'estado': estado,
+        'mensaje':mensaje
+    }
+    
+    return JsonResponse(retorno)
+        
