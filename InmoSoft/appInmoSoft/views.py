@@ -13,6 +13,7 @@ import json
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 import threading
+import requests
 from smtplib import SMTPException
 from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
@@ -30,6 +31,11 @@ def vistaPaginaPrincipal(request):
     return render(request,'paginaPrincipal.html')
 def vistaIniciarSesion(request):
     return render(request,'inicioSesion.html')
+
+def vistaInicioAdministrador(request):
+    return render(request,'administrador/inicioAdministrador.html')
+def vistaInicioAsesor(request):
+    return render(request,'asesor/inicioAsesor.html')
 def registrarUsuario(request):
     try:
         cedula = request.POST["txtCedula"]
@@ -145,4 +151,36 @@ def cambiarEstadoUsuario(request,id):
     }
     
     return JsonResponse(retorno)
+
+def iniciarSesion(request):
+    if request.method == 'POST':
+        recaptcha_token = request.POST.get('recaptchaToken')
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_token
+        })
+
+        if response.json().get('success') == True:
+            username = request.POST["txtUsuario"]
+            password = request.POST["txtContraseña"]
+            user = authenticate(username=username, password=password)
+            print(user)
+            if user is not None:
+            # registrar la variable de sesión
+                auth.login(request, user)
+                if user.groups.filter(name='Administrador').exists():
+                    return redirect('/inicioAdministrador/')
+                else:
+                    return redirect('/inicioAsesor/')
+            else:
+                mensaje = "Usuario o Contraseña Incorrectas"
+                return render(request, "inicioSesion.html", {"mensaje": mensaje})
+        else:
+            mensaje = "validar recapcha"
+            return render(request, "inicioSesion.html", {"mensaje": mensaje})
+
+def cerrarSesion(request):
+    auth.logout(request)
+    return render(request, "inicioSesion.html",
+                  {"mensaje": "Ha cerrado la sesión"})
         

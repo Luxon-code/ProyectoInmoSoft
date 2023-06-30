@@ -21,13 +21,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',views.vistaPaginaPrincipal),
     path('vistaRegistrarUsuario/',views.vistaRegistrarUsuario),
     path("vistaModificarUsuario/",views.vistaModificarUsuario),
+    path("vistaInicioSesion/",views.vistaIniciarSesion),
+    path("inicioAdministrador/",views.vistaInicioAdministrador),
+    path('inicioAsesor/',views.vistaInicioAsesor),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
-    path('',views.vistaPaginaPrincipal),
-    path("vistaInicioSesion/",views.vistaIniciarSesion),
+    path('iniciarSesion/',views.iniciarSesion),
+    path('cerrarSesion/',views.cerrarSesion),
 ]
 
 if settings.DEBUG:

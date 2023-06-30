@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'appInmoSoft.User'
 
 #recaptcha
-GOOGLE_RECAPTCHA_SECRET_KEY = '6Le90uklAAAAADSBX0UHsES9FRQASHU-tLFQEuDI'
+GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld2Ud8mAAAAADRTJN0vMNK4ZYyCaBYQcByGF60g'
 
 #variables configuración correo
 EMAIL_HOST="sandbox.smtp.mailtrap.io"
