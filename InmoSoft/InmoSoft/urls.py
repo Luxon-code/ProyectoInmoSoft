@@ -25,11 +25,13 @@ urlpatterns = [
     path('vistaRegistrarUsuario/',views.vistaRegistrarUsuario),
     path("vistaModificarUsuario/",views.vistaModificarUsuario),
     path("vistaInicioSesion/",views.vistaIniciarSesion),
+    path("vistaPerfilUsuario/",views.vistaPerfilUsuario),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/',views.vistaInicioAsesor),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
+    path('modificarUsuario/<int:id>',views.modificarDatosUserPerfil),
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),
 ]

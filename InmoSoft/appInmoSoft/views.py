@@ -10,6 +10,7 @@ from django.contrib import auth
 from django.conf import settings
 import urllib
 import json
+import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 import threading
@@ -20,12 +21,21 @@ from django.db.models import Sum, Avg, Count
 
 # Create your views here.
 def vistaRegistrarUsuario(request):
-    roles = Group.objects.all()
-    retorno = {'roles': roles}
-    return render(request,'administrador/registrarUsuario.html',retorno)
+    if request.user.is_authenticated: 
+        roles = Group.objects.all()
+        retorno = {'roles': roles,'user':request.user}
+        return render(request,'administrador/registrarUsuario.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
 
 def vistaModificarUsuario(request):
-    return render(request,'administrador/modificarUsuario.html')
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}
+        return render(request,'administrador/modificarUsuario.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
 
 def vistaPaginaPrincipal(request):
     return render(request,'paginaPrincipal.html')
@@ -33,9 +43,31 @@ def vistaIniciarSesion(request):
     return render(request,'inicioSesion.html')
 
 def vistaInicioAdministrador(request):
-    return render(request,'administrador/inicioAdministrador.html')
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}
+        return render(request,'administrador/inicioAdministrador.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
+
 def vistaInicioAsesor(request):
-    return render(request,'asesor/inicioAsesor.html')
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}  
+        return render(request,'asesor/inicioAsesor.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+def vistaPerfilUsuario(request):
+    if request.user.is_authenticated:
+        if request.user.userTipo == 'Administrador':
+            retorno = {"user":request.user}  
+            return render(request,'administrador/perfilUsuario.html',retorno)
+        else:
+            retorno = {"user":request.user}  
+            return render(request,'asesor/perfilUsuario.html',retorno) 
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
 def registrarUsuario(request):
     try:
         cedula = request.POST["txtCedula"]
@@ -183,4 +215,44 @@ def cerrarSesion(request):
     auth.logout(request)
     return render(request, "inicioSesion.html",
                   {"mensaje": "Ha cerrado la sesión"})
+    
+def modificarDatosUserPerfil(request,id):
+    if request.method == "POST":
+        try:
+            cedula = request.POST["txtCedula"]
+            nombres = request.POST["txtNombres"]
+            apellidos = request.POST["txtApellido"]
+            correo = request.POST["txtCorreo"]
+            telefono = request.POST["txtTelefono"]
+            foto = request.FILES.get("fileFoto", False)
+            username = request.POST["txtUserName"]
+            with transaction.atomic():
+                user = User.objects.get(pk=id)
+                user.username=username
+                user.first_name=nombres
+                user.last_name=apellidos
+                user.email=correo
+                user.userCedula=cedula
+                user.userTelefono=telefono
+                if(foto):
+                    if user.userFoto == "":
+                        user.userFoto=foto
+                    else:
+                        os.remove('./media/'+str(user.userFoto))
+                        user.userFoto=foto
+                user.save()
+                mensaje = "Datos Modificados Correctamente"
+                retorno = {"mensaje": mensaje,"estado":True}
+                if user.userTipo == "Administrador":
+                    return render(request, 'administrador/perfilUsuario.html',retorno)
+                else:
+                    return render(request, 'asesor/perfilUsuario.html',retorno)
+        except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+        retorno = {"mensaje":mensaje,"estado":False}
+        if user.userTipo == "Administrador":
+            return render(request, 'administrador/perfilUsuario.html',retorno)
+        else:
+            return render(request, 'asesor/perfilUsuario.html',retorno)
         

@@ -6,32 +6,20 @@
           <i class="bi bi-houses" style="font-size: 1.5rem"></i>
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="#" class="nav-link px-2 link-body-emphasis link-opacity-25-hover">INICIO</a></li>
-            <li class="nav-item dropdown">
-              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover dropdown-toggle" href="#" id="navbarDropdownProyectos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item">
+              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover" href="#">
                 PROYECTOS
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownProyectos">
-                <li><a class="dropdown-item" href="#">Agregar Proyecto</a></li>
-                <li><a class="dropdown-item" href="#">Modificar Proyecto</a></li>
-              </ul>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover dropdown-toggle" href="#" id="navbarDropdownVentas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item">
+              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover" href="#">
                 VENTAS
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownVentas">
-                <li><a class="dropdown-item" href="#">Asistentes</a></li>
-                <li><a class="dropdown-item" href="#">General</a></li>
-              </ul>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                USUARIOS
+            <li class="nav-item">
+              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover" href="#">
+                LISTA DE MORA
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
-                <li><a class="dropdown-item" href="/vistaRegistrarUsuario/">Agregar usuario</a></li>
-                <li><a class="dropdown-item" href="/vistaModificarUsuario/">Modificar usuario</a></li>
-              </ul>
             </li>
           </ul>
           <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
@@ -42,11 +30,18 @@
           </form>
           <div class="dropdown text-end">
             <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="navbarDropdownMenuPerfil" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              {% if user.userFoto != "" %}
+                <img src="../media/{{user.userFoto}}" alt="mdo" width="32" height="32" class="rounded-circle">
+              {% else %}
+                <img src="../media/usuario-icono.png" alt="mdo" width="32" height="32" class="rounded-circle">
+              {% endif %}
             </a>
             <ul class="dropdown-menu text-small" aria-labelledby="navbarDropdownMenuPerfil">
+              <li>
+                <h5 class="dropdown-header">{{user.first_name}} {{user.last_name}} - {{user.userTipo}}</h5>
+              </li>
               <li><a class="dropdown-item" href="#">Mis ventas</a></li>
-              <li><a class="dropdown-item" href="#">Perfil</a></li>
+              <li><a class="dropdown-item" href="/vistaPerfilUsuario/">Perfil</a></li>
               <li><a class="dropdown-item" href="#">Ayuda</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/cerrarSesion/">Cerrar sesión</a></li>
