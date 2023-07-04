@@ -25,7 +25,6 @@ function readUsuarios(){
     fetch(url)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         let table = ""
         data.usuarios.forEach((element,index)=> {
             table+= `<tr class="text-center">
@@ -44,6 +43,7 @@ function readUsuarios(){
             localStorage.idSolicitud = element.idSolicitud
         });
         tblUsers.innerHTML = table
+        cargarDataTable($("#tablaInmosoft"),"Usuarios del sistema",6);
     })
 }
 function cambiarEstadoUsuario(id){

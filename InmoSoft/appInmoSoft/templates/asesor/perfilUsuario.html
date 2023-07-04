@@ -84,12 +84,92 @@
                 <button class="btn bg-secondary text-white w-100 mb-1" type="submit" >Modificar Datos</button>
             </div>
             <div class="col-6">
-                <button class="btn bg-secondary text-white w-100 mb-1" type="button" >Cambiar Contraseña</button>
+                <button class="btn bg-secondary text-white w-100 mb-1" type="button" data-bs-toggle="modal" data-bs-target="#modalCambiarContraseña" >Cambiar Contraseña</button>
             </div>
         </div>
       </form>
     </div> 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCambiarContraseña" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalCambiarContraseñaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/cambiarContraseña/{{user.id}}" enctype="multipart/form-data"  method="post" class="needs-validation" novalidate>
+        {% csrf_token%}
+        <div class="modal-header bg-secondary">
+          <h1 class="modal-title fs-5 text-white" id="modalCambiarContraseñaLabel">Cambiar Contraseña</h1>
+          <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" id="txtContraseñaActual" name="txtContraseñaActual" placeholder="Contraseña Actual" required>
+            <button class="btn btn-outline-secondary" type="button" id="btnContraseñaActual">
+              <i class="bi bi-eye-slash-fill"></i>
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" id="txtNuevaContraseña" name="txtNuevaContraseña" placeholder="Nueva Contraseña" oninput="compararCampos()" required>
+            <button class="btn btn-outline-secondary" type="button" id="btnNuevaContraseña">
+              <i class="bi bi-eye-slash-fill"></i>
+            </button>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" class="form-control" id="txtConfirmarContraseña" name="txtConfirmarContraseña" placeholder="Confirmar Contraseña" oninput="compararCampos()" required>
+            <button class="btn btn-outline-secondary" type="button" id="btnConfirmarContraseña">
+              <i class="bi bi-eye-slash-fill"></i>
+            </button>
+          </div>
+          <p id="mensajeAdvertencia" style="color: red; display: none;">Los campos nueva contraseña y confirmar contraseña no son iguales.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-secondary" id="btnCambiarContraseña">Cambiar</button>
+          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+    $('#btnContraseñaActual').click(function() {
+      const passwordInput = $('#txtContraseñaActual');
+      const icon = $(this).find('i');
+
+      if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+      } else {
+        passwordInput.attr('type', 'password');
+        icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+      }
+    });
+    $('#btnNuevaContraseña').click(function() {
+      const passwordInput = $('#txtNuevaContraseña');
+      const icon = $(this).find('i');
+
+      if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+      } else {
+        passwordInput.attr('type', 'password');
+        icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+      }
+    });
+    $('#btnConfirmarContraseña').click(function() {
+      const passwordInput = $('#txtConfirmarContraseña');
+      const icon = $(this).find('i');
+
+      if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+      } else {
+        passwordInput.attr('type', 'password');
+        icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+      }
+    });
+  });
+</script>
 {% if mensaje %}
 {% if estado %}
   <script>
@@ -164,10 +244,22 @@
     var fileInput = document.getElementById('fileFoto');
     fileInput.addEventListener('change', previewImage);
 });
+function compararCampos() {
+  var campo1 = document.getElementById("txtNuevaContraseña").value;
+  var campo2 = document.getElementById("txtConfirmarContraseña").value;
+  var mensaje = document.getElementById("mensajeAdvertencia");
+  var btnCambiar = document.getElementById("btnCambiarContraseña");
+  if (campo1 !== campo2) {
+    mensaje.style.display = "block";
+    btnCambiar.type= "button";
+  } else {
+    mensaje.style.display = "none";
+    btnCambiar.type = "submit";
+  }
+}
 </script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
-<script src="{% static '../static/js/usuarios.js' %}"></script>
 {%endblock %}
 {% block piePagina %}
     {% include "piePagina.html" %}

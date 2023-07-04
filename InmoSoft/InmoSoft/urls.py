@@ -32,6 +32,7 @@ urlpatterns = [
     path('getUsuarios/',views.getUsuarios),
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
     path('modificarUsuario/<int:id>',views.modificarDatosUserPerfil),
+    path('cambiarContraseña/<int:id>',views.cambiarContraseñaUsuario),
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),
 ]

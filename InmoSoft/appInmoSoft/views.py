@@ -256,3 +256,35 @@ def modificarDatosUserPerfil(request,id):
         else:
             return render(request, 'asesor/perfilUsuario.html',retorno)
         
+def cambiarContraseñaUsuario(request,id):
+    if request.method == 'POST':
+        try:
+            contraseñaActual = request.POST['txtContraseñaActual']
+            nuevaContraseña = request.POST['txtNuevaContraseña']
+            confirmarContraseña = request.POST['txtConfirmarContraseña']
+            with transaction.atomic():
+                user = User.objects.get(pk=id)
+                if user.check_password(contraseñaActual):
+                    if nuevaContraseña == confirmarContraseña:
+                        user.set_password(nuevaContraseña)
+                        user.save()
+                        return redirect('/vistaPerfilUsuario/')
+                    else:
+                        mensaje="La nueva Contraseña no es igual a la contraseña escrita en confirmar contraseña"
+                        retorno={"mensaje":mensaje,"estado":False}
+                else:
+                    mensaje="No se pudo cambiar la contraseña debido a que la contraseña actual ingresada no es correcta"
+                    retorno={"mensaje":mensaje,"estado":False}
+                if user.userTipo == "Administrador":
+                    return render(request, 'administrador/perfilUsuario.html',retorno)
+                else:
+                    return render(request, 'asesor/perfilUsuario.html',retorno)
+        except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+        retorno = {"mensaje":mensaje,"estado":False}
+        if user.userTipo == "Administrador":
+            return render(request, 'administrador/perfilUsuario.html',retorno)
+        else:
+            return render(request, 'asesor/perfilUsuario.html',retorno)
+        

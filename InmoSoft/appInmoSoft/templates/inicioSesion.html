@@ -12,6 +12,9 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.6.4.js" 
+    integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" 
+    crossorigin="anonymous"></script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
@@ -54,9 +57,9 @@
                   </div>
                 </div>
                 <div class="input-group mt-1">
-                  <div class="input-group-text bg-light">
+                  <button type="button" class="input-group-text bg-light" id="togglePassword">
                     <i class="bi bi-eye-slash-fill" style="font-size: 2rem;"></i>
-                  </div>
+                  </button>
                   <input class="form-control " type="password" placeholder="Contraseña" name="txtContraseña" id="txtContraseña" required/>
                   <div class="invalid-feedback">
                     Ingrese la contraseña.
@@ -133,6 +136,23 @@
       })
   })()
   </script>
+  <script>
+    $(document).ready(function() {
+      $('#togglePassword').click(function() {
+        const passwordInput = $('#txtContraseña');
+        const icon = $(this).find('i');
+  
+        if (passwordInput.attr('type') === 'password') {
+          passwordInput.attr('type', 'text');
+          icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+        } else {
+          passwordInput.attr('type', 'password');
+          icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+        }
+      });
+    });
+  </script>
+  
 </body>
 
 </html>
