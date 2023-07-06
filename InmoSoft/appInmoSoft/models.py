@@ -36,16 +36,15 @@ class User(AbstractUser):
     userTipo = models.CharField(max_length=15,choices=tipoUsuario,db_comment="Nombre Tipo de usuario")
     userfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     userfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
-
     def _str_(self):
         return f"{self.username}"
 
 class Casas(models.Model):
-    casNumeroManzana =  models.IntegerField(max_length=20, db_comment="Numero de manzana")
-    casNumeroInmueble = models.IntegerField(max_length=20, db_comment="Numero de inmueble")
-    casTotalCasas = models.IntegerField(max_length=20, db_comment="Total de casas en el proyecto")
+    casNumeroManzana =  models.IntegerField(db_comment="Numero de manzana")
+    casNumeroInmueble = models.IntegerField(db_comment="Numero de inmueble")
+    casTotalCasas = models.IntegerField(db_comment="Total de casas en el proyecto")
     casCategoria = models.CharField(max_length=15, choices=tipoCategoriaCasas, db_comment="Tipo de casa")
-    casPrecioVivienda = models.IntegerField(max_length=20,db_comment="Precio de vivienda") 
+    casPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
     casfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     casfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
@@ -53,11 +52,11 @@ class Casas(models.Model):
         return f"El numero del inmueble es: {self.casNumeroInmueble}"
 
 class Apartamento(models.Model):
-    apaNumeroTorre =  models.IntegerField(max_length=20, db_comment="Numero de Torre")
-    apaNumeroInmueble = models.IntegerField(max_length=20, db_comment="Numero de inmueble")
-    apaTotalApartamento = models.IntegerField(max_length=20, db_comment="Total de apartamentos en el proyecto")
+    apaNumeroTorre =  models.IntegerField(db_comment="Numero de Torre")
+    apaNumeroInmueble = models.IntegerField(db_comment="Numero de inmueble")
+    apaTotalApartamento = models.IntegerField(db_comment="Total de apartamentos en el proyecto")
     apaCategoria = models.CharField(max_length=15, choices=tipoCategoriaApartamento, db_comment="Tipo de apartamento")
-    apaPrecioVivienda = models.IntegerField(max_length=20,db_comment="Precio de vivienda") 
+    apaPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
     apafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     apafechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
@@ -81,9 +80,9 @@ class Proyecto(models.Model):
     proUbicacion = models.ForeignKey(Ubicacion,on_delete=models.PROTECT,db_comment="Ubicacion del proyecto")
     
 class Inmueble(models.Model):
-    inmNumeroHabitaciones = models.IntegerField(max_length=20,db_comment="Numero de habitaciones de un inmueble")
+    inmNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
     inmAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
-    inmValorInmueble = models.IntegerField(max_length=20, db_comment="Valor del inmueble")
+    inmValorInmueble = models.IntegerField(db_comment="Valor del inmueble")
     inmEntregaDeObra =  models.CharField(max_length=20, choices=entregaDeObra ,db_comment="Entrega del inmueble")
     inmEstado = models.CharField(max_length=20,choices=estadoDeInmueble ,db_comment="estado de disponibilidad del Inmueble")
     inmCasa = models.ForeignKey(Casas, on_delete=models.PROTECT,db_comment="hace referencia al tipo de inmueble")
@@ -116,17 +115,17 @@ class Venta(models.Model):
 class PlanDePago(models.Model):
     plaFechaInicial = models.DateField(db_comment="Fecha de inicio del plan de pago")
     plaFechaFinal = models.DateField(db_comment="Fecha de final del plan de pago")
-    plaCuotaInicial = models.IntegerField(max_length=20, db_comment="Valor de la cuota Inicial")
-    plaValorDeCuota = models.IntegerField(max_length=20, db_comment="Valor de la Cuota")
+    plaCuotaInicial = models.IntegerField(db_comment="Valor de la cuota Inicial")
+    plaValorDeCuota = models.IntegerField(db_comment="Valor de la Cuota")
     plafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora de registro")
     plafechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     plaVenta= models.ForeignKey(Venta, on_delete=models.PROTECT, db_comment="venta")
     
 class RegistroPago(models.Model):
     regFechaPago=models.DateField(auto_now=True, db_comment="Fecha de pago")
-    regValorPago=models.IntegerField(max_length=20,db_comment="Valor de pagode la cuota")
-    regPendiente=models.IntegerField(max_length=20,db_comment="Valor pendiente")
-    regRecaudo= models.IntegerField(max_length=20,db_comment="Recaudo total")
+    regValorPago=models.IntegerField(db_comment="Valor de pagode la cuota")
+    regPendiente=models.IntegerField(db_comment="Valor pendiente")
+    regRecaudo= models.IntegerField(db_comment="Recaudo total")
     regfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     regfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     regPlanDePago = models.ForeignKey(PlanDePago, on_delete=models.PROTECT, db_comment="plan de pago")

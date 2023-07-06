@@ -54,10 +54,10 @@ function cargarDataTable(tabla,titulo,col){
         columnas.push(i);
     }
 
-    if (col>6){
+    var orientacion = "portrait";
+
+    if (col > 6) {
         orientacion = "landscape";
-    }else{
-        orientacion = "portrait";
     }
     tabla.dataTable({
         "paging": true,

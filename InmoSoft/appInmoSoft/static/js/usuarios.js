@@ -1,25 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    function previewImage(event) {
-        var input = event.target;
-        var imgPerfil = document.querySelector('.imgPerfil img');
-
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                imgPerfil.src = e.target.result;
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            // Imagen por defecto en caso de no seleccionar ninguna
-            imgPerfil.src = '../media/usuario-icono.png';
-        }
-    }
-
-    var fileInput = document.getElementById('fileFoto');
-    fileInput.addEventListener('change', previewImage);
-});
 function readUsuarios(){
     let url = `/getUsuarios/`
     fetch(url)
@@ -35,15 +13,14 @@ function readUsuarios(){
             <td>
                 <div class="form-check form-switch">
                 <input onclick="cambiarEstadoUsuario(${element.id})" class="form-check-input" type="checkbox" role="switch" id="switch${element.userCedula}" ${element.is_active==true?"checked":""}>
-                <label class="form-check-label" for="switch${element.nombrePro}">${element.is_active==true?"Activo":"Inactivo"}</label>
+                <label class="form-check-label" for="switch${element.userCedula}">${element.is_active==true?'Activo':'Inactivo'}</label>
                 </div>
             </td>
             <td><i class="bi bi-pencil-square fs-3"></i></td>
         </tr>`
-            localStorage.idSolicitud = element.idSolicitud
         });
         tblUsers.innerHTML = table
-        cargarDataTable($("#tablaInmosoft"),"Usuarios del sistema",6);
+        cargarDataTable($("#tablaInmosoft"),"Usuarios del sistema",5);
     })
 }
 function cambiarEstadoUsuario(id){
@@ -51,8 +28,9 @@ function cambiarEstadoUsuario(id){
     fetch(url)
     .then(response =>response.json())
     .then(data =>{
-        console.log(data)
-        readUsuarios()
+        if(data.estado){
+            location.reload()
+        }
     })
 }
 readUsuarios()

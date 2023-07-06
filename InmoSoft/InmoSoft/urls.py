@@ -19,6 +19,7 @@ from django.urls import path
 from appInmoSoft import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.vistaPaginaPrincipal),
@@ -35,6 +36,10 @@ urlpatterns = [
     path('cambiarContraseña/<int:id>',views.cambiarContraseñaUsuario),
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),
+    path("reset_password/",auth_views.PasswordResetView.as_view(template_name="recuperarContraseña/PasswordResetView.html"),name="password_reset"),
+    path("reset_password_send/",auth_views.PasswordResetDoneView.as_view(),name="password_reset_done"),
+    path("reset/<uidb64>/<token>/",auth_views.PasswordResetConfirmView.as_view(),name="password_reset_confirm"),
+    path("reset_password_complete/",auth_views.PasswordResetCompleteView.as_view(),name="password_reset_complete"),
 ]
 
 if settings.DEBUG:
