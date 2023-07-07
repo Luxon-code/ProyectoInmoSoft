@@ -37,9 +37,9 @@ urlpatterns = [
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),
     path("reset_password/",auth_views.PasswordResetView.as_view(template_name="recuperarContraseña/PasswordResetView.html"),name="password_reset"),
-    path("reset_password_send/",auth_views.PasswordResetDoneView.as_view(),name="password_reset_done"),
-    path("reset/<uidb64>/<token>/",auth_views.PasswordResetConfirmView.as_view(),name="password_reset_confirm"),
-    path("reset_password_complete/",auth_views.PasswordResetCompleteView.as_view(),name="password_reset_complete"),
+    path("reset_password_send/",auth_views.PasswordResetDoneView.as_view(template_name="recuperarContraseña/PasswordResetDoneView.html"),name="password_reset_done"),
+    path("reset/<uidb64>/<token>/",auth_views.PasswordResetConfirmView.as_view(template_name="recuperarContraseña/PasswordResetConfirmView.html"),name="password_reset_confirm"),
+    path("reset_password_complete/",auth_views.PasswordResetCompleteView.as_view(template_name="recuperarContraseña/PasswordResetCompleteView.html"),name="password_reset_complete"),
 ]
 
 if settings.DEBUG:

@@ -75,7 +75,7 @@ def registrarUsuario(request):
         apellidos = request.POST["txtApellido"]
         correo = request.POST["txtCorreo"]
         telefono = request.POST["txtTelefono"]
-        foto = request.FILES.get("fileFoto", False)
+        foto = request.FILES.get("fileFoto")
         idRol = int(request.POST["cbRol"])
         with transaction.atomic():
             # obtener el Rol de acuerdo a id del rol
