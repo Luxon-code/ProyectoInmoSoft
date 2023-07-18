@@ -52,16 +52,13 @@ class Casas(models.Model):
         return f"El numero del inmueble es: {self.casNumeroInmueble}"
 
 class Apartamento(models.Model):
-    apaNumeroTorre =  models.IntegerField(db_comment="Numero de Torre")
-    apaNumeroInmueble = models.IntegerField(db_comment="Numero de inmueble")
+    apaNumeroTorre =  models.IntegerField(db_comment="Numero de Torres")
+    apaNumeroInmueble = models.IntegerField(db_comment="Numero de inmuebles por torre")
     apaTotalApartamento = models.IntegerField(db_comment="Total de apartamentos en el proyecto")
     apaCategoria = models.CharField(max_length=15, choices=tipoCategoriaApartamento, db_comment="Tipo de apartamento")
     apaPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
     apafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     apafechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
-
-    def _str_(self) :
-       return f"El numero del inmueble es: {self.apaNumeroInmueble}"
 
 class Ubicacion(models.Model):
     ubiDepartamento =  models.CharField(max_length=20, db_comment="ubicacion del departamento del proyecto")
@@ -82,11 +79,10 @@ class Proyecto(models.Model):
 class Inmueble(models.Model):
     inmNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
     inmAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
-    inmValorInmueble = models.IntegerField(db_comment="Valor del inmueble")
     inmEntregaDeObra =  models.CharField(max_length=20, choices=entregaDeObra ,db_comment="Entrega del inmueble")
     inmEstado = models.CharField(max_length=20,choices=estadoDeInmueble ,db_comment="estado de disponibilidad del Inmueble")
-    inmCasa = models.ForeignKey(Casas, on_delete=models.PROTECT,db_comment="hace referencia al tipo de inmueble")
-    inmApartamento =  models.ForeignKey(Apartamento, on_delete=models.PROTECT,db_comment="hace refencia al tipo de inmueble")
+    inmCasa = models.ForeignKey(Casas, on_delete=models.PROTECT,db_comment="hace referencia al tipo de inmueble",null=True)
+    inmApartamento =  models.ForeignKey(Apartamento, on_delete=models.PROTECT,db_comment="hace refencia al tipo de inmueble",null=True)
     inmProyecto = models.ForeignKey(Proyecto, on_delete=models.PROTECT, db_comment="prouecto que corresponde el inmueble")
     inmfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     inmfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")

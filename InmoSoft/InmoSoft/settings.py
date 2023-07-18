@@ -139,6 +139,5 @@ EMAIL_HOST="sandbox.smtp.mailtrap.io"
 EMAIL_PORT="2525"
 EMAIL_HOST_USER="8193035cda119f" 
 EMAIL_HOST_PASSWORD='6d9bbe39c0895e' 
-EMAIL_USE_TLS=True
 #variable para personalizar lo que manda django por defecto en el correo de mandar contraseña
 PASSWORD_RESET_EMAIL_TEMPLATE = 'recuperarContraseña/password_reset_email.html'
