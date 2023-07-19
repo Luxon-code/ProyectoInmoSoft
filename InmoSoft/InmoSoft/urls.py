@@ -27,6 +27,7 @@ urlpatterns = [
     path("vistaModificarUsuario/",views.vistaModificarUsuario),
     path("vistaInicioSesion/",views.vistaIniciarSesion),
     path("vistaPerfilUsuario/",views.vistaPerfilUsuario),
+    path('vistaRegistrarProyecto/',views.vistaRegistrarProyecto),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/',views.vistaInicioAsesor),
     path('registrarUsuario/',views.registrarUsuario),

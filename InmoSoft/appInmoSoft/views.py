@@ -68,6 +68,13 @@ def vistaPerfilUsuario(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
+def vistaRegistrarProyecto(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}  
+        return render(request,'administrador/registrarProyecto.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
 def registrarUsuario(request):
     try:
         cedula = request.POST["txtCedula"]

@@ -40,9 +40,8 @@ class User(AbstractUser):
         return f"{self.username}"
 
 class Casas(models.Model):
-    casNumeroManzana =  models.IntegerField(db_comment="Numero de manzana")
-    casNumeroInmueble = models.IntegerField(db_comment="Numero de inmueble")
-    casTotalCasas = models.IntegerField(db_comment="Total de casas en el proyecto")
+    casNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
+    casAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
     casCategoria = models.CharField(max_length=15, choices=tipoCategoriaCasas, db_comment="Tipo de casa")
     casPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
     casfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
@@ -52,9 +51,8 @@ class Casas(models.Model):
         return f"El numero del inmueble es: {self.casNumeroInmueble}"
 
 class Apartamento(models.Model):
-    apaNumeroTorre =  models.IntegerField(db_comment="Numero de Torres")
-    apaNumeroInmueble = models.IntegerField(db_comment="Numero de inmuebles por torre")
-    apaTotalApartamento = models.IntegerField(db_comment="Total de apartamentos en el proyecto")
+    apaNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
+    apaAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
     apaCategoria = models.CharField(max_length=15, choices=tipoCategoriaApartamento, db_comment="Tipo de apartamento")
     apaPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
     apafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
@@ -71,14 +69,21 @@ class Proyecto(models.Model):
     proNombre = models.CharField(max_length=25, db_comment="Nombre del proyecto")
     proDescripcion = models.TextField(max_length=255, db_comment="Descripcion del proyecto")
     proFiducia = models.CharField(max_length=25,db_comment="Fiducia que va a contriduir en el proyecto")
+    proFoto = models.FileField(upload_to=f"fotosPro/", null=True, blank=True,db_comment="Foto del Proyecto")
+    proNumeroManzanasTorres =  models.IntegerField(db_comment="Numero de manzanas o torres")
+    proNumeroInmuebles = models.IntegerField(db_comment="Numero de inmueble por manzanas o torres")
+    proTotalCasas = models.IntegerField(db_comment="Total de casas en el proyecto")
     proParqueadero = models.CharField(max_length=25,choices=tipoDeParqueadero ,db_comment="Tipo de parqueadero que tiene el proyecto")
     profechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     profechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     proUbicacion = models.ForeignKey(Ubicacion,on_delete=models.PROTECT,db_comment="Ubicacion del proyecto")
     
+class fotoInmuble(models.Model):
+    fotInmuble = models.FileField(upload_to=f"fotosInm/", null=True, blank=True,db_comment="Fotos del Imueble")
+    fotProyecto = models.ForeignKey(Proyecto,on_delete=models.PROTECT,db_comment="llave foranea para defenir a que proyecto pertenece la foto del inmuble") 
+    fotfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
+    fotfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 class Inmueble(models.Model):
-    inmNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
-    inmAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
     inmEntregaDeObra =  models.CharField(max_length=20, choices=entregaDeObra ,db_comment="Entrega del inmueble")
     inmEstado = models.CharField(max_length=20,choices=estadoDeInmueble ,db_comment="estado de disponibilidad del Inmueble")
     inmCasa = models.ForeignKey(Casas, on_delete=models.PROTECT,db_comment="hace referencia al tipo de inmueble",null=True)
