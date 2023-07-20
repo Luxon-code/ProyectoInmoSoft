@@ -3,7 +3,7 @@
     {% include "asesor/encabezado.html" %}
 {%endblock %}
 {% block contenido %}
-<div class="d-flex justify-content-center align-items-center vh-100" style="margin-top:6rem; margin-bottom: 6rem;">
+<div class="row d-flex justify-content-center align-items-center" style="margin-top:6rem; margin-bottom: 6rem;">
     <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75" style="width: 30rem;">
       <form action="/modificarUsuario/{{user.id}}" enctype="multipart/form-data"  method="post" class="needs-validation" novalidate> 
         {% csrf_token%}

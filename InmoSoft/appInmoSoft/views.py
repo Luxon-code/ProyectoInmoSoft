@@ -70,7 +70,7 @@ def vistaPerfilUsuario(request):
         return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
 def vistaRegistrarProyecto(request):
     if request.user.is_authenticated:
-        retorno = {"user":request.user}  
+        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero}  
         return render(request,'administrador/registrarProyecto.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"

@@ -3,7 +3,7 @@
     {% include "administrador/encabezado.html" %}
 {%endblock %}
 {% block contenido %}
-<div class="d-flex justify-content-center align-items-center vh-100" style="margin-top:6rem; margin-bottom: 6rem;">
+<div class="row d-flex justify-content-center align-items-center" style="margin-top:6rem; margin-bottom: 6rem;">
     <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
         <h2 class="text-center">Registrar Proyecto</h2>
       <form action="" enctype="multipart/form-data"  method="post" class="needs-validation" novalidate> 
@@ -13,13 +13,6 @@
                 <div>
                     <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
                     <input class="form-control" type="text" placeholder="Nombre de proyecto" required /><br>
-                </div>
-            </div>
-            <div class="mt-3 col-lg-4">
-                <div>
-                    <label for="txtDescripcion">Descripcion del Proyecto:</label>
-                    <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="5"
-                        class="form-control"> </textarea>
                 </div>
             </div>
             <div class="mt-3 col-lg-4">
@@ -57,8 +50,9 @@
                     <select name="cbObraentregable" id="cbObraentregable" class="form-select"
                         aria-label="Default select example">
                         <option value="">Selecione</option>
-                        <option value="">Obra blanca</option>
-                        <option value="">Obra gris</option>
+                        {% for obra in entregaObra %}
+                            <option value="{{obra.0}}">{{obra.0}}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -68,15 +62,26 @@
                     <select name="cbParqueadero" id="cbParqueadero" class="form-select"
                         aria-label="Default select example">
                         <option value="">Selecione</option>
-                        <option value="">Comunal</option>
-                        <option value="">Asignado</option>
+                        {% for parqueadero in parqueaderos %}
+                            <option value="{{parqueadero.0}}">{{parqueadero.0}}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
-            <div class="mt-3 col-lg-4">
+            <div class="mt-3 col-lg-6">
                 <div>
                     <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
                     <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto">
+                    <div class="text-center m-2 imgPerfil2">
+                        <img src="../media/simboloPNG.png" class="" alt="img-proyecto" style="width:10rem;height: 10rem;">
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-6">
+                <div>
+                    <label for="txtDescripcion">Descripcion del Proyecto:</label>
+                    <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="8"
+                        class="form-control"> </textarea>
                 </div>
             </div>
         </div>
@@ -89,11 +94,8 @@
                 <div>
                     <label for="cbDepartamento">Departamento:</label> <br>
                     <select name="cbDepartamento" id="cbDepartamento" class="form-select"
-                        aria-label="Default select example">
+                     onchange="actualizarMunicipios()">
                         <option value="">Selecione</option>
-                        <option value="">Huila</option>
-                        <option value="">Cundinamarca</option>
-                        <option value="">Antioquia</option>
                     </select>
                 </div>
             </div>
@@ -102,9 +104,7 @@
                     <label for="cbMunicipio">Municipio:</label> <br>
                     <select name="cbMunicipio" id="cbMunicipio" class="form-select"
                         aria-label="Default select example">
-                        <option value="">Neiva</option>
-                        <option value="">La Plata</option>
-                        <option value="">Colombia</option>
+                        <option value="">Seleccione</option>
                     </select>
                 </div>
             </div>
@@ -115,11 +115,42 @@
                 </div>
             </div>
         </div>
+        <div class="row m-3">
+            <div class="col-12 text-center">
+                <button type="button" class="btn btn-outline-danger">Cancelar</button>
+                <button type="button" class="btn btn-outline-secondary">Siguiente</button>
+            </div>
+        </div>
       </form>
     </div> 
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function previewImage(event) {
+          var input = event.target;
+          var imgPerfil = document.querySelector('.imgPerfil2 img');
+  
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+  
+              reader.onload = function(e) {
+                  imgPerfil.src = e.target.result;
+              }
+  
+              reader.readAsDataURL(input.files[0]);
+          } else {
+              // Imagen por defecto en caso de no seleccionar ninguna
+              imgPerfil.src = '../media/simboloPNG.png';
+          }
+      }
+  
+      var fileInput = document.getElementById('fileFoto');
+      fileInput.addEventListener('change', previewImage);
+  });
+</script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
+<script src="{% static '../static/js/proyectos.js' %}"></script>
 {%endblock %}
 {% block piePagina %}
     {% include "piePagina.html" %}
