@@ -113,7 +113,7 @@ def registrarUsuario(request):
             # se actualiza el user
             user.save()
             mensaje = "Usuario Agregado Correctamente"
-            retorno = {"mensaje": mensaje,"estado":True}
+            retorno = {"mensaje": mensaje,"estado":True,'roles':Group.objects.all()}
             # enviar correo al usuario
             asunto = 'Registro Sistema InmoSoft'
             mensaje = f'Cordial saludo, <b>{user.first_name} {user.last_name}</b>, nos permitimos.\
@@ -130,7 +130,7 @@ def registrarUsuario(request):
     except Error as error:
         transaction.rollback()
         mensaje = f"{error}"
-    retorno = {"mensaje": mensaje,"estado":False}
+    retorno = {"mensaje": mensaje,"estado":False,'roles':Group.objects.all()}
     return render(request, "administrador/registrarUsuario.html",retorno)
 
 def enviarCorreo(asunto=None, mensaje=None, destinatario=None):
