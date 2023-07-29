@@ -70,8 +70,15 @@ def vistaPerfilUsuario(request):
         return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
 def vistaRegistrarProyecto(request):
     if request.user.is_authenticated:
-        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero}  
+        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia}  
         return render(request,'administrador/registrarProyecto.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+def vistaRegistrarCasaoApartamento(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}  
+        return render(request,'administrador/registrarCasaoApartamento.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
@@ -294,4 +301,6 @@ def cambiarContraseñaUsuario(request,id):
             return render(request, 'administrador/perfilUsuario.html',retorno)
         else:
             return render(request, 'asesor/perfilUsuario.html',retorno)
+
+
         

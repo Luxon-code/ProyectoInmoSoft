@@ -12,22 +12,18 @@
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
-                    <input class="form-control" type="text" placeholder="Nombre de proyecto" required /><br>
+                    <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required /><br>
                 </div>
             </div>
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="txtFiducia">Fiducia:</label> <br>
-                    <select name="txtFiducia" id="txtFiducia" class="form-select"
+                    <select name="cbFiducia" id="cbFiducia" class="form-select"
                         aria-label="Default select example">
                         <option value="">Seleccione</option>
-                        <option value="">Bancolombia</option>
-                        <option value="">BBVA</option>
-                        <option value="">Banco de Bogota</option>
-                        <option value="">Banco Caja Social</option>
-                        <option value="">Grupo Bancolombia</option>
-                        <option value="">Davivienda</option>
-                        <option value="">Banco de Occidente</option>
+                        {% for fidu in fiducia %}
+                        <option value="{{fidu.0}}">{{fidu.0}}</option>
+                        {% endfor %}
 
                     </select>
                 </div>
@@ -35,13 +31,19 @@
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="">Numero de Torres o manzanas:</label>
-                    <input type="number" class="form-control" placeholder="Numero de Torres o manzanas" required>
+                    <input type="number" class="form-control" placeholder="Numero de Torres o manzanas" name="txtNumeroTorresoManzanas" id="txtNumeroTorresoManzanas" required>
                 </div>
             </div>
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="">Numero de apartamentos o casas:</label>
-                    <input type="number" class="form-control" placeholder="Numero de apartamentos o casas" required>
+                    <input type="number" class="form-control" placeholder="Numero de apartamentos o casas por torre" name="txtNumerosApartamentosoCasas" id="txtNumerosApartamentosoCasas" required>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Total de inmuebles:</label>
+                    <input type="text" class="form-control" name="txtTotalInmuebles" id="txtTotalInmuebles" readonly>
                 </div>
             </div>
             <div class="mt-3 col-lg-4">
@@ -111,14 +113,15 @@
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="txtDireccion">Direccion:</label>
-                    <input type="text" class="form-control" placeholder="Direccion" required>
+                    <input type="text" class="form-control" placeholder="Direccion" name="txtDireccion" id="txtDireccion" required>
                 </div>
             </div>
         </div>
         <div class="row m-3">
             <div class="col-12 text-center">
-                <button type="button" class="btn btn-outline-danger">Cancelar</button>
-                <button type="button" class="btn btn-outline-secondary">Siguiente</button>
+                <a type="button" href="/inicioAdministrador/" class="btn btn-outline-danger">Cancelar</a>
+                <a type="button" href="/vistaRegistarCasaoApartamento/"   class="btn btn-outline-secondary">Siguiente</a>
+                <a type="button" onclick="guardarDatosPrimerFormulario()">guardar</a>
             </div>
         </div>
       </form>
@@ -147,6 +150,20 @@
       var fileInput = document.getElementById('fileFoto');
       fileInput.addEventListener('change', previewImage);
   });
+
+  function multiplicarApartamentosYTorres() {
+    const numeroApartamentos = parseInt(document.getElementById('txtNumerosApartamentosoCasas').value);
+    const numeroTorres = parseInt(document.getElementById('txtNumeroTorresoManzanas').value);
+  
+    if (!isNaN(numeroApartamentos) && !isNaN(numeroTorres)) {
+      const totalInmuebles = numeroApartamentos * numeroTorres;
+      document.getElementById('txtTotalInmuebles').value = totalInmuebles;
+    }
+  }
+  
+  // Agregar el evento input a los campos para ejecutar la función de multiplicación automáticamente
+  document.getElementById('txtNumerosApartamentosoCasas').addEventListener('input', multiplicarApartamentosYTorres);
+  document.getElementById('txtNumeroTorresoManzanas').addEventListener('input', multiplicarApartamentosYTorres);
 </script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">

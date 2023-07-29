@@ -28,6 +28,7 @@ urlpatterns = [
     path("vistaInicioSesion/",views.vistaIniciarSesion),
     path("vistaPerfilUsuario/",views.vistaPerfilUsuario),
     path('vistaRegistrarProyecto/',views.vistaRegistrarProyecto),
+    path('vistaRegistarCasaoApartamento/',views.vistaRegistrarCasaoApartamento),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/',views.vistaInicioAsesor),
     path('registrarUsuario/',views.registrarUsuario),
