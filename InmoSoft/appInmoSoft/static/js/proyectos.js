@@ -42,41 +42,38 @@ cargarDepartamentos()
 
 
     // Función para guardar los datos del primer formulario en el almacenamiento local
-    function guardarDatosPrimerFormulario() {
-      const formData = {
-          nombreProyecto: document.getElementById('txtNombreProyecto').value,
-          fiducia: document.getElementById('cbFiducia').value,
-          numeroTorresOManzanas: document.getElementById('txtNumeroTorresoManzanas').value,
-          numeroApartamentosOCasas: document.getElementById('txtNumerosApartamentosoCasas').value,
-          totalInmuebles: document.getElementById('txtTotalInmuebles').value,
-          obraEntregable: document.getElementById('cbObraentregable').value,
-          parqueadero: document.getElementById('cbParqueadero').value,
-          departamento: document.getElementById('cbDepartamento').value,
-          ciudad: document.getElementById('cbMunicipio').value,
-          direccion: document.getElementById('txtDireccion').value,
-          descripcion: document.getElementById('txtDescripcion').value,
-          // Agrega aquí los valores de otros campos del primer formulario que desees guardar
-      };
-      localStorage.setItem('primerFormularioData', JSON.stringify(formData));
-  }
-
-  // Función para cargar y rellenar el primer formulario con los datos guardados
-  function cargarDatosPrimerFormulario() {
-      const formData = JSON.parse(localStorage.getItem('primerFormularioData'));
-      if (formData) {
-          document.getElementById('txtNombreProyecto').value = formData.nombreProyecto;
-          document.getElementById('cbFiducia').value = formData.fiducia;
-          document.getElementById('txtNumeroTorresoManzanas').value = formData.numeroTorresOManzanas;
-          document.getElementById('txtNumerosApartamentosoCasas').value = formData.numeroApartamentosOCasas;
-          document.getElementById('txtTotalInmuebles').value = formData.totalInmuebles;
-          document.getElementById('cbObraentregable').value = formData.obraEntregable;
-          document.getElementById('cbParqueadero').value = formData.parqueadero;
-          document.getElementById('cbDepartamento').value = formData.departamento;
-          document.getElementById('cbMunicipio').value = formData.ciudad;
-          document.getElementById('txtDireccion').value = formData.direccion;
-          document.getElementById('txtDescripcion').value = formData.descripcion;
-          // Rellena otros campos del primer formulario según sea necesario
-      }
-  }
+function guardarDatosPrimerFormulario() {
+    const formulario = document.getElementById('formularioDatos1');
+    const formData = new FormData(formulario);
+  
+    // Convertir la imagen a un objeto Blob
+    const imagenInput = formulario.querySelector('input[type="file"]');
+    const imagenBlob = imagenInput.files[0];
+  
+    // Crear un objeto con los datos del formulario y la imagen Blob
+    const datos = {
+      nombreProyecto: formData.get('txtNombreProyecto'),
+      fiducia: formData.get('cbFiducia'),
+      numeroTorresOManzanas: formData.get('txtNumeroTorresoManzanas'),
+      numeroApartamentosOCasas: formData.get('txtNumerosApartamentosoCasas'),
+      totalInmuebles: formData.get('txtTotalInmuebles'),
+      obraEntregable: formData.get('cbObraentregable'),
+      parqueadero: formData.get('cbParqueadero'),
+      departamento: formData.get('cbDepartamento'),
+      ciudad: formData.get('cbMunicipio'),
+      direccion: formData.get('txtDireccion'),
+      descripcion: formData.get('txtDescripcion'),
+    };
+    // Crear una URL de objeto para representar la imagen
+    const imagenUrl = URL.createObjectURL(imagenBlob);
+    datos.imagen = imagenUrl;
+  
+    // Guardar el objeto de datos en localStorage
+    localStorage.setItem('datosFormulario', JSON.stringify(datos));
+  
+    console.log('Datos del primer formulario guardados en localStorage:', datos);
+}
+  
+  
 
   

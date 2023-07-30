@@ -302,5 +302,6 @@ def cambiarContraseñaUsuario(request,id):
         else:
             return render(request, 'asesor/perfilUsuario.html',retorno)
 
-
+def registrarProyecto(request):
+    pass
         

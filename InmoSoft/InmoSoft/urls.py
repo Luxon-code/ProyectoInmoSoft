@@ -36,6 +36,7 @@ urlpatterns = [
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
     path('modificarUsuario/<int:id>',views.modificarDatosUserPerfil),
     path('cambiarContraseña/<int:id>',views.cambiarContraseñaUsuario),
+    path("registrarProyecto/",views.registrarProyecto),
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),
     path("reset_password/",auth_views.PasswordResetView.as_view(template_name="recuperarContraseña/PasswordResetView.html"),name="password_reset"),
