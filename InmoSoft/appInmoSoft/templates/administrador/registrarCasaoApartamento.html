@@ -1,0 +1,159 @@
+{% extends "index.html" %}
+{% block encabezado %}
+    {% include "administrador/encabezado.html" %}
+{% endblock %}
+{% block contenido %}
+<div class="row d-flex justify-content-center align-items-center" style="margin-top: 6rem; margin-bottom: 6rem;">
+    <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
+    <label for="selectForm">Seleccione si son casas o apartamentos:</label>
+    <select id="selectForm" onchange="showForm()">
+        <option value="none" selected disabled>Seleccionar</option>
+        <option value="formCasa">Casas</option>
+        <option value="formApartamento">Apartamentos</option>
+    </select>
+
+    <form action="" enctype="multipart/form-data"  method="post" class="needs-validation form-section" novalidate id="formCasa" name="formCasa"> 
+        {% csrf_token %}
+        <!-- Contenido del formulario para casas -->
+        <div class="row">
+            <h2 class="text-center">Formulario de Casas</h2>
+        </div>
+        <div class="row">
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Numero de Habitaciones:</label>
+                    <input type="number" class="form-control" name="txtNumHabitacionesCasa" id="txtNumHabitacionesCasa" placeholder="Numero de Torres o manzanas" required>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Area construida en M2:</label>
+                    <input type="number" class="form-control" name="txtAreaConstruidaCasa" id="txtAreaConstruidaCasa" placeholder="Numero de Torres o manzanas" required>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Precio del inmueble:</label>
+                    <input type="number" class="form-control" name="txtAreaConstruidaCasa" id="txtAreaConstruidaCasa" placeholder="Numero de Torres o manzanas" required>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <h3 class="text-center">Datos del inmueble</h3>
+        </div>    
+        <div class="row">
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Tipo A:</label>
+                    <input type="number" class="form-control" name="txtNumtipoACasas" id="txtNumtipoACasas" placeholder="Ingrese el número de inmuebles tipo A" required>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Tipo B:</label>
+                    <input type="number" class="form-control" name="txtNumtipoBCasas" id="txtNumtipoBCasas" placeholder="Ingrese el número de inmuebles tipo B" required>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="">Tipo C:</label>
+                    <input type="number" class="form-control" name="txtNumtipoCCasas" id="txtNumtipoCCasas" placeholder="Ingrese el número de inmuebles tipo C" required>
+                </div>
+            </div>
+            <main>
+                <div class="container">
+                    <section id="Images" class="images-cards">
+                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-xs-12" id="add-photo-container">
+                                    <div class="add-new-photo first" id="add-photo">
+                                        <span><i class="icon-camera"></i></span>
+                                    </div>
+                                    <input type="file" multiple id="add-new-photo" name="images[]">
+                                </div>
+                            </div>
+                        </form> 
+                    </section>
+                </div>
+            </main>
+            
+            
+        </div>
+    </form>
+
+    <form action="" enctype="multipart/form-data"  method="post" class="needs-validation form-section" novalidate id="formApartamento" name="formApartamento"> 
+        {% csrf_token %}
+        <!-- Contenido del formulario para apartamentos -->
+        <h2 class="text-center">Formulario de Apartamentos</h2>
+        <div class="mt-3 col-lg-4">
+            <div>
+                <label for="">Numero de Habitaciones:</label>
+                <input type="number" class="form-control" name="txtNumHabitacionesCasa" id="txtNumHabitacionesCasa" placeholder="Numero de Torres o manzanas" required>
+            </div>
+        </div>
+        <div class="mt-3 col-lg-4">
+            <div>
+                <label for="">Area construida en M2:</label>
+                <input type="number" class="form-control" name="txtAreaConstruidaCasa" id="txtAreaConstruidaCasa" placeholder="Numero de Torres o manzanas" required>
+            </div>
+        </div>
+        <div class="mt-3 col-lg-4">
+            <div>
+                <label for="">Area construida en M2:</label>
+                <input type="number" class="form-control" name="txtAreaConstruidaCasa" id="txtAreaConstruidaCasa" placeholder="Numero de Torres o manzanas" required>
+            </div>
+        </div>
+    </form>
+        <div class="modal">
+            <div class="modal-main">
+            <div class="row">
+                <div class="c-3-lg c-3-md c-1-sm close-modal"></div>
+                <div class="c-6-lg c-6-md c-10-sm c-12-xs close-modal">
+                <div class="modal-card" id="loading">
+                    <div class="preloader"></div>
+                    <span class="tag">Cargando...</span>
+                </div>
+                <div class="modal-card" id="Message">
+                    <span class="tag"></span>
+                </div>
+                </div>
+                <div class="c-3-lg c-3-md c-1-sm close-modal"></div>
+            </div>
+            </div>
+      </div>
+    
+    </div>
+     
+</div>
+<script>
+    function showForm() {
+        const selectElement = document.getElementById('selectForm');
+        const selectedForm = selectElement.value;
+    
+        const formCasa = document.getElementById('formCasa');
+        const formApartamento = document.getElementById('formApartamento');
+    
+        formCasa.classList.remove('active');
+        formApartamento.classList.remove('active');
+    
+        if (selectedForm === 'formCasa') {
+            formCasa.classList.add('active');
+        } else if (selectedForm === 'formApartamento') {
+            formApartamento.classList.add('active');
+        }
+    }
+</script>
+
+{% load static%}
+
+<link rel="stylesheet" href="{% static 'css/cssImagenes/styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/registrarCasaoApartamento.css' %}">
+{% endblock %}
+
+<script src="% static '../static/js/js/functions.js' %}"></script>
+<script src="% static '../static/js/js/modal.js' %}"></script>
+<script src="% static '../static/js/js/scripts.js' %}"></script>
+{% block piePagina %}
+    {% include "piePagina.html" %}
+{% endblock %}

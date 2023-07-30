@@ -28,6 +28,10 @@ estadoCivil=[
     ('Soltero','Soltero'),('Casado','Casado')
 ]
 
+fiducia=[
+    ('Bancolombia','Bancolombia'),('BBVA','BBVA'),('Banco de Bogota','Banco de Bogota'),('Banco Caja Social','Banco Caja Social'),('Grupo Bancolombia','Grupo Bancolombia'),('Davivienda','Davivienda'),('Banco de Occidente','Banco de Occidente')
+]
+
 class User(AbstractUser):
     userCedula = models.CharField(max_length=20,unique=True,db_comment="Numero de cedula del usuario")
     userTelefono = models.CharField(max_length=20,db_comment="Numero de telefono del usuario")
@@ -67,11 +71,12 @@ class Ubicacion(models.Model):
 class Proyecto(models.Model):
     proNombre = models.CharField(max_length=25, db_comment="Nombre del proyecto")
     proDescripcion = models.TextField(max_length=255, db_comment="Descripcion del proyecto")
-    proFiducia = models.CharField(max_length=25,db_comment="Fiducia que va a contriduir en el proyecto")
+    proFiducia = models.CharField(max_length=25,choices=fiducia,db_comment="Fiducia que va a contriduir en el proyecto")
     proFoto = models.FileField(upload_to=f"fotosPro/", null=True, blank=True,db_comment="Foto del Proyecto")
     proNumeroManzanasTorres =  models.IntegerField(db_comment="Numero de manzanas o torres")
     proNumeroInmuebles = models.IntegerField(db_comment="Numero de inmueble por manzanas o torres")
-    proTotalCasas = models.IntegerField(db_comment="Total de casas en el proyecto")
+    proNumeroDePisos = models.IntegerField(db_comment="Numero de pisos")
+    proTotalInmuebles = models.IntegerField(db_comment="Total de inmuebles en todo el proyecto")
     proParqueadero = models.CharField(max_length=25,choices=tipoDeParqueadero ,db_comment="Tipo de parqueadero que tiene el proyecto")
     profechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     profechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
@@ -87,7 +92,7 @@ class Inmueble(models.Model):
     inmEstado = models.CharField(max_length=20,choices=estadoDeInmueble ,db_comment="estado de disponibilidad del Inmueble")
     inmCasa = models.ForeignKey(Casas, on_delete=models.PROTECT,db_comment="hace referencia al tipo de inmueble",null=True)
     inmApartamento =  models.ForeignKey(Apartamento, on_delete=models.PROTECT,db_comment="hace refencia al tipo de inmueble",null=True)
-    inmProyecto = models.ForeignKey(Proyecto, on_delete=models.PROTECT, db_comment="prouecto que corresponde el inmueble")
+    inmProyecto = models.ForeignKey(Proyecto, on_delete=models.PROTECT, db_comment="proyecto al que corresponde el inmueble")
     inmfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     inmfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
