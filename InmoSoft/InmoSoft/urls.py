@@ -36,6 +36,7 @@ urlpatterns = [
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
     path('modificarUsuario/<int:id>',views.modificarDatosUserPerfil),
     path('cambiarContraseña/<int:id>',views.cambiarContraseñaUsuario),
+    path('guardarDatosFormulario1/',views.datosFormulario1),
     path("registrarProyecto/",views.registrarProyecto),
     path('iniciarSesion/',views.iniciarSesion),
     path('cerrarSesion/',views.cerrarSesion),

@@ -6,7 +6,7 @@
 <div class="row d-flex justify-content-center align-items-center" style="margin-top:6rem; margin-bottom: 6rem;">
     <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
         <h2 class="text-center">Registrar Proyecto</h2>
-      <form action="/vistaRegistarCasaoApartamento/" enctype="multipart/form-data" id="formularioDatos1"> 
+      <form action="/guardarDatosFormulario1/" enctype="multipart/form-data" method="post" id="formularioDatos1"> 
         {% csrf_token %}
         <div class="row">     
             <div class="mt-3 col-lg-4">
@@ -33,19 +33,25 @@
                     <input type="number" class="form-control" placeholder="Numero de Torres o manzanas" name="txtNumeroTorresoManzanas" id="txtNumeroTorresoManzanas" required>
                 </div>
             </div>
-            <div class="mt-3 col-lg-4">
+            <div class="mt-3 col-lg-3">
                 <div>
                     <label for="">Numero de apartamentos o casas:</label>
                     <input type="number" class="form-control" placeholder="Numero de apartamentos o casas por torre" name="txtNumerosApartamentosoCasas" id="txtNumerosApartamentosoCasas" required>
                 </div>
             </div>
-            <div class="mt-3 col-lg-4">
+            <div class="mt-3 col-lg-3">
                 <div>
                     <label for="">Total de inmuebles:</label>
-                    <input type="text" class="form-control" name="txtTotalInmuebles" id="txtTotalInmuebles" readonly>
+                    <input type="number" class="form-control" name="txtTotalInmuebles" id="txtTotalInmuebles" readonly>
                 </div>
             </div>
-            <div class="mt-3 col-lg-4">
+            <div class="mt-3 col-lg-3">
+                <div>
+                    <label for="">Numero de pisos por casa o torre:</label>
+                    <input type="number" class="form-control" name="txtPisos" id="txtPisos" placeholder="Numero de pisos por casa o torre">
+                </div>
+            </div>
+            <div class="mt-3 col-lg-3">
                 <div>
                     <label for="cbObraentregable">Obra entregable:</label> <br>
                     <select name="cbObraentregable" id="cbObraentregable" class="form-select"
@@ -119,13 +125,17 @@
         <div class="row m-3">
             <div class="col-12 text-center">
                 <a type="button" href="/inicioAdministrador/" class="btn btn-outline-danger">Cancelar</a>
-                <button type="submit" class="btn btn-outline-secondary" onclick="guardarDatosPrimerFormulario()" id="guardarBtn">Siguiente</button>
+                <button type="submit" class="btn btn-outline-secondary" id="guardarBtn">Siguiente</button>
             </div>
         </div>
       </form>
     </div> 
 </div>
+{% load static%}
+<link rel="stylesheet" href="{% static 'css/body.css' %}">
+<script src="{% static '../static/js/proyectos.js' %}"></script>
 <script>
+    cargarDepartamentos()
     document.addEventListener('DOMContentLoaded', function() {
       function previewImage(event) {
           var input = event.target;
@@ -156,6 +166,8 @@
     if (!isNaN(numeroApartamentos) && !isNaN(numeroTorres)) {
       const totalInmuebles = numeroApartamentos * numeroTorres;
       document.getElementById('txtTotalInmuebles').value = totalInmuebles;
+    }else{
+        document.getElementById('txtTotalInmuebles').value = 0;
     }
   }
   
@@ -163,9 +175,6 @@
   document.getElementById('txtNumerosApartamentosoCasas').addEventListener('input', multiplicarApartamentosYTorres);
   document.getElementById('txtNumeroTorresoManzanas').addEventListener('input', multiplicarApartamentosYTorres);
 </script>
-{% load static%}
-<link rel="stylesheet" href="{% static 'css/body.css' %}">
-<script src="{% static '../static/js/proyectos.js' %}"></script>
 {%endblock %}
 {% block piePagina %}
     {% include "piePagina.html" %}

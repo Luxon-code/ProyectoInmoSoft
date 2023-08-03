@@ -302,6 +302,111 @@ def cambiarContraseñaUsuario(request,id):
         else:
             return render(request, 'asesor/perfilUsuario.html',retorno)
 
+datosForm1 = {}
+def datosFormulario1(request):
+    datosForm1 = {
+        'nombreProyecto': request.POST.get('txtNombreProyecto'),
+        'fiducia': request.POST.get('cbFiducia'),
+        'numeroTorresOManzanas': int(request.POST.get('txtNumeroTorresoManzanas')),
+        'numeroApartamentosOCasas': int(request.POST.get('txtNumerosApartamentosoCasas')),
+        'numeroPisos':int(request.POST.get('txtPisos')),
+        'totalInmuebles': int(request.POST.get('txtTotalInmuebles')),
+        'obraEntregable': request.POST.get('cbObraentregable'),
+        'parqueadero': request.POST.get('cbParqueadero'),
+        'departamento': request.POST.get('cbDepartamento'),
+        'ciudad': request.POST.get('cbMunicipio'),
+        'direccion': request.POST.get('txtDireccion'),
+        'descripcion': request.POST.get('txtDescripcion'),
+        'fotoProyecto': request.FILES.get("fileFoto"),
+    }
+    return redirect('/vistaRegistarCasaoApartamento/')
+
 def registrarProyecto(request):
-    pass
+    if request.method == 'POST':
+        try:
+            tipoProyecto = request.POST.get('tipoProyecto')
+            if(tipoProyecto=='Casa'):
+                numeroHabitaciones=request.POST.get('txtNumHabitaciones')
+                areaConstruida=request.POST.get('txtAreaConstruida')
+                fotosInmuble = request.FILES.getlist('fileFotosCasa')
+                numeroInmubleTipoA = int(request.POST.get('txtNumtipoA'))
+                precioTipoA = request.POST.get('txtPrecioA')
+                numeroInmubleTipoB = int(request.POST.get('txtNumtipoB'))
+                precioTipoB = request.POST.get('txtPrecioB')
+                numeroInmubleTipoC = int(request.POST.get('txtNumtipoC'))
+                precioTipoC = request.POST.get('txtPrecioC')
+                with transaction.atomic():
+                    #Guardamos la ubicacion del proyecto
+                    ubicacion = Ubicacion(ubiDepartamento=datosForm1.get('departamento'),
+                                          ubiCuidad=datosForm1.get('ciudad'),
+                                          ubiDireccion=datosForm1.get('direccion'))
+                    ubicacion.save()
+                    
+                    proyecto = Proyecto(proNombre=datosForm1.get('nombreProyecto'),
+                                        proDescripcion=datosForm1.get('descripcion'),
+                                        proFiducia=datosForm1.get('fiducia'),
+                                        proFoto=datosForm1.get('fotoProyecto'),
+                                        proNumeroManzanasTorres=datosForm1.get('numeroTorresOManzanas'),
+                                        proNumeroInmuebles=datosForm1.get('numeroApartamentosOCasas'),
+                                        proNumeroDePisos=datosForm1.get('numeroPisos'),
+                                        proTotalInmuebles=datosForm1.get('totalInmuebles'),
+                                        proParqueadero=datosForm1.get('parqueadero'),
+                                        proUbicacion=ubicacion)
+                    proyecto.save()
+                    casaA = Casas(casNumeroHabitaciones=numeroHabitaciones,
+                                        casAreaConstruida=areaConstruida,
+                                        casCategoria="Tipo A",
+                                        casPrecioVivienda=precioTipoA)
+                    casaA.save()
+                    casaB = Casas(casNumeroHabitaciones=numeroHabitaciones,
+                                        casAreaConstruida=areaConstruida,
+                                        casCategoria="Tipo B",
+                                        casPrecioVivienda=precioTipoB)
+                    casaB.save()
+                    casaC = Casas(casNumeroHabitaciones=numeroHabitaciones,
+                                        casAreaConstruida=areaConstruida,
+                                        casCategoria="Tipo C",
+                                        casPrecioVivienda=precioTipoC)
+                    casaC.save()
+                    for i in range(numeroInmubleTipoA):
+                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                                            inmEstado="Disponible",
+                                            inmCasa=casaA,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for i in range(numeroInmubleTipoB):
+                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                                            inmEstado="Disponible",
+                                            inmCasa=casaB,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for i in range(numeroInmubleTipoC):
+                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                                            inmEstado="Disponible",
+                                            inmCasa=casaC,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for foto in fotosInmuble:
+                        fotoInm = fotoInmuble(fotInmuble=foto,fotProyecto=proyecto)
+                        fotoInm.save()
+                    mensaje="Proyecto Registrado Exitosamente" 
+                    retorno = {"mensaje":mensaje,"estado":True} 
+                    return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
+            elif(tipoProyecto=='Apartamento'):
+                numeroHabitaciones=request.POST.get('txtNumHabitaciones')
+                AreaConstruida=request.POST.get('txtAreaConstruida')
+                fotosInmuble = request.FILES.getlist('fileFotosApartamento')
+                numeroInmubleTipoA = request.POST.get('txtNumtipoA')
+                precioTipoA = request.POST.get('txtPrecioA')
+                numeroInmubleTipoB = request.POST.get('txtNumtipoB')
+                precioTipoB = request.POST.get('txtPrecioB')
+                numeroInmubleTipoC = request.POST.get('txtNumtipoC')
+                precioTipoC = request.POST.get('txtPrecioC')
+                with transaction.atomic():
+                    pass 
+        except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+        retorno = {"mensaje":mensaje,"estado":False}
+        return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
         
