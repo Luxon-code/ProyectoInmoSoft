@@ -3,8 +3,10 @@ from django.shortcuts import render, redirect
 from appInmoSoft.models import *
 from django.contrib.auth.models import Group
 from django.db import Error, transaction
+from django.core.files.base import ContentFile
 import random
 import string
+import base64
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.conf import settings
@@ -317,15 +319,31 @@ def datosFormulario1(request):
         'ciudad': request.POST.get('cbMunicipio'),
         'direccion': request.POST.get('txtDireccion'),
         'descripcion': request.POST.get('txtDescripcion'),
-        'fotoProyecto': request.FILES.get("fileFoto"),
     }
-    return redirect('/vistaRegistarCasaoApartamento/')
+    fotoProyecto = request.FILES.get("fileFoto")
+    if fotoProyecto:
+        foto_base64 = base64.b64encode(fotoProyecto.read()).decode('utf-8')
+        request.session['fotoProyecto'] = foto_base64
+
+    return render(request, 'administrador/registrarCasaoApartamento.html', datosForm1)
 
 def registrarProyecto(request):
     if request.method == 'POST':
         try:
             tipoProyecto = request.POST.get('tipoProyecto')
             if(tipoProyecto=='Casa'):
+                nombreProyecto= request.POST.get('txtNombreProyecto')
+                fiducia= request.POST.get('cbFiducia')
+                numeroTorresOManzanas= int(request.POST.get('txtNumeroTorresoManzanas'))
+                numeroApartamentosOCasas= int(request.POST.get('txtNumerosApartamentosoCasas'))
+                numeroPisos=int(request.POST.get('txtPisos'))
+                totalInmuebles= int(request.POST.get('txtTotalInmuebles'))
+                obraEntregable= request.POST.get('cbObraentregable')
+                parqueadero= request.POST.get('cbParqueadero')
+                departamento= request.POST.get('cbDepartamento')
+                ciudad= request.POST.get('cbMunicipio')
+                direccion= request.POST.get('txtDireccion')
+                descripcion= request.POST.get('txtDescripcion')
                 numeroHabitaciones=request.POST.get('txtNumHabitaciones')
                 areaConstruida=request.POST.get('txtAreaConstruida')
                 fotosInmuble = request.FILES.getlist('fileFotosCasa')
@@ -335,24 +353,31 @@ def registrarProyecto(request):
                 precioTipoB = request.POST.get('txtPrecioB')
                 numeroInmubleTipoC = int(request.POST.get('txtNumtipoC'))
                 precioTipoC = request.POST.get('txtPrecioC')
+                foto_base64 = request.session.get('fotoProyecto', None)
+                fotoProyecto = None  # Inicializar con valor None
+
+                if foto_base64:
+                    foto_bytes = base64.b64decode(foto_base64)
+                    fotoProyecto = ContentFile(foto_bytes, name='foto_proyecto.jpg')
                 with transaction.atomic():
                     #Guardamos la ubicacion del proyecto
-                    ubicacion = Ubicacion(ubiDepartamento=datosForm1.get('departamento'),
-                                          ubiCuidad=datosForm1.get('ciudad'),
-                                          ubiDireccion=datosForm1.get('direccion'))
+                    ubicacion = Ubicacion(ubiDepartamento=departamento,
+                                          ubiCuidad=ciudad,
+                                          ubiDireccion=direccion)
                     ubicacion.save()
-                    
-                    proyecto = Proyecto(proNombre=datosForm1.get('nombreProyecto'),
-                                        proDescripcion=datosForm1.get('descripcion'),
-                                        proFiducia=datosForm1.get('fiducia'),
-                                        proFoto=datosForm1.get('fotoProyecto'),
-                                        proNumeroManzanasTorres=datosForm1.get('numeroTorresOManzanas'),
-                                        proNumeroInmuebles=datosForm1.get('numeroApartamentosOCasas'),
-                                        proNumeroDePisos=datosForm1.get('numeroPisos'),
-                                        proTotalInmuebles=datosForm1.get('totalInmuebles'),
-                                        proParqueadero=datosForm1.get('parqueadero'),
+                    #guardamos el proyecto
+                    proyecto = Proyecto(proNombre=nombreProyecto,
+                                        proDescripcion=descripcion,
+                                        proFiducia=fiducia,
+                                        proFoto=fotoProyecto,
+                                        proNumeroManzanasTorres=numeroTorresOManzanas,
+                                        proNumeroInmuebles=numeroApartamentosOCasas,
+                                        proNumeroDePisos=numeroPisos,
+                                        proTotalInmuebles=totalInmuebles,
+                                        proParqueadero=parqueadero,
                                         proUbicacion=ubicacion)
                     proyecto.save()
+                    #creamos 3 objetos casas segun su tipo
                     casaA = Casas(casNumeroHabitaciones=numeroHabitaciones,
                                         casAreaConstruida=areaConstruida,
                                         casCategoria="Tipo A",
@@ -368,42 +393,137 @@ def registrarProyecto(request):
                                         casCategoria="Tipo C",
                                         casPrecioVivienda=precioTipoC)
                     casaC.save()
+                    #creamos los inmubles segun el numero de su tipo
                     for i in range(numeroInmubleTipoA):
-                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                             inmEstado="Disponible",
                                             inmCasa=casaA,
                                             inmProyecto=proyecto)
                         inmueble.save()
                     for i in range(numeroInmubleTipoB):
-                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                             inmEstado="Disponible",
                                             inmCasa=casaB,
                                             inmProyecto=proyecto)
                         inmueble.save()
                     for i in range(numeroInmubleTipoC):
-                        inmueble = Inmueble(inmEntregaDeObra=datosForm1.get('obraEntregable'),
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                             inmEstado="Disponible",
                                             inmCasa=casaC,
                                             inmProyecto=proyecto)
                         inmueble.save()
+                    #gurdamos la fotos del inmueble que pertenencen al proyecto creado
                     for foto in fotosInmuble:
                         fotoInm = fotoInmuble(fotInmuble=foto,fotProyecto=proyecto)
                         fotoInm.save()
                     mensaje="Proyecto Registrado Exitosamente" 
-                    retorno = {"mensaje":mensaje,"estado":True} 
-                    return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
+                    retorno = {"mensaje":mensaje,"estado":True,"titulo":"Registro de Proyecto"} 
+                    return render(request, 'administrador/inicioAdministrador.html',retorno)
             elif(tipoProyecto=='Apartamento'):
+                nombreProyecto= request.POST.get('txtNombreProyecto')
+                fiducia= request.POST.get('cbFiducia')
+                numeroTorresOManzanas= int(request.POST.get('txtNumeroTorresoManzanas'))
+                numeroApartamentosOCasas= int(request.POST.get('txtNumerosApartamentosoCasas'))
+                numeroPisos=int(request.POST.get('txtPisos'))
+                totalInmuebles= int(request.POST.get('txtTotalInmuebles'))
+                obraEntregable= request.POST.get('cbObraentregable')
+                parqueadero= request.POST.get('cbParqueadero')
+                departamento= request.POST.get('cbDepartamento')
+                ciudad= request.POST.get('cbMunicipio')
+                direccion= request.POST.get('txtDireccion')
+                descripcion= request.POST.get('txtDescripcion')
                 numeroHabitaciones=request.POST.get('txtNumHabitaciones')
-                AreaConstruida=request.POST.get('txtAreaConstruida')
+                areaConstruida=request.POST.get('txtAreaConstruida')
                 fotosInmuble = request.FILES.getlist('fileFotosApartamento')
-                numeroInmubleTipoA = request.POST.get('txtNumtipoA')
+                numeroInmubleTipoA = int(request.POST.get('txtNumtipoA'))
                 precioTipoA = request.POST.get('txtPrecioA')
-                numeroInmubleTipoB = request.POST.get('txtNumtipoB')
+                numeroInmubleTipoB = int(request.POST.get('txtNumtipoB'))
                 precioTipoB = request.POST.get('txtPrecioB')
-                numeroInmubleTipoC = request.POST.get('txtNumtipoC')
+                numeroInmubleTipoC = int(request.POST.get('txtNumtipoC'))
                 precioTipoC = request.POST.get('txtPrecioC')
+                numeroInmueblePenthouse = int(request.POST.get('txtNumTipoPenthouse'))
+                precioTipoPenthouse = request.POST.get('txtPrecioPenthouse')
+                foto_base64 = request.session.get('fotoProyecto', None)
+                fotoProyecto = None  # Inicializar con valor None
+                if foto_base64:
+                    foto_bytes = base64.b64decode(foto_base64)
+                    fotoProyecto = ContentFile(foto_bytes, name='foto_proyecto.jpg')
                 with transaction.atomic():
-                    pass 
+                    #Guardamos la ubicacion del proyecto
+                    ubicacion = Ubicacion(ubiDepartamento=departamento,
+                                          ubiCuidad=ciudad,
+                                          ubiDireccion=direccion)
+                    ubicacion.save()
+                    #guardamos el proyecto
+                    proyecto = Proyecto(proNombre=nombreProyecto,
+                                        proDescripcion=descripcion,
+                                        proFiducia=fiducia,
+                                        proFoto=fotoProyecto,
+                                        proNumeroManzanasTorres=numeroTorresOManzanas,
+                                        proNumeroInmuebles=numeroApartamentosOCasas,
+                                        proNumeroDePisos=numeroPisos,
+                                        proTotalInmuebles=totalInmuebles,
+                                        proParqueadero=parqueadero,
+                                        proUbicacion=ubicacion)
+                    proyecto.save()
+                    #creamos 3 objetos casas segun su tipo
+                    apartametoA = Apartamento(
+                                        apaNumeroHabitaciones=numeroHabitaciones,
+                                        apaAreaConstruida=areaConstruida,
+                                        apaCategoria="Tipo A",
+                                        apaPrecioVivienda=precioTipoA)
+                    apartametoA.save()
+                    apartamentoB = Apartamento(
+                                        apaNumeroHabitaciones=numeroHabitaciones,
+                                        apaAreaConstruida=areaConstruida,
+                                        apaCategoria="Tipo B",
+                                        apaPrecioVivienda=precioTipoB)
+                    apartamentoB.save()
+                    apartamentoC = Apartamento(
+                                        apaNumeroHabitaciones=numeroHabitaciones,
+                                        apaAreaConstruida=areaConstruida,
+                                        apaCategoria="Tipo C",
+                                        apaPrecioVivienda=precioTipoC)
+                    apartamentoC.save()
+                    apartamentoPenthouse = Apartamento(
+                        apaNumeroHabitaciones=numeroHabitaciones,
+                        apaAreaConstruida=areaConstruida,
+                        apaCategoria="Tipo penthouse",
+                        apaPrecioVivienda=precioTipoPenthouse
+                    )
+                    apartamentoPenthouse.save()
+                    #creamos los inmubles segun el numero de su tipo
+                    for i in range(numeroInmubleTipoA):
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
+                                            inmEstado="Disponible",
+                                            inmApartamento=apartametoA,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for i in range(numeroInmubleTipoB):
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
+                                            inmEstado="Disponible",
+                                            inmApartamento=apartamentoB,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for i in range(numeroInmubleTipoC):
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
+                                            inmEstado="Disponible",
+                                            inmApartamento=apartamentoC,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    for i in range(numeroInmueblePenthouse):
+                        inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
+                                            inmEstado="Disponible",
+                                            inmApartamento=apartamentoPenthouse,
+                                            inmProyecto=proyecto)
+                        inmueble.save()
+                    #guardamos la fotos del inmueble que pertenencen al proyecto creado
+                    for foto in fotosInmuble:
+                        fotoInm = fotoInmuble(fotInmuble=foto,fotProyecto=proyecto)
+                        fotoInm.save()
+                    mensaje="Proyecto Registrado Exitosamente" 
+                    retorno = {"mensaje":mensaje,"estado":True,"titulo":"Registro de Proyecto"} 
+                    return render(request, 'administrador/inicioAdministrador.html',retorno)
         except Error as error:
             transaction.rollback()
             mensaje = f"{error}"
