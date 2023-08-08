@@ -529,4 +529,7 @@ def registrarProyecto(request):
             mensaje = f"{error}"
         retorno = {"mensaje":mensaje,"estado":False}
         return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
+    
+
+    
         

@@ -14,6 +14,7 @@
             <option value="formCasa">Casas</option>
             <option value="formApartamento">Apartamentos</option>
         </select>
+        <input type="hidden" id="numeroinmuebles" name="numeroinmuebles">
 
         <form action="/registrarProyecto/" enctype="multipart/form-data" class="form-section"  method="post"  id="formCasa" name="formCasa"> 
             {% csrf_token %}
@@ -97,7 +98,7 @@
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
-                    <button type="submit" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
+                    <button type="submit" onclick="return validateForm()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
                 </div>
             </div>
         </form>
@@ -195,7 +196,7 @@
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
-                    <button type="submit" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
+                    <button type="submit"  onclick="return validateForm()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
                 </div>
             </div>
         </form> 
@@ -221,6 +222,39 @@
 
     fotos('multi-selector-uniq-apartamento','fileFotosApartamento','preview-apartamento')
     fotos('multi-selector-uniq-casa','fileFotosCasa','preview-casa')
+
+    //obtener el total de inmuebles
+    var numeroRecibidoinmuebles = localStorage.getItem("Totalinmueblesnum");
+        if (numeroRecibidoinmuebles !== null) {
+            document.getElementById("numeroinmuebles").value = numeroRecibidoinmuebles;
+            localStorage.removeItem("Totalinmueblesnum");
+        }
+
+        function calculateSum() {
+            let numTipoA = parseInt(document.getElementById('txtNumtipoA').value) || 0;
+            let numTipoB = parseInt(document.getElementById('txtNumtipoB').value) || 0;
+            let numTipoC = parseInt(document.getElementById('txtNumtipoC').value) || 0;
+            let numTipoPenthouse = parseInt(document.getElementById('txtNumTipoPenthouse').value) || 0;
+    
+            return numTipoA + numTipoB + numTipoC + numTipoPenthouse;
+        }
+    
+        function validateForm() {
+            const numeroinmuebles = parseInt(document.getElementById('numeroinmuebles').value) || 0;
+            const currentSum = calculateSum();
+    
+            if (currentSum < numeroinmuebles) {
+                const faltante = numeroinmuebles - currentSum;
+                Swal.fire('',`No has registrado todos los inmuebles. Faltan ${faltante} inmuebles por registrar.`,'warning');
+                return false;
+            } else if (currentSum > numeroinmuebles) {
+                const exceso = currentSum - numeroinmuebles;
+                Swal.fire('',`Has sobrepasado el límite de inmuebles. Exceso de ${exceso} inmuebles.`,'warning');
+                return false;
+            }
+    
+            return true;
+        }
 </script>
 {% endblock %}
 {% block piePagina %}
