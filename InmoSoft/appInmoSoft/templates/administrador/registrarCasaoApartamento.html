@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
-                    <button type="submit" onclick="return validateForm()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
+                    <button type="submit" onclick="return validateFormCasa()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
                 </div>
             </div>
         </form>
@@ -150,7 +150,7 @@
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Tipo A:</label>
-                        <input type="number" class="form-control" name="txtNumtipoA" id="txtNumtipoA" placeholder="Ingrese el número de inmuebles tipo A" required>
+                        <input type="number" class="form-control" name="txtNumtipoA" id="txtNumtipoAApar" placeholder="Ingrese el número de inmuebles tipo A" required>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
@@ -162,7 +162,7 @@
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Tipo B:</label>
-                        <input type="number" class="form-control" name="txtNumtipoB" id="txtNumtipoB" placeholder="Ingrese el número de inmuebles tipo B" required>
+                        <input type="number" class="form-control" name="txtNumtipoB" id="txtNumtipoBApar" placeholder="Ingrese el número de inmuebles tipo B" required>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
@@ -174,7 +174,7 @@
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Tipo C:</label>
-                        <input type="number" class="form-control" name="txtNumtipoC" id="txtNumtipoC" placeholder="Ingrese el número de inmuebles tipo C" required>
+                        <input type="number" class="form-control" name="txtNumtipoC" id="txtNumtipoCApar" placeholder="Ingrese el número de inmuebles tipo C" required>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
@@ -196,7 +196,7 @@
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
-                    <button type="submit"  onclick="return validateForm()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
+                    <button type="submit"  onclick="return validateFormApartamento()" class="btn btn-outline-secondary w-50">Finalizar Registro del proyecto</button>
                 </div>
             </div>
         </form> 
@@ -226,29 +226,56 @@
     //obtener el total de inmuebles
     var numeroRecibidoinmuebles = localStorage.getItem("Totalinmueblesnum");
         if (numeroRecibidoinmuebles !== null) {
-            document.getElementById("numeroinmuebles").value = numeroRecibidoinmuebles;
             localStorage.removeItem("Totalinmueblesnum");
         }
 
-        function calculateSum() {
+        function calculateSumCasa() {
             let numTipoA = parseInt(document.getElementById('txtNumtipoA').value) || 0;
             let numTipoB = parseInt(document.getElementById('txtNumtipoB').value) || 0;
             let numTipoC = parseInt(document.getElementById('txtNumtipoC').value) || 0;
+    
+            sumCasa= numTipoA + numTipoB + numTipoC;
+            return sumCasa
+
+        }
+        
+        function calculateSumApartamento() {
+            let numTipoA = parseInt(document.getElementById('txtNumtipoAApar').value) || 0;
+            let numTipoB = parseInt(document.getElementById('txtNumtipoBApar').value) || 0;
+            let numTipoC = parseInt(document.getElementById('txtNumtipoCApar').value) || 0;
             let numTipoPenthouse = parseInt(document.getElementById('txtNumTipoPenthouse').value) || 0;
     
-            return numTipoA + numTipoB + numTipoC + numTipoPenthouse;
+            sumApartamento= numTipoA + numTipoB + numTipoC + numTipoPenthouse;
+            return sumApartamento
         }
+
+        function validateFormCasa() {
+            const numeroinmuebles = numeroRecibidoinmuebles;
+            const currentSumCasa = calculateSumCasa();
     
-        function validateForm() {
-            const numeroinmuebles = parseInt(document.getElementById('numeroinmuebles').value) || 0;
-            const currentSum = calculateSum();
-    
-            if (currentSum < numeroinmuebles) {
-                const faltante = numeroinmuebles - currentSum;
+            if (currentSumCasa < numeroinmuebles) {
+                const faltante = numeroinmuebles - currentSumCasa;
                 Swal.fire('',`No has registrado todos los inmuebles. Faltan ${faltante} inmuebles por registrar.`,'warning');
                 return false;
-            } else if (currentSum > numeroinmuebles) {
-                const exceso = currentSum - numeroinmuebles;
+            } else if (currentSumCasa > numeroinmuebles) {
+                const exceso = currentSumCasa - numeroinmuebles;
+                Swal.fire('',`Has sobrepasado el límite de inmuebles. Exceso de ${exceso} inmuebles.`,'warning');
+                return false;
+            }
+    
+            return true;
+        }
+
+        function validateFormApartamento() {
+            const numeroinmuebles = numeroRecibidoinmuebles;
+            const currentSumApar = calculateSumApartamento();
+    
+            if (currentSumApar < numeroinmuebles) {
+                const faltante = numeroinmuebles - currentSumApar;
+                Swal.fire('',`No has registrado todos los inmuebles. Faltan ${faltante} inmuebles por registrar.`,'warning');
+                return false;
+            } else if (currentSumApar > numeroinmuebles) {
+                const exceso = currentSumApar - numeroinmuebles;
                 Swal.fire('',`Has sobrepasado el límite de inmuebles. Exceso de ${exceso} inmuebles.`,'warning');
                 return false;
             }
