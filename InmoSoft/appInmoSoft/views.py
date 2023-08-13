@@ -221,7 +221,7 @@ def iniciarSesion(request):
                 else:
                     return redirect('/inicioAsesor/')
             else:
-                mensaje = "Usuario o Contraseña Incorrectas"
+                mensaje = "El Usuario o Contraseña Son Incorrectas"
                 return render(request, "inicioSesion.html", {"mensaje": mensaje})
         else:
             mensaje = "validar recapcha"
@@ -235,11 +235,11 @@ def iniciarSesionAPI(request,usuario,contraseña):
     # registrar la variable de sesión
         auth.login(request, user)
         if user.groups.filter(name='Administrador').exists():
-           return JsonResponse({'mensaje':'Inicio de sesion exitoso como administrador','estado':True})
+           return JsonResponse({'mensaje':'Inicio de sesión exitoso como administrador','estado':True})
         else:
-            return JsonResponse({'mensaje':'Inicio de sesion exitoso como asesor','estado':True})
+            return JsonResponse({'mensaje':'Inicio de sesión exitoso como asesor','estado':True})
     else:
-        mensaje = "Usuario o Contraseña Incorrectas"
+        mensaje = "El Usuario o Contraseña Son Incorrectas"
         return JsonResponse({'mensaje':mensaje,'estado':False})
 
 def cerrarSesion(request):
