@@ -33,10 +33,28 @@ fiducia=[
 ]
 
 class User(AbstractUser):
-    userCedula = models.CharField(max_length=20,unique=True,db_comment="Numero de cedula del usuario")
+    userCedula = models.CharField(
+        max_length=20,unique=True,
+        db_comment="Numero de cedula del usuario",
+        error_messages={
+        'unique': "Ya existe un usuario con esta cedula",
+        }
+        )
     userTelefono = models.CharField(max_length=20,db_comment="Numero de telefono del usuario")
     userFoto = models.FileField(upload_to=f"fotos/", null=True, blank=True,db_comment="Foto del Usuario")
     userTipo = models.CharField(max_length=15,choices=tipoUsuario,db_comment="Nombre Tipo de usuario")
+    username = models.CharField(
+        ("username"),
+        max_length=150,
+        unique=True,
+        error_messages={
+            "unique": ("Ya existe un usuario con ese correo electronico"),
+        },
+    )
+    email = models.EmailField(("email address"), blank=True,unique=True,
+                              error_messages={
+            "unique": ("Ya existe un usuario con ese correo electronico"),
+        })
     userfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     userfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     def _str_(self):

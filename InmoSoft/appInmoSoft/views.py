@@ -20,7 +20,7 @@ import requests
 from smtplib import SMTPException
 from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
-
+from django.core.exceptions import ValidationError
 # Create your views here.
 def vistaRegistrarUsuario(request):
     if request.user.is_authenticated: 
@@ -118,7 +118,7 @@ def registrarUsuario(request):
             retorno = {"mensaje": mensaje,"estado":True,'roles':Group.objects.all()}
             # enviar correo al usuario
             asunto = 'Registro Sistema InmoSoft'
-            mensaje = f'Cordial saludo, <b>{user.first_name} {user.last_name}</b>, nos permitimos.\
+            mensajeCorreo = f'Cordial saludo, <b>{user.first_name} {user.last_name}</b>, nos permitimos.\
                 informarle que usted ha sido registrado en el Sistema de Inmosoft de la ciudad de Neiva.\
                 Nos permitimos enviarle las credenciales de Ingreso a nuestro sistema.<br>\
                 <br><b>Username: </b> {user.username}\
@@ -126,12 +126,12 @@ def registrarUsuario(request):
                 <br><br>Lo invitamos a ingresar a nuestro sistema en la url:\
                 http://Inmosoft.com'
             thread = threading.Thread(
-                target=enviarCorreo, args=(asunto, mensaje, user.email))
+                target=enviarCorreo, args=(asunto, mensajeCorreo, user.email))
             thread.start()
             return render(request, 'administrador/registrarUsuario.html',retorno)
-    except Error as error:
+    except Exception as error:
         transaction.rollback()
-        mensaje = f"{error}"
+        mensaje = error
     retorno = {"mensaje": mensaje,"estado":False,'roles':Group.objects.all()}
     return render(request, "administrador/registrarUsuario.html",retorno)
 
