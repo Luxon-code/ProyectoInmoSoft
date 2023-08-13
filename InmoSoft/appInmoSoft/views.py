@@ -546,5 +546,15 @@ def registrarProyecto(request):
         return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
     
 
+def getProyecto(request):
+    try:
+        retorno = {
+            "proyectos":list(Proyecto.objects.all().values()),
+        }
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje=f"{error}"
+    
+
     
         

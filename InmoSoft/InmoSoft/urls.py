@@ -33,6 +33,7 @@ urlpatterns = [
     path('inicioAsesor/',views.vistaInicioAsesor),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
+    path('getProyecto/',views.getProyecto),
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario),
     path('modificarUsuario/<int:id>',views.modificarDatosUserPerfil),
     path('cambiarContraseña/<int:id>',views.cambiarContraseñaUsuario),
