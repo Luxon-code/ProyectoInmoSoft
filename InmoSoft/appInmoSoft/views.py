@@ -546,7 +546,7 @@ def registrarProyecto(request):
         return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
     
 
-def getProyecto(request):
+def listarProyectos(request):
     try:
         proyectos = []
         proyects = Proyecto.objects.all()
@@ -554,6 +554,7 @@ def getProyecto(request):
             inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
             if inmueble.inmCasa:
                 proyecto = {
+                    'id': proyect.id,
                     'nombre': proyect.proNombre,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
@@ -562,6 +563,7 @@ def getProyecto(request):
                 }
             else:
                 proyecto = {
+                    'id':proyect.id,
                     'nombre': proyect.proNombre,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
@@ -575,6 +577,21 @@ def getProyecto(request):
         mensaje=f"{error}"
         return JsonResponse(mensaje)
     
-
+def proyectosCarrusel(request):
+    try:
+        proyectos = []
+        proyects = Proyecto.objects.order_by('-profechaHoraCreacion')[:5]
+        for proyect in proyects:
+            proyecto = {
+                'nombre':proyect.proNombre,
+                'foto':str(proyect.proFoto),
+                'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+            }
+            proyectos.append(proyecto)
+        retorno = {'proyectos':proyectos}
+        return JsonResponse(retorno)
+    except Exception as error:
+        mensaje={'error':error}
+        return JsonResponse(mensaje)
     
         

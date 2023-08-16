@@ -17,7 +17,7 @@ entregaDeObra=[
 ]
 
 estadoDeInmueble=[
-    ('Disponible','Disponible'), ('Separado','Separado')
+    ('Disponible','Disponible'), ('Separado','Separado'),('Vendido','Vendido')
 ]
 
 tipoDeParqueadero=[
