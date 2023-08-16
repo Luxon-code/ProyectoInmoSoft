@@ -548,12 +548,32 @@ def registrarProyecto(request):
 
 def getProyecto(request):
     try:
-        retorno = {
-            "proyectos":list(Proyecto.objects.all().values()),
-        }
+        proyectos = []
+        proyects = Proyecto.objects.all()
+        for proyect in proyects:
+            inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
+            if inmueble.inmCasa:
+                proyecto = {
+                    'nombre': proyect.proNombre,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'foto':str(proyect.proFoto),
+                    'precio':inmueble.inmCasa.casPrecioVivienda,
+                }
+            else:
+                proyecto = {
+                    'nombre': proyect.proNombre,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'foto':str(proyect.proFoto),
+                    'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                }
+            proyectos.append(proyecto)
+        retorno = {'proyectos':proyectos}
         return JsonResponse(retorno)
     except Error as error:
         mensaje=f"{error}"
+        return JsonResponse(mensaje)
     
 
     
