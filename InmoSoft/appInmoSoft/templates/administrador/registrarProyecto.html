@@ -12,7 +12,7 @@
             <div class="mt-3 col-lg-4">
                 <div>
                     <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
-                    <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required />
+                    <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required/>
                 </div>
             </div>
             <div class="mt-3 col-lg-4">
@@ -178,7 +178,7 @@
   document.getElementById("guardarBtn").addEventListener("click", function() {
     var numeroinmuebles = document.getElementById("txtTotalInmuebles").value;
     localStorage.setItem("Totalinmueblesnum", numeroinmuebles);
-    window.location.href = "registrarCasaoApartamento.html";
+    //window.location.href = "registrarCasaoApartamento.html"
 });
 </script>
 {%endblock %}
