@@ -84,6 +84,52 @@ def vistaRegistrarCasaoApartamento(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
+
+def vistaDetalleInmueble(request, proyecto_id):
+    try:
+       
+        proyect = Proyecto.objects.filter(id=proyecto_id).first()
+        inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
+        
+        if inmueble.inmCasa:
+                proyecto = {
+                    'id': proyect.id,
+                    'nombre': proyect.proNombre,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'parqueadero':proyect.proParqueadero,
+                    'areaConstruida':inmueble.inmCasa.casAreaConstruida,
+                    'foto':proyect.proFoto,
+                    'precio':inmueble.inmCasa.casPrecioVivienda,
+                    'numInmuebles':proyect.proTotalInmuebles,
+                    'numdivision':proyect.proNumeroManzanasTorres,
+                    'tipo':"Casas",
+                    'division':"Manzanas",
+                }
+        else:
+                proyecto = {
+                    'id':proyect.id,
+                    'nombre': proyect.proNombre,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'parqueadero':proyect.proParqueadero,
+                    'areaConstruida':inmueble.inmCasa.apaAreaConstruida,
+                    'foto':proyect.proFoto,
+                    'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                    'numInmuebles':proyect.proTotalInmuebles,
+                    'numdivision':proyect.proNumeroManzanasTorres,
+                    'tipo':"apartamento",
+                    'division':"Torres",
+                }
+        retorno = {'proyecto':proyecto}
+        return render(request, 'detalleInmueble.html', retorno)
+    except Error as error:
+        mensaje=f"{error}"
+        return render(request, 'detalleImueble.html', {'mensaje':mensaje})
+        
+        
+
 def registrarUsuario(request):
     try:
         cedula = request.POST["txtCedula"]
@@ -593,5 +639,25 @@ def proyectosCarrusel(request):
     except Exception as error:
         mensaje={'error':error}
         return JsonResponse(mensaje)
+    
+def proyectoDetalleCarrusel(request, id):
+    try:
+        fotosInmuebles = []
+        fotosInm = fotoInmuble.objects.filter(fotProyecto=id)
+        for fotoinm in fotosInm:
+            proyectoDetal ={
+                'imagen': str(fotoinm.fotInmuble)
+            }
+            fotosInmuebles.append(proyectoDetal)
+        retorno = {'imagenes':fotosInmuebles}
+        return JsonResponse(retorno)
+    except Exception as error:
+        mensaje={'error':error}
+        return  JsonResponse(mensaje)
+        
+
+
+    
+    
     
         

@@ -10,7 +10,7 @@ function readProyectos() {
                 const imageUrl = `/media/${proyecto.foto}`; // Construye la URL completa de la imagen
                 const projectHTML = `
                     <div class="col-sm d-flex justify-content-center">
-                        <a href="" style="text-decoration: none;">
+                        <a href="/vistaDetalleInmueble/${proyecto.id}" style="text-decoration: none;">
                             <div class="card my-3 cardProyecto" style="width: 20rem;">
                                 <div class="card-header text-center bg-danger text-white text-uppercase">
                                     Nuevo Proyecto
