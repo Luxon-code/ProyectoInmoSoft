@@ -19,7 +19,7 @@
           <span class="input-group-text bg-light">
             <i class="bi bi-person-vcard text-secondary"></i>
           </span>
-          <input class="form-control" type="number" placeholder="Cedula" name="txtCedula" required/>
+          <input class="form-control" type="number" placeholder="Cedula" value="{{cedula}}" name="txtCedula" required/>
           <div class="invalid-feedback">
             Ingrese el numero de cedula.
           </div>
@@ -28,7 +28,7 @@
           <span class="input-group-text bg-light">
             <i class="bi bi-person-fill text-secondary"></i>
           </span>
-          <input class="form-control" type="text" placeholder="Nombre(s)" name="txtNombres" id="txtNombres" required/>
+          <input class="form-control" type="text" placeholder="Nombre(s)" value="{{nombres}}" name="txtNombres" id="txtNombres" required/>
           <div class="invalid-feedback">
             Ingrese el Nombre(s).
           </div>
@@ -37,7 +37,7 @@
           <span class="input-group-text bg-light">
             <i class="bi bi-person-fill text-secondary"></i>
           </span>
-          <input class="form-control" type="text" placeholder="Apellido(s)" name="txtApellido" required/>
+          <input class="form-control" type="text" placeholder="Apellido(s)" value="{{apellidos}}" name="txtApellido" required/>
           <div class="invalid-feedback">
             Ingrese el Apellido(s).
           </div>
@@ -46,7 +46,7 @@
           <span class="input-group-text bg-light">
             <i class="bi bi-envelope-fill text-secondary"></i>
           </span>
-          <input class="form-control" type="email" placeholder="Correo Electrónico" name="txtCorreo" required/>
+          <input class="form-control" type="email" placeholder="Correo Electrónico" value="{{correo}}" name="txtCorreo" required/>
           <div class="invalid-feedback">
             Ingrese el Correo Electrónico.
           </div>
@@ -55,14 +55,14 @@
           <span class="input-group-text bg-light">
             <i class="bi  bi-phone text-secondary"></i>
           </span>
-          <input class="form-control" type="number" placeholder="Telefono" name="txtTelefono" required/>
+          <input class="form-control" type="number" placeholder="Telefono" value="{{telefono}}" name="txtTelefono" required/>
           <div class="invalid-feedback">
             Ingrese el numero de Telefono.
           </div>
         </div>
         <div class="input-group mb-3">
           <label class="input-group-text" for="inputGroupSelect01"><i class="bi bi-person-badge text-secondary"></i></label>
-          <select class="form-select" id="inputGroupSelect01" name="cbRol" required>
+          <select class="form-select" id="inputGroupSelect01" name="cbRol" id="cbRol" required>
             <option value="">Rol en el sistema</option>
             {% for rol in roles %}
               <option value="{{rol.id}}">{{rol.name}}</option>

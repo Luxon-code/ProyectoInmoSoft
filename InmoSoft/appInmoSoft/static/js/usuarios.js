@@ -30,6 +30,18 @@ function cambiarEstadoUsuario(id){
     .then(data =>{
         if(data.estado){
             location.reload()
+        }else{
+            Swal.fire({
+                title: 'Modificar usuario',
+                text: data.mensaje,
+                icon: 'warning',               
+                confirmButtonColor: '#3085d6',             
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                   location.reload()
+                }
+            })
         }
     })
 }

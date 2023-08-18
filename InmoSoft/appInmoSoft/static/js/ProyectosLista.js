@@ -16,14 +16,14 @@ function readProyectos() {
                                     Nuevo Proyecto
                                 </div>
                                 <div class="bg-danger">
-                                    <img src="${imageUrl}" class="card-img-top" alt="...">
+                                    <img src="${imageUrl}" class="card-img-top" style=height:11rem;>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">${proyecto.nombre}</h5>
-                                    <p class="card-text text-secondary">${proyecto.ubicacion}</p>
-                                    <p class="text-secondary">${proyecto.descripcion}</p>
+                                    <p class="card-text text-secondary">Ubicacion: ${proyecto.ubicacion}</p>
+                                    <p class="text-secondary">${limitarLongitud(proyecto.descripcion,100)}</p>
                                     <div class="border-bottom border-black"></div>
-                                    <p class="text-secondary fw-bold">$ ${proyecto.precio}</p>
+                                    <p class="text-secondary fw-bold">Desde: $ ${proyecto.precio}</p>
                                 </div>
                             </div>
                         </a>
@@ -46,9 +46,9 @@ function readCarrusel(){
             console.log(data);
             const carruselProyectos = document.getElementById('CarruselProyectos')
             let proyectosHmtl = ''
-            data.proyectos.forEach(proyecto => {
+            data.proyectos.forEach((proyecto, index) => {
                 const imageUrl = `/media/${proyecto.foto}`;
-                const proyectoHTML = `<div class="carousel-item active" data-bs-interval="10000">
+                const proyectoHTML = `<div class="carousel-item ${index==0?'active':''}" data-bs-interval="10000">
                 <img src="${imageUrl}" class="d-block" style="width: 100%; height: 25rem;" >
                 <div class="carousel-caption d-none d-md-block">
                   <h5>${proyecto.nombre}</h5>
@@ -61,5 +61,11 @@ function readCarrusel(){
         })
         .catch(error => console.error('Error fetching data:', error));
 }
+function limitarLongitud(cadena, longitudMaxima) {
+    if (cadena.length > longitudMaxima) {
+      return cadena.slice(0, longitudMaxima) + "...";
+    }
+    return cadena;
+  }
 readCarrusel();
 readProyectos();
