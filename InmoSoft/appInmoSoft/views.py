@@ -177,10 +177,17 @@ def registrarUsuario(request):
             return render(request, 'administrador/registrarUsuario.html',retorno)
     except Exception as error:
         transaction.rollback()
-        mensaje = error
-    retorno = {"mensaje": mensaje,"estado":False,'roles':Group.objects.all()}
+        if 'userCedula' in str(error):
+            mensaje = "Ya existe un usuario con esta cedula"
+        elif 'user.username' in str(error):
+            mensaje = "Ya existe un usuario con este correo electronico"
+        else:
+            mensaje = error
+    retorno = {"mensaje": mensaje,"estado":False,'roles':Group.objects.all(),
+                "cedula" : cedula,"nombres" : nombres,"apellidos" : apellidos,
+                "correo" : correo,"telefono" : telefono
+                }
     return render(request, "administrador/registrarUsuario.html",retorno)
-
 def enviarCorreo(asunto=None, mensaje=None, destinatario=None):
     remitente = settings.EMAIL_HOST_USER
     template = get_template('enviarCorreo.html')
@@ -208,7 +215,7 @@ def generarPassword():
     longitud = 10
 
     caracteres = string.ascii_lowercase + \
-        string.ascii_uppercase + string.digits + string.punctuation
+        string.ascii_uppercase + string.digits
     password = ''
 
     for i in range(longitud):
@@ -229,13 +236,17 @@ def cambiarEstadoUsuario(request,id):
     try:
         with transaction.atomic():
             user = User.objects.get(pk=id)
-            if user.is_active:
-                user.is_active = False
+            if user.is_superuser:
+                mensaje = "Este usuario no se le puede cambiar el estado, ya que es el superuser del sistema"
+                estado = False
             else:
-                user.is_active = True
-            user.save()
-            estado = True
-            mensaje = "Estado del usuario modificado"
+                if user.is_active:
+                    user.is_active = False
+                else:
+                    user.is_active = True
+                user.save()
+                estado = True
+                mensaje = "Estado del usuario modificado"
     except Error as error:
         transaction.rollback()
         mensaje = f"{error}"
@@ -326,7 +337,14 @@ def modificarDatosUserPerfil(request,id):
                     return render(request, 'asesor/perfilUsuario.html',retorno)
         except Error as error:
             transaction.rollback()
-            mensaje = f"{error}"
+            if 'userCedula' in str(error):
+                mensaje = "Ya existe un usuario con esta cedula"
+            elif 'user.username' in str(error):
+                mensaje = "Ya existe un usuario con este nombre de usuario"
+            elif 'user.email' in str(error):
+                mensaje = "Ya existe un usuario con ese correo electronico"
+            else:
+                mensaje = error
         retorno = {"mensaje":mensaje,"estado":False}
         if user.userTipo == "Administrador":
             return render(request, 'administrador/perfilUsuario.html',retorno)
@@ -585,7 +603,7 @@ def registrarProyecto(request):
                     mensaje="Proyecto Registrado Exitosamente" 
                     retorno = {"mensaje":mensaje,"estado":True,"titulo":"Registro de Proyecto"} 
                     return render(request, 'administrador/inicioAdministrador.html',retorno)
-        except Error as error:
+        except Exception as error:
             transaction.rollback()
             mensaje = f"{error}"
         retorno = {"mensaje":mensaje,"estado":False}
