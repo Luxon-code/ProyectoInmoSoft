@@ -114,7 +114,7 @@ def vistaDetalleInmueble(request, proyecto_id):
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'parqueadero':proyect.proParqueadero,
-                    'areaConstruida':inmueble.inmCasa.apaAreaConstruida,
+                    'areaConstruida':inmueble.inmApartamento.apaAreaConstruida,
                     'foto':proyect.proFoto,
                     'precio':inmueble.inmApartamento.apaPrecioVivienda,
                     'numInmuebles':proyect.proTotalInmuebles,
