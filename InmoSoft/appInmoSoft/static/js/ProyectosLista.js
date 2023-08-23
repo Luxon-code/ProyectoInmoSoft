@@ -45,7 +45,9 @@ function readCarrusel(){
         .then(data => {
             console.log(data);
             const carruselProyectos = document.getElementById('CarruselProyectos')
+            const indicadores = document.getElementById('indicadores')
             let proyectosHmtl = ''
+            let indicadoresHTML = ''
             data.proyectos.forEach((proyecto, index) => {
                 const imageUrl = `/media/${proyecto.foto}`;
                 const proyectoHTML = `<div class="carousel-item ${index==0?'active':''}" data-bs-interval="10000">
@@ -55,8 +57,11 @@ function readCarrusel(){
                   <p>${proyecto.ubicacion}</p>
                 </div>
               </div>`;
+                const indicadorHTML = `<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="${index}" class=${index==0 ?"active":""} ${index==0?'aria-current="true"':null} aria-label="Slide ${index+1}"></button>`
+                indicadoresHTML += indicadorHTML
                 proyectosHmtl += proyectoHTML;
             });
+            indicadores.innerHTML = indicadoresHTML;
             carruselProyectos.innerHTML = proyectosHmtl;
         })
         .catch(error => console.error('Error fetching data:', error));
