@@ -10,8 +10,7 @@ import base64
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.conf import settings
-import urllib
-import json
+from .decorators import soloAdmin,soloAsesor
 import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
@@ -22,6 +21,9 @@ from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
 from django.core.exceptions import ValidationError
 # Create your views here.
+
+#-------VISTAS----------
+@soloAdmin
 def vistaRegistrarUsuario(request):
     if request.user.is_authenticated: 
         roles = Group.objects.all()
@@ -30,7 +32,7 @@ def vistaRegistrarUsuario(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
-
+@soloAdmin
 def vistaModificarUsuario(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user}
@@ -41,9 +43,11 @@ def vistaModificarUsuario(request):
 
 def vistaPaginaPrincipal(request):
     return render(request,'paginaPrincipal.html')
+
 def vistaIniciarSesion(request):
     return render(request,'inicioSesion.html')
 
+@soloAdmin
 def vistaInicioAdministrador(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user}
@@ -51,7 +55,8 @@ def vistaInicioAdministrador(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
-
+    
+@soloAsesor
 def vistaInicioAsesor(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user}  
@@ -59,6 +64,7 @@ def vistaInicioAsesor(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
+
 def vistaPerfilUsuario(request):
     if request.user.is_authenticated:
         if request.user.userTipo == 'Administrador':
@@ -69,7 +75,8 @@ def vistaPerfilUsuario(request):
             return render(request,'asesor/perfilUsuario.html',retorno) 
     else:
         mensaje = "Debe iniciar sesión"
-        return render(request,'inicioSesion.html',{"mensaje":mensaje}) 
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+@soloAdmin
 def vistaRegistrarProyecto(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia}  
@@ -77,6 +84,8 @@ def vistaRegistrarProyecto(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
+
+@soloAdmin
 def vistaRegistrarCasaoApartamento(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user}  
@@ -128,7 +137,7 @@ def vistaDetalleInmueble(request, proyecto_id):
         mensaje=f"{error}"
         return render(request, 'detalleImueble.html', {'mensaje':mensaje})
         
-        
+#-------------------------------------FUNCIONES--------------------------#       
 
 def registrarUsuario(request):
     try:
