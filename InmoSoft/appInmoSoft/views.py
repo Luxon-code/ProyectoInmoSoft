@@ -301,9 +301,11 @@ def iniciarSesionAPI(request,usuario,contraseña):
     # registrar la variable de sesión
         auth.login(request, user)
         if user.groups.filter(name='Administrador').exists():
-           return JsonResponse({'mensaje':'Inicio de sesión exitoso como administrador','estado':True})
+           return JsonResponse({'mensaje':'Inicio de sesión exitoso como administrador','estado':True,'username':request.user.username,
+                                'correo':request.user.email,'nombre':request.user.first_name,'apellidos':request.user.last_name,
+                                'foto':str(request.user.userFoto)})
         else:
-            return JsonResponse({'mensaje':'Inicio de sesión exitoso como asesor','estado':True})
+            return JsonResponse({'mensaje':'Inicio de sesión exitoso como asesor','estado':True,'user':request.user})
     else:
         mensaje = "El Usuario o Contraseña Son Incorrectas"
         return JsonResponse({'mensaje':mensaje,'estado':False})
