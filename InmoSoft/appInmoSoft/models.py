@@ -64,7 +64,7 @@ class Casas(models.Model):
     casNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
     casAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
     casCategoria = models.CharField(max_length=15, choices=tipoCategoriaCasas, db_comment="Tipo de casa")
-    casPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
+    casPrecioVivienda = models.BigIntegerField(db_comment="Precio de vivienda") 
     casfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     casfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
@@ -75,14 +75,14 @@ class Apartamento(models.Model):
     apaNumeroHabitaciones = models.IntegerField(db_comment="Numero de habitaciones de un inmueble")
     apaAreaConstruida = models.CharField(max_length=20, db_comment="Area construida del inmueble")
     apaCategoria = models.CharField(max_length=15, choices=tipoCategoriaApartamento, db_comment="Tipo de apartamento")
-    apaPrecioVivienda = models.IntegerField(db_comment="Precio de vivienda") 
+    apaPrecioVivienda = models.BigIntegerField(db_comment="Precio de vivienda") 
     apafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     apafechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
 class Ubicacion(models.Model):
-    ubiDepartamento =  models.CharField(max_length=20, db_comment="ubicacion del departamento del proyecto")
-    ubiCuidad =  models.CharField(max_length=20, db_comment="ubicacion de la cuidad del prouceto")
-    ubiDireccion = models.CharField(max_length=20,db_comment="Direccion del proyecto")
+    ubiDepartamento =  models.CharField(max_length=255, db_comment="ubicacion del departamento del proyecto")
+    ubiCuidad =  models.CharField(max_length=255, db_comment="ubicacion de la cuidad del prouceto")
+    ubiDireccion = models.CharField(max_length=255,db_comment="Direccion del proyecto")
     ubifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     ubifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
