@@ -136,6 +136,15 @@ def vistaDetalleInmueble(request, proyecto_id):
     except Error as error:
         mensaje=f"{error}"
         return render(request, 'detalleImueble.html', {'mensaje':mensaje})
+    
+def vistaModificarProyecto(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia}  
+        return render(request,'administrador/modificarProyectos.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
         
 #-------------------------------------FUNCIONES--------------------------#       
 
@@ -635,6 +644,9 @@ def listarProyectos(request):
                     'descripcion':proyect.proDescripcion,
                     'foto':str(proyect.proFoto),
                     'precio':inmueble.inmCasa.casPrecioVivienda,
+                    'fecha':proyect.profechaHoraCreacion,
+                    'fiducia':proyect.proFiducia,
+                    'totalinmuebles':proyect.proTotalInmuebles,
                 }
             else:
                 proyecto = {
@@ -644,6 +656,9 @@ def listarProyectos(request):
                     'descripcion':proyect.proDescripcion,
                     'foto':str(proyect.proFoto),
                     'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                    'fecha':proyect.profechaHoraCreacion,
+                    'fiducia':proyect.proFiducia,
+                    'totalinmuebles':proyect.proTotalInmuebles,
                 }
             proyectos.append(proyecto)
         retorno = {'proyectos':proyectos}
@@ -651,6 +666,29 @@ def listarProyectos(request):
     except Error as error:
         mensaje=f"{error}"
         return JsonResponse(mensaje)
+    
+def buscarProyecto(request, id):
+    try:
+        proyect = Proyecto.objects.filter(id=id).first()
+
+        proyecto = {
+            'id': proyect.id,
+            'nombre': proyect.proNombre,
+            'fiducia':proyect.proFiducia,
+            'departamento': proyect.proUbicacion.ubiDepartamento,
+            'municipio': proyect.proUbicacion.ubiCuidad,
+            'descripcion': proyect.proDescripcion,
+            'parqueadero': proyect.proParqueadero,
+            'foto': str(proyect.proFoto),
+            'direccion': proyect.proUbicacion.ubiDireccion
+        }
+        
+        retorno = {'proyecto': proyecto}
+        return JsonResponse(retorno)  # Return JSON response instead of rendering HTML
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
+    
     
 def proyectosCarrusel(request):
     try:
@@ -683,7 +721,47 @@ def proyectoDetalleCarrusel(request, id):
     except Exception as error:
         mensaje={'error':error}
         return  JsonResponse(mensaje)
-        
+    
+    
+
+
+def modificarProyecto(request, id):
+    if request.method == 'POST':
+        try:
+                nombreProyecto = request.POST["txtNombreProyecto"]
+                fiducia = request.POST["cbFiducia"]
+                parqueadero = request.POST["cbParqueadero"]
+                foto = request.FILES.get("fileFoto", False)
+                direccion = request.POST["txtDireccion"]
+                descripcion = request.POST["txtDescripcion"]
+                departamento = request.POST["cbDepartamento"]
+                municipio = request.POST["cbMunicipio"]
+                with transaction.atomic():
+                    proyecto=Proyecto.objects.get(pk=id)
+                    proyecto.proNombre = nombreProyecto
+                    proyecto.proFiducia = fiducia
+                    proyecto.proParqueadero = parqueadero
+                    proyecto.proDescripcion = descripcion
+                    if(foto):
+                        os.remove('./media/'+str(proyecto.proFoto))
+                        proyecto.proFoto = foto
+                    proyecto.save()
+                    ubicacion=Ubicacion.objects.get(pk=proyecto.proUbicacion)
+                    ubicacion.ubiDireccion=direccion
+                    if(departamento and municipio):
+                        ubicacion.ubiDepartamento=departamento
+                        ubicacion.ubiCuidad=municipio
+                    ubicacion.save()
+                    mensaje = "Datos Modificados Correctamente"
+                    retorno = {"mensaje": mensaje,"estado":True}
+                    return render(request, 'administrador/modificarProyectos.html',retorno)
+    
+        except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}
+        return render(request, 'administrador/modificarProyectos.html',retorno)
+
 
 
     

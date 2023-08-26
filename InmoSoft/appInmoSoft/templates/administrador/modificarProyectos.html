@@ -1,0 +1,211 @@
+{% extends "index.html" %}
+{% block encabezado %}
+    {% include "administrador/encabezado.html" %}
+{%endblock %}
+{% block contenido %}
+<div class="row d-flex justify-content-center align-items-center">
+    <div class="bg-white p-5 rounded-5 text-secondary bg-opacity-75 table-responsive" style="width: 60rem">
+        <div class="d-flex justify-content-center">
+            <h3 class="text-center bg-bold">Proyectos Del Sistema</h3>
+        </div>
+        <div class="w-100">
+            <table class="mt-3 table table-bordered table-hover" id="tablaInmosoft">
+                <thead>
+                    <tr class="text-center bg-secondary text-white">
+                        <th>Nombre</th>
+                        <th>Fiducia</th>
+                        <th>Fecha de creacion</th>
+                        <th>Total de inmuebles</th>
+                        <th>Ubicacion</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody id="tblProyectos">
+                   
+                </tbody>
+            </table>
+            <div class="row p-3">
+                <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                </div>
+                <div class="col-4 text-center">
+                    <span class="fw-bold">ADMINISTRADOR</span>
+                </div>
+                <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- Add modal-xl class here -->
+        <div class="modal-content">
+            
+                <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
+                    <h2 class="text-center">Modificar proyecto</h2>
+                  <form action="" enctype="multipart/form-data" method="post" id="formularioDatos1"> 
+                    {% csrf_token %}
+                    <div class="row">     
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
+                                <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtFiducia">Fiducia:</label> <br>
+                                <select name="cbFiducia" id="cbFiducia" class="form-select"
+                                     required>
+                                    <option value="">Seleccione</option>
+                                    {% for fidu in fiducia %}
+                                    <option value="{{fidu.0}}">{{fidu.0}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="cbParqueadero">Parqueadero:</label> <br>
+                                <select name="cbParqueadero" id="cbParqueadero" class="form-select"
+                                     required>
+                                    <option value="">Selecione</option>
+                                    {% for parqueadero in parqueaderos %}
+                                        <option value="{{parqueadero.0}}">{{parqueadero.0}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
+                                <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto" accept="image/*" onchange="cambiarImagen(event)" >
+                            </div>
+                        </div>
+                        <div class="col-12 text-center m-2 imgPerfil2">
+                            <img src="../media/simboloPNG.png" class="" alt="img-proyecto" style="width:10rem;height: 10rem;">
+                        </div>
+                        <div class="mt-3 col-lg-12">
+                            <div>
+                                <label for="txtDescripcion">Descripcion del Proyecto:</label>
+                                <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="5"
+                                    class="form-control" required> </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <h3 class="text-center">Ubicacion</h3>
+                    </div>
+                    <div class="row">
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtDepartamento">Departamento:</label> <br>
+                                <input class="form-control" type="text" placeholder="" name="txtDepartamento" id="txtDepartamento" readonly/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtMunicipio">Municipio:</label> <br>
+                                <input class="form-control" type="text" placeholder="" name="txtMunicipio" id="txtMunicipio" readonly/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="cbDepartamento">Departamento:</label> <br>
+                                <select name="cbDepartamento" id="cbDepartamento" class="form-select"
+                                 onchange="actualizarMunicipios()" >
+                                    <option value="">Selecione</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="cbMunicipio">Municipio:</label> <br>
+                                <select name="cbMunicipio" id="cbMunicipio" class="form-select"
+                                    aria-label="Default select example" >
+                                    <option value="">Seleccione</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtDireccion">Direccion:</label>
+                                <input type="text" class="form-control" placeholder="Direccion" name="txtDireccion" id="txtDireccion" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-3">
+                        <div class="col-12 text-center">
+                            <a type="button" href="/vistaModificarProyecto/" class="btn btn-outline-danger">Cancelar</a>
+                            <button type="submit" class="btn btn-outline-secondary" id="modificarBtn" >Modificar</button>
+                        </div>
+                    </div>
+                  </form>
+                </div> 
+        </div>
+    </div>
+</div>
+
+{% load static%}
+<link rel="stylesheet" href="{% static 'css/body.css' %}">
+<script src="{% static '../static/js/ProyectosMod.js' %}"></script>
+<script src="{% static '../static/js/proyectos.js' %}"></script>
+<script>
+    cargarDepartamentos()
+    document.addEventListener('DOMContentLoaded', function() {
+      function previewImage(event) {
+          var input = event.target;
+          var imgPerfil = document.querySelector('.imgPerfil2 img');
+  
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+  
+              reader.onload = function(e) {
+                  imgPerfil.src = e.target.result;
+              }
+  
+              reader.readAsDataURL(input.files[0]);
+          } else {
+              // Imagen por defecto en caso de no seleccionar ninguna
+              imgPerfil.src = '../media/simboloPNG.png';
+          }
+      }
+  
+      var fileInput = document.getElementById('fileFoto');
+      fileInput.addEventListener('change', previewImage);
+  });
+
+
+  function abrirModal(id) {
+    const url = `/buscarProyecto/${id}/`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Llenar los campos del modal con los datos obtenidos
+            document.getElementById('txtNombreProyecto').value = data.proyecto.nombre;
+            document.getElementById('cbFiducia').value = data.proyecto.fiducia;
+            document.getElementById('cbParqueadero').value = data.proyecto.parqueadero;
+            document.getElementById('txtDepartamento').value = data.proyecto.departamento;
+            document.getElementById('txtMunicipio').value = data.proyecto.municipio;
+            document.getElementById('txtDireccion').value = data.proyecto.direccion;
+            document.getElementById('txtDescripcion').value = data.proyecto.descripcion;
+            // Establecer la imagen usando la URL obtenida
+            const imgElement = document.querySelector('.imgPerfil2 img');
+            imgElement.src = `/media/${data.proyecto.foto}`;
+
+            const formulario = document.getElementById('formularioDatos1');
+            formulario.action = `/modificarProyecto/${data.proyecto.id}/`;
+
+
+            // Mostrar el modal
+            $('#editarModal').modal('show');
+        });
+}
+</script>
+{%endblock %}
+{% block piePagina %}
+    {% include "piePagina.html" %}
+{%endblock %}

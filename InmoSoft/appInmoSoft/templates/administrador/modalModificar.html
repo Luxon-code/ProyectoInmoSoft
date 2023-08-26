@@ -1,0 +1,104 @@
+<div class="row d-flex justify-content-center align-items-center" style="margin-top:6rem; margin-bottom: 6rem;">
+    <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
+        <h2 class="text-center">Modificar proyecto</h2>
+      <form action="" enctype="multipart/form-data" method="post" id="formularioDatos1"> 
+        {% csrf_token %}
+        <div class="row">     
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
+                    <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required/>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="txtFiducia">Fiducia:</label> <br>
+                    <select name="cbFiducia" id="cbFiducia" class="form-select"
+                         required>
+                        <option value="">Seleccione</option>
+                        {% for fidu in fiducia %}
+                        <option value="{{fidu.0}}">{{fidu.0}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-3">
+                <div>
+                    <label for="cbObraentregable">Obra entregable:</label> <br>
+                    <select name="cbObraentregable" id="cbObraentregable" class="form-select"
+                         required>
+                        <option value="">Selecione</option>
+                        {% for obra in entregaObra %}
+                            <option value="{{obra.0}}">{{obra.0}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-6">
+                <div>
+                    <label for="cbParqueadero">Parqueadero:</label> <br>
+                    <select name="cbParqueadero" id="cbParqueadero" class="form-select"
+                         required>
+                        <option value="">Selecione</option>
+                        {% for parqueadero in parqueaderos %}
+                            <option value="{{parqueadero.0}}">{{parqueadero.0}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-6">
+                <div>
+                    <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
+                    <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto"  accept="image/*" required>
+                </div>
+            </div>
+            <div class="col-12 text-center m-2 imgPerfil2">
+                <img src="../media/simboloPNG.png" class="" alt="img-proyecto" style="width:10rem;height: 10rem;">
+            </div>
+            <div class="mt-3 col-lg-12">
+                <div>
+                    <label for="txtDescripcion">Descripcion del Proyecto:</label>
+                    <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="5"
+                        class="form-control" required> </textarea>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <h3 class="text-center">Ubicacion</h3>
+        </div>
+        <div class="row">
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="cbDepartamento">Departamento:</label> <br>
+                    <select name="cbDepartamento" id="cbDepartamento" class="form-select"
+                     onchange="actualizarMunicipios()" required>
+                        <option value="">Selecione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="cbMunicipio">Municipio:</label> <br>
+                    <select name="cbMunicipio" id="cbMunicipio" class="form-select"
+                        aria-label="Default select example" required>
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="txtDireccion">Direccion:</label>
+                    <input type="text" class="form-control" placeholder="Direccion" name="txtDireccion" id="txtDireccion" required>
+                </div>
+            </div>
+        </div>
+        <div class="row m-3">
+            <div class="col-12 text-center">
+                <a type="button" href="/inicioAdministrador/" class="btn btn-outline-danger">Cancelar</a>
+                <button type="submit" class="btn btn-outline-secondary" id="guardarBtn">Siguiente</button>
+            </div>
+        </div>
+      </form>
+    </div> 
+</div>
