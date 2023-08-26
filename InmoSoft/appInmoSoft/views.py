@@ -136,7 +136,7 @@ def vistaDetalleInmueble(request, proyecto_id):
     except Error as error:
         mensaje=f"{error}"
         return render(request, 'detalleImueble.html', {'mensaje':mensaje})
-    
+@soloAdmin
 def vistaModificarProyecto(request):
     if request.user.is_authenticated:
         retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia}  
@@ -746,7 +746,7 @@ def modificarProyecto(request, id):
                         os.remove('./media/'+str(proyecto.proFoto))
                         proyecto.proFoto = foto
                     proyecto.save()
-                    ubicacion=Ubicacion.objects.get(pk=proyecto.proUbicacion)
+                    ubicacion=Ubicacion.objects.get(pk=proyecto.proUbicacion.id)
                     ubicacion.ubiDireccion=direccion
                     if(departamento and municipio):
                         ubicacion.ubiDepartamento=departamento
@@ -755,7 +755,6 @@ def modificarProyecto(request, id):
                     mensaje = "Datos Modificados Correctamente"
                     retorno = {"mensaje": mensaje,"estado":True}
                     return render(request, 'administrador/modificarProyectos.html',retorno)
-    
         except Error as error:
             transaction.rollback()
             mensaje = f"{error}"
