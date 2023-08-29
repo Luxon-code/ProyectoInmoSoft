@@ -31,9 +31,9 @@
           <div class="dropdown text-end">
             <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="navbarDropdownMenuPerfil" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               {% if user.userFoto != ""%}
-                <img src="../media/{{user.userFoto}}" alt="mdo" width="32" height="32" class="rounded-circle">
+                <img src="/media/{{user.userFoto}}" alt="mdo" width="32" height="32" class="rounded-circle">
               {% else %}
-                <img src="../media/usuario-icono.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                <img src="/media/usuario-icono.png" alt="mdo" width="32" height="32" class="rounded-circle">
               {% endif %}
             </a>
             <ul class="dropdown-menu text-small" aria-labelledby="navbarDropdownMenuPerfil">

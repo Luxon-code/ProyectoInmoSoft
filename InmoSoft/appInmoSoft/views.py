@@ -96,8 +96,6 @@ def vistaRegistrarCasaoApartamento(request):
     
 
 def vistaDetalleInmueble(request, proyecto_id):
-    try:
-       
         proyect = Proyecto.objects.filter(id=proyecto_id).first()
         inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
         
@@ -131,11 +129,14 @@ def vistaDetalleInmueble(request, proyecto_id):
                     'tipo':"apartamento",
                     'division':"Torres",
                 }
-        retorno = {'proyecto':proyecto}
-        return render(request, 'detalleInmueble.html', retorno)
-    except Error as error:
-        mensaje=f"{error}"
-        return render(request, 'detalleImueble.html', {'mensaje':mensaje})
+        if request.user.is_authenticated:
+            retorno = {'proyecto':proyecto,"user":request.user}
+            return render(request, 'asesor/detalleInmueble.html', retorno)
+        else:
+            retorno = {'proyecto':proyecto}
+            return render(request, 'detalleInmueble.html', retorno)
+        
+    
 @soloAdmin
 def vistaModificarProyecto(request):
     if request.user.is_authenticated:

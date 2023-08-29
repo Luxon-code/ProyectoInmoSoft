@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block encabezado %}
-    {% include "encabezado.html" %}
+    {% include "asesor/encabezado.html" %}
 {%endblock %}
 {% block contenido %}
 <div class="container">
@@ -64,6 +64,11 @@
                     <div class="mt-3 col-lg-12">
                         <span>Descripción</span>
                         <p>{{proyecto.descripcion}}</p>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-lg-6 d-flex justify-content-end">
+                        <button class="btn btn-secondary">Apartar</button>
                     </div>
                 </div>
             </div>
