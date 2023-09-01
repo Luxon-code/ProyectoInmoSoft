@@ -1,12 +1,18 @@
+{% load static %}
+
 <div class="row">
     <header class="p-3 mb-3 border-bottom border-black  bg-body-secondary">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             
-            <i class="bi bi-houses" style="font-size: 1.5rem"></i>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="/" class="nav-link px-2 link-body-emphasis link-opacity-25-hover">INICIO</a></li>
-            </ul>
+            <a href="{% url 'inicio' %}" style="text-decoration: none;" class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 text-dark">
+              <div>
+                <img src="{% static 'img/Logo.png' %}" alt="">
+              </div>
+              <h2>
+                Inmosoft
+              </h2>
+            </a>
     
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
               <div class="d-flex align-items-center">

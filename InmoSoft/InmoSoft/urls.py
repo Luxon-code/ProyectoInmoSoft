@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.vistaPaginaPrincipal),
+    path('',views.vistaPaginaPrincipal, name="inicio"),
     path('vistaRegistrarUsuario/',views.vistaRegistrarUsuario),
     path("vistaModificarUsuario/",views.vistaModificarUsuario),
     path("vistaInicioSesion/",views.vistaIniciarSesion),
@@ -32,7 +32,7 @@ urlpatterns = [
     path('vistaDetalleInmueble/<int:proyecto_id>/', views.vistaDetalleInmueble),
     path('vistaModificarProyecto/',views.vistaModificarProyecto),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
-    path('inicioAsesor/',views.vistaInicioAsesor),
+    path('inicioAsesor/', views.vistaInicioAsesor,name="inicioAsesor"),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
     path('listarProyectos/',views.listarProyectos),

@@ -320,7 +320,9 @@ def iniciarSesionAPI(request,usuario,contraseña):
                                 'foto':str(request.user.userFoto)})
     else:
         mensaje = "El Usuario o Contraseña Son Incorrectas"
-        return JsonResponse({'mensaje':mensaje,'estado':False})
+        return JsonResponse({'mensaje':mensaje,'estado':False,'username':"",
+                                'correo':"",'nombre':"",'apellidos':"",
+                                'foto':""})
 
 def cerrarSesion(request):
     auth.logout(request)

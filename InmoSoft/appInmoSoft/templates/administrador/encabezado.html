@@ -1,13 +1,24 @@
+{% load static %}
+
 <div class="row">
     <!-- Encabezado -->
     <header class="p-3 mb-3 border-bottom border-black bg-body-secondary">
       <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <i class="bi bi-houses" style="font-size: 1.5rem"></i>
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start" >
+          <div class="d-flex align-items-center justify-content-center">
+            <div>
+              <img src="{% static 'img/Logo.png' %}" alt="">
+            </div>
+            <h2>
+              Inmosoft
+            </h2>
+          </div>
+          
+          <ul class="nav col-12 col-lg-auto  mb-2 justify-content-center mb-md-0  ms-lg-auto "">
+            <i class="bi bi-houses" style="font-size: 1.5rem"></i>
             <li><a href="/inicioAdministrador/" class="nav-link px-2 link-body-emphasis link-opacity-25-hover">INICIO</a></li>
             <li class="nav-item dropdown">
-              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover dropdown-toggle" href="#" id="navbarDropdownProyectos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link px-2 link-body-emphasis link-opacity-25-hover dropdown-toggle " href="#" id="navbarDropdownProyectos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 PROYECTOS
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdownProyectos">
@@ -34,14 +45,8 @@
               </ul>
             </li>
           </ul>
-          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-            <div class="d-flex align-items-center">
-              <input type="search" class="form-control" placeholder="Buscar proyectos" aria-label="Search">
-              <button class="btn btn-outline-secondary mx-1" type="submit"><i class="bi bi-search"></i></button>
-            </div>
-          </form>
           <div class="dropdown text-end">
-            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="navbarDropdownMenuPerfil" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="d-block link-dark text-decoration-none " id="navbarDropdownMenuPerfil" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               {% if user.userFoto != "" %}
                 <img src="../media/{{user.userFoto}}" alt="mdo" width="32" height="32" class="rounded-circle">
               {% else %}

@@ -35,9 +35,14 @@
     {% load static%}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static '../static/js/dataTable.js' %}"></script>
+    <script src="{% static '../static/js/loader.js' %}"></script>
     <title>InmoSoft</title>
 </head>
 <body>
+    <div id="loaderDiv" class="loader-container">
+        <div class="loader"></div>
+        <div class="loading-text">Cargando</div>
+    </div>
         <div class="container-fluid">
             {% block encabezado %}
             {% endblock %}
