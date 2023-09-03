@@ -15,12 +15,14 @@
             </a>
     
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-              <div class="d-flex align-items-center">
-                <input type="search" id="inputbuscar" class="form-control" placeholder="Buscar proyectos" aria-label="Search">
-                <div id="resultados"></div>
-                <button class="btn btn-outline-secondary mx-1" type="submit"><i class="bi bi-search"></i></button>
+              <div class="position-relative">
+                <div class="input-group">
+                  <input onkeyup="autoComplet()" type="search" id="inputbuscar" class="form-control" placeholder="Buscar proyectos" aria-label="Buscar">
+                  <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+                <div id="listProyectos" class="position-absolute w-100 z-1"></div>
               </div>
-            </form>
+            </form>            
     
             <div class="dropdown text-end">
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
