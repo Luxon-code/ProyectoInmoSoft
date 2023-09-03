@@ -33,7 +33,7 @@ urlpatterns = [
     path('vistaModificarProyecto/',views.vistaModificarProyecto),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/', views.vistaInicioAsesor),
-    path('vistaApartarInmueble/<int:id>/', views.vistaApartarInmueble),
+    path('vistaImmueblesDisponibles/<int:id>/', views.vistaImmueblesDisponibles),
     path('listarInmuebles/<int:id>/', views.listarInmuebles),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),

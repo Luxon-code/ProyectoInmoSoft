@@ -20,14 +20,14 @@ function readProyectos() {
                     <td>${proyecto.totalinmuebles}</td>
                     <td>${proyecto.ubicacion}</td>
                     <td>
-                        <button class="btn btn-info btn-sm" onclick="abrirModal(${proyecto.id})">
+                        <button class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${proyecto.id})">
                             <i class="bi bi-pencil"></i> Editar
                         </button>
                     </td>
                 </tr>`;
         });
         tblProyectos.innerHTML = table;
-        cargarDataTable($("#tablaInmosoft"), "Proyectos del sistema", 6);
+        cargarDataTable($("#tablaInmosoft"), "Proyectos del sistema", 5);
     });
 }
 

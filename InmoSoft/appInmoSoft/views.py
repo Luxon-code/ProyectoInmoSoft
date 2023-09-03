@@ -145,11 +145,12 @@ def vistaModificarProyecto(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
-    
-def vistaApartarInmueble(request, id):
+
+@soloAsesor   
+def vistaImmueblesDisponibles(request, id):
     if request.user.is_authenticated:
         retorno = {"user":request.user,'idProyecto':id}  
-        return render(request,'asesor/separarInmueble.html',retorno)
+        return render(request,'asesor/listaInmueblesDisponibles.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
@@ -646,7 +647,7 @@ def registrarProyecto(request):
 def listarProyectos(request):
     try:
         proyectos = []
-        proyects = Proyecto.objects.all()
+        proyects = Proyecto.objects.filter(proEstado=True).all()
         for proyect in proyects:
             inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
             if inmueble.inmCasa:
@@ -683,9 +684,9 @@ def listarProyectos(request):
 def listarInmuebles(request,id):
     try:
         inmuebles=[]
-        inmuebless= Inmueble.objects.filter(inmProyecto= id)
+        inmuebless= Inmueble.objects.filter(inmProyecto= id).all()
         for inmuebl in inmuebless:
-            if inmuebless.inmCasa:
+            if inmuebl.inmCasa:
                 inmueble={
                     'id': inmuebl.id,
                     'Precio':inmuebl.inmCasa.casPrecioVivienda,
@@ -695,8 +696,8 @@ def listarInmuebles(request,id):
             else:
                 inmueble={
                     'id': inmuebl.id,
-                    'Precio':inmuebl.inmCasa.casPrecioVivienda,
-                    'tipo':inmuebl.inmCasa.casCategoria,
+                    'Precio':inmuebl.inmApartamento.apaPrecioVivienda,
+                    'tipo':inmuebl.inmApartamento.apaCategoria,
                     'disponibilidad':inmuebl.inmEstado,
                 }
             inmuebles.append(inmueble)
@@ -735,7 +736,7 @@ def buscarProyecto(request, id):
 def proyectosCarrusel(request):
     try:
         proyectos = []
-        proyects = Proyecto.objects.order_by('-profechaHoraCreacion')[:5]
+        proyects = Proyecto.objects.filter(proEstado=True).order_by('-profechaHoraCreacion')[:5]
         for proyect in proyects:
             proyecto = {
                 'nombre':proyect.proNombre,

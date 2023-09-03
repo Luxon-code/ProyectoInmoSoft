@@ -92,6 +92,7 @@ class Proyecto(models.Model):
     proFiducia = models.CharField(max_length=25,choices=fiducia,db_comment="Fiducia que va a contriduir en el proyecto")
     proFoto = models.FileField(upload_to=f"fotosPro/", null=True, blank=True,db_comment="Foto del Proyecto")
     proNumeroManzanasTorres =  models.IntegerField(db_comment="Numero de manzanas o torres")
+    proEstado = models.BooleanField(default=True,db_comment="Estado")
     proNumeroInmuebles = models.IntegerField(db_comment="Numero de inmueble por manzanas o torres")
     proNumeroDePisos = models.IntegerField(db_comment="Numero de pisos")
     proTotalInmuebles = models.IntegerField(db_comment="Total de inmuebles en todo el proyecto")
