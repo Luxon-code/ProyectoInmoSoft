@@ -10,7 +10,7 @@ function autoComplet(){
                 let lista = `<div class="list-group">`
                 const filtroPokemon = data.proyectos.filter(filtrar)
                 filtroPokemon.forEach(element => {
-                    lista += `<a href="/vistaDetalleInmueble/${element.id}" class="list-group-item list-group-item-action">${element.nombre} - ${element.ubicacion} <img src="/media/${element.foto}" alt="fotoProyecto" style="width:20px;height:20px;"/></a>`;
+                    lista += `<a href="/vistaDetalleProyecto/${element.id}" class="list-group-item list-group-item-action">${element.nombre} - ${element.ubicacion} <img src="/media/${element.foto}" alt="fotoProyecto" style="width:20px;height:20px;"/></a>`;
                 });
                 lista += `</div>`
                 document.getElementById("listProyectos").innerHTML = lista

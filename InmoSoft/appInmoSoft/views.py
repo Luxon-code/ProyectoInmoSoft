@@ -95,7 +95,7 @@ def vistaRegistrarCasaoApartamento(request):
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
     
 
-def vistaDetalleInmueble(request, proyecto_id):
+def vistaDetalleProyecto(request, proyecto_id):
         proyect = Proyecto.objects.filter(id=proyecto_id).first()
         inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
         
@@ -148,7 +148,7 @@ def vistaModificarProyecto(request):
     
 def vistaApartarInmueble(request, id):
     if request.user.is_authenticated:
-        retorno = {"user":request.user}  
+        retorno = {"user":request.user,'idProyecto':id}  
         return render(request,'asesor/separarInmueble.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"
