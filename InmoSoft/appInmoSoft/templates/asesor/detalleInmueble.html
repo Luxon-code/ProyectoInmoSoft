@@ -68,7 +68,7 @@
                 </div>
                 <div class="row d-flex justify-content-end">
                     <div class="col-lg-6 d-flex justify-content-end">
-                        <button class="btn btn-secondary">Apartar</button>
+                        <button id="btnApartar" class="btn btn-secondary" onclick="window.location.href='/vistaApartarInmueble/{{proyecto.id}}'">Apartar</button>
                     </div>
                 </div>
             </div>
@@ -82,6 +82,8 @@
 
 <script>
     readCarrusel({{proyecto.id}})
+
+    
 </script>
 {%endblock %}
 {% block piePagina %}

@@ -33,6 +33,8 @@ urlpatterns = [
     path('vistaModificarProyecto/',views.vistaModificarProyecto),
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/', views.vistaInicioAsesor,name="inicioAsesor"),
+    path('vistaApartarInmueble/<int:id>/', views.vistaApartarInmueble, name='vistaApartarinmueble'),
+    path('listarInmuebles/<int:id>/', views.listarInmuebles, name='listarInmuebles'),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
     path('listarProyectos/',views.listarProyectos),

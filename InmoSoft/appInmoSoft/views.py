@@ -146,6 +146,14 @@ def vistaModificarProyecto(request):
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
     
+def vistaApartarInmueble(request, id):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}  
+        return render(request,'asesor/separarInmueble.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
         
 #-------------------------------------FUNCIONES--------------------------#       
 
@@ -671,6 +679,35 @@ def listarProyectos(request):
     except Error as error:
         mensaje=f"{error}"
         return JsonResponse(mensaje)
+    
+def listarInmuebles(request,id):
+    try:
+        inmuebles=[]
+        inmuebless= Inmueble.objects.filter(inmProyecto= id)
+        for inmuebl in inmuebless:
+            if inmuebless.inmCasa:
+                inmueble={
+                    'id': inmuebl.id,
+                    'Precio':inmuebl.inmCasa.casPrecioVivienda,
+                    'tipo':inmuebl.inmCasa.casCategoria,
+                    'disponibilidad':inmuebl.inmEstado,
+                }
+            else:
+                inmueble={
+                    'id': inmuebl.id,
+                    'Precio':inmuebl.inmCasa.casPrecioVivienda,
+                    'tipo':inmuebl.inmCasa.casCategoria,
+                    'disponibilidad':inmuebl.inmEstado,
+                }
+            inmuebles.append(inmueble)
+        retorno ={'inmuebles':inmuebles}
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje=f"{error}"
+        return JsonResponse(mensaje)	
+            
+            
+        
     
 def buscarProyecto(request, id):
     try:
