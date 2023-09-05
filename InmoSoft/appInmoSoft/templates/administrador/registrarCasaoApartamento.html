@@ -32,6 +32,9 @@
             <input type="text" value="{{departamento}}" name="cbDepartamento" hidden>
             <input type="text" value="{{ciudad}}" name="cbMunicipio" hidden>
             <input type="text" value="{{direccion}}" name="txtDireccion" hidden>
+            <input type="text" value="{{cantidaParqueaderos}}" name="txtCantParqueadero" hidden>
+            <input type="text" value="{{costoSeparacion}}" name="txtCostSeparacion" hidden>
+            <input type="text" value="{{tipoProyecto}}" name="cbTipoProyecto" hidden>
             <div class="row">
                 <h2 class="text-center">Datos del inmueble</h2>
             </div>
@@ -63,38 +66,38 @@
             <div class="row">
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo A:</label>
-                        <input type="number" class="form-control" name="txtNumtipoA" id="txtNumtipoA" placeholder="Ingrese el número de inmuebles tipo A" required>
+                        <label for="">Cantidad Tipo A:</label>
+                        <input type="number" class="form-control" oninput="habilitarInput('txtNumtipoA','txtPrecioAval')" name="txtNumtipoA" id="txtNumtipoA" placeholder="Ingrese el número de inmuebles tipo A">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio de la casa tipo A:</label>
-                        <input type="number" class="form-control" name="txtPrecioA" id="txtPrecioA" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioA" id="txtPrecioAval" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo B:</label>
-                        <input type="number" class="form-control" name="txtNumtipoB" id="txtNumtipoB" placeholder="Ingrese el número de inmuebles tipo B" required>
+                        <label for="">Cantidad Tipo B:</label>
+                        <input type="number" class="form-control" oninput="habilitarInput('txtNumtipoB','txtPrecioBval')" name="txtNumtipoB" id="txtNumtipoB" placeholder="Ingrese el número de inmuebles tipo B">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio de la casa tipo B:</label>
-                        <input type="number" class="form-control" name="txtPrecioB" id="txtPrecioB" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioB" id="txtPrecioBval" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo C:</label>
-                        <input type="number" class="form-control" name="txtNumtipoC" id="txtNumtipoC" placeholder="Ingrese el número de inmuebles tipo C" required>
+                        <label for="">Cantidad Tipo C:</label>
+                        <input type="number" oninput="habilitarInput('txtNumtipoC','txtPrecioCval')" class="form-control" name="txtNumtipoC" id="txtNumtipoC" placeholder="Ingrese el número de inmuebles tipo C">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio de la casa tipo C:</label>
-                        <input type="number" class="form-control" name="txtPrecioC" id="txtPrecioC" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioC" id="txtPrecioCval" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
@@ -119,6 +122,9 @@
             <input type="text" value="{{departamento}}" name="cbDepartamento" hidden>
             <input type="text" value="{{ciudad}}" name="cbMunicipio" hidden>
             <input type="text" value="{{direccion}}" name="txtDireccion" hidden>
+            <input type="text" value="{{cantidaParqueaderos}}" name="txtCantParqueadero" hidden>
+            <input type="text" value="{{costoSeparacion}}" name="txtCostSeparacion" hidden>
+            <input type="text" value="{{tipoProyecto}}" name="cbTipoProyecto" hidden>
             <div class="row">
                 <h2 class="text-center">Datos del inmueble</h2>
             </div>
@@ -149,50 +155,50 @@
             <div class="row">
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo A:</label>
-                        <input type="number" class="form-control" name="txtNumtipoA" id="txtNumtipoAApar" placeholder="Ingrese el número de inmuebles tipo A" required>
+                        <label for="">Cantidad Tipo A:</label>
+                        <input type="number" class="form-control" oninput="habilitarInput('txtNumtipoAApar','txtPrecioA')" name="txtNumtipoA" id="txtNumtipoAApar" placeholder="Ingrese el número de inmuebles tipo A">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio del apartamento tipo A:</label>
-                        <input type="number" class="form-control" name="txtPrecioA" id="txtPrecioA" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioA" id="txtPrecioA" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo B:</label>
-                        <input type="number" class="form-control" name="txtNumtipoB" id="txtNumtipoBApar" placeholder="Ingrese el número de inmuebles tipo B" required>
+                        <label for="">Cantidad Tipo B:</label>
+                        <input type="number" oninput="habilitarInput('txtNumtipoBApar','txtPrecioB')" class="form-control" name="txtNumtipoB" id="txtNumtipoBApar" placeholder="Ingrese el número de inmuebles tipo B">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio del apartamento tipo B:</label>
-                        <input type="number" class="form-control" name="txtPrecioB" id="txtPrecioB" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioB" id="txtPrecioB" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo C:</label>
-                        <input type="number" class="form-control" name="txtNumtipoC" id="txtNumtipoCApar" placeholder="Ingrese el número de inmuebles tipo C" required>
+                        <label for="">Cantidad Tipo C:</label>
+                        <input type="number" oninput="habilitarInput('txtNumtipoCApar','txtPrecioC')" class="form-control" name="txtNumtipoC" id="txtNumtipoCApar" placeholder="Ingrese el número de inmuebles tipo C">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio del apartamento tipo C:</label>
-                        <input type="number" class="form-control" name="txtPrecioC" id="txtPrecioC" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioC" id="txtPrecioC" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
-                        <label for="">Tipo penthouse:</label>
-                        <input type="number" class="form-control" name="txtNumTipoPenthouse" id="txtNumTipoPenthouse" placeholder="Ingrese el número de inmuebles tipo penthouse" required>
+                        <label for="">Cantidad Tipo penthouse:</label>
+                        <input type="number" class="form-control" name="txtNumTipoPenthouse" id="txtNumTipoPenthouse" placeholder="Ingrese el número de inmuebles tipo penthouse" oninput="habilitarInput('txtNumTipoPenthouse','txtPrecioPenthouse')">
                     </div>
                 </div>
                 <div class="mt-3 col-lg-6">
                     <div>
                         <label for="">Precio del apartamento tipo penthouse:</label>
-                        <input type="number" class="form-control" name="txtPrecioPenthouse" id="txtPrecioPenthouse" placeholder="Precio" required>
+                        <input type="number" class="form-control" name="txtPrecioPenthouse" id="txtPrecioPenthouse" placeholder="Precio" disabled>
                     </div>
                 </div>
                 <div class="col-12 m-3 d-flex justify-content-center">
@@ -312,6 +318,22 @@
             }
     
             return true;
+        }
+        function habilitarInput(IdInput1,IdInput2) {
+            // Obtén el valor del primer input
+            var valorInput1 = document.getElementById(IdInput1).value;
+
+            // Obtén el segundo input
+            var input2 = document.getElementById(IdInput2);
+
+            // Habilita el segundo input si el primero tiene contenido, de lo contrario, deshabilítalo
+            if (valorInput1.trim() !== "") {
+                input2.disabled = false;
+                input2.required = true;
+            } else {
+                input2.disabled = true;
+                input2.required = false;
+            }
         }
 </script>
 {% endblock %}

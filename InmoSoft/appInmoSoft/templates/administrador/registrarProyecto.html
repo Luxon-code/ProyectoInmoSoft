@@ -17,7 +17,19 @@
             </div>
             <div class="mt-3 col-lg-4">
                 <div>
-                    <label for="txtFiducia">Fiducia:</label> <br>
+                    <label for="cbTipoProyecto">Tipo de proyecto:</label> <br>
+                    <select name="cbTipoProyecto" id="cbTipoProyecto" class="form-select"
+                         required>
+                        <option value="">Seleccione</option>
+                        {% for tipo in tipoProyecto %}
+                        <option value="{{tipo.0}}">{{tipo.0}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="cbFiducia">Fiducia:</label> <br>
                     <select name="cbFiducia" id="cbFiducia" class="form-select"
                          required>
                         <option value="">Seleccione</option>
@@ -29,29 +41,29 @@
             </div>
             <div class="mt-3 col-lg-4">
                 <div>
-                    <label for="">Numero de Torres o manzanas:</label>
+                    <label for="txtNumeroTorresoManzanas">Numero de Torres o manzanas:</label>
                     <input type="number" class="form-control" placeholder="Numero de Torres o manzanas" name="txtNumeroTorresoManzanas" id="txtNumeroTorresoManzanas" required>
                 </div>
             </div>
-            <div class="mt-3 col-lg-3">
+            <div class="mt-3 col-lg-4">
                 <div>
-                    <label for="">Numero de apartamentos o casas:</label>
-                    <input type="number" class="form-control" placeholder="Numero de apartamentos o casas por torre" name="txtNumerosApartamentosoCasas" id="txtNumerosApartamentosoCasas" required>
+                    <label for="txtNumerosApartamentosoCasas">Numero de immuebles por Torre o manzana:</label>
+                    <input type="number" class="form-control" placeholder="Numero de immuebles por Torre o manzana" name="txtNumerosApartamentosoCasas" id="txtNumerosApartamentosoCasas" required>
                 </div>
             </div>
-            <div class="mt-3 col-lg-3">
+            <div class="mt-3 col-lg-4">
                 <div>
-                    <label for="">Total de inmuebles:</label>
+                    <label for="txtTotalInmuebles">Total de inmuebles:</label>
                     <input type="number" class="form-control" name="txtTotalInmuebles" id="txtTotalInmuebles" readonly>
                 </div>
             </div>
-            <div class="mt-3 col-lg-3">
+            <div class="mt-3 col-lg-4">
                 <div>
-                    <label for="">Numero de pisos por casa o torre:</label>
+                    <label for="txtPisos">Numero de pisos por casa o torre:</label>
                     <input type="number" class="form-control" name="txtPisos" id="txtPisos" placeholder="Numero de pisos por casa o torre">
                 </div>
             </div>
-            <div class="mt-3 col-lg-3">
+            <div class="mt-3 col-lg-4">
                 <div>
                     <label for="cbObraentregable">Obra entregable:</label> <br>
                     <select name="cbObraentregable" id="cbObraentregable" class="form-select"
@@ -61,6 +73,12 @@
                             <option value="{{obra.0}}">{{obra.0}}</option>
                         {% endfor %}
                     </select>
+                </div>
+            </div>
+            <div class="mt-3 col-lg-4">
+                <div>
+                    <label for="txtCostSeparacion">Costo de separacion:</label>
+                    <input type="number" class="form-control" name="txtCostSeparacion" id="txtCostSeparacion" placeholder="Costo de separacion">
                 </div>
             </div>
             <div class="mt-3 col-lg-6">
@@ -76,6 +94,12 @@
                 </div>
             </div>
             <div class="mt-3 col-lg-6">
+                <div>
+                    <label for="txtCantParqueadero">Cantidad de parqueaderos:</label>
+                    <input type="number" class="form-control" name="txtCantParqueadero" id="txtCantParqueadero" placeholder="Cantidad de parqueaderos">
+                </div>
+            </div>
+            <div class="mt-3 col-lg-12">
                 <div>
                     <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
                     <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto"  accept="image/*" required>

@@ -31,7 +31,9 @@ estadoCivil=[
 fiducia=[
     ('Bancolombia','Bancolombia'),('BBVA','BBVA'),('Banco de Bogota','Banco de Bogota'),('Banco Caja Social','Banco Caja Social'),('Grupo Bancolombia','Grupo Bancolombia'),('Davivienda','Davivienda'),('Banco de Occidente','Banco de Occidente')
 ]
-
+tipoDeProyecto = [
+    ('VIS', 'VIS'),('VIP','VIP'),('NO VIS','NO VIS')
+]
 class User(AbstractUser):
     userCedula = models.CharField(
         max_length=20,unique=True,
@@ -89,14 +91,17 @@ class Ubicacion(models.Model):
 class Proyecto(models.Model):
     proNombre = models.CharField(max_length=25, db_comment="Nombre del proyecto")
     proDescripcion = models.TextField(max_length=255, db_comment="Descripcion del proyecto")
+    proTipo = models.CharField(max_length=255,choices=tipoDeProyecto,db_comment="Tipo de proyecto",default='VIS')
     proFiducia = models.CharField(max_length=25,choices=fiducia,db_comment="Fiducia que va a contriduir en el proyecto")
     proFoto = models.FileField(upload_to=f"fotosPro/", null=True, blank=True,db_comment="Foto del Proyecto")
     proNumeroManzanasTorres =  models.IntegerField(db_comment="Numero de manzanas o torres")
+    proCostoSeparacion = models.BigIntegerField(db_comment="Costo de separacion del inmuble")
     proEstado = models.BooleanField(default=True,db_comment="Estado")
     proNumeroInmuebles = models.IntegerField(db_comment="Numero de inmueble por manzanas o torres")
     proNumeroDePisos = models.IntegerField(db_comment="Numero de pisos")
     proTotalInmuebles = models.IntegerField(db_comment="Total de inmuebles en todo el proyecto")
     proParqueadero = models.CharField(max_length=25,choices=tipoDeParqueadero ,db_comment="Tipo de parqueadero que tiene el proyecto")
+    proCantidadParqueadero = models.BigIntegerField(db_comment='Cantidad de parqueaderos que tendra el proyecto')
     profechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     profechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     proUbicacion = models.ForeignKey(Ubicacion,on_delete=models.PROTECT,db_comment="Ubicacion del proyecto")
