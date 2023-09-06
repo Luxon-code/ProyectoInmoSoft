@@ -605,28 +605,28 @@ def registrarProyecto(request):
                                         proCantidadParqueadero=cantidadParqueaderos)
                     proyecto.save()
                     #creamos 3 objetos apartamento segun su tipo
-                    if precioTipoA!="":
+                    if precioTipoA:
                         apartametoA = Apartamento(
                                             apaNumeroHabitaciones=numeroHabitaciones,
                                             apaAreaConstruida=areaConstruida,
                                             apaCategoria="Tipo A",
                                             apaPrecioVivienda=precioTipoA)
                         apartametoA.save()
-                    if precioTipoB!="":
+                    if precioTipoB:
                         apartamentoB = Apartamento(
                                             apaNumeroHabitaciones=numeroHabitaciones,
                                             apaAreaConstruida=areaConstruida,
                                             apaCategoria="Tipo B",
                                             apaPrecioVivienda=precioTipoB)
                         apartamentoB.save()
-                    if precioTipoC!="":
+                    if precioTipoC:
                         apartamentoC = Apartamento(
                                             apaNumeroHabitaciones=numeroHabitaciones,
                                             apaAreaConstruida=areaConstruida,
                                             apaCategoria="Tipo C",
                                             apaPrecioVivienda=precioTipoC)
                         apartamentoC.save()
-                    if precioTipoPenthouse!="":
+                    if precioTipoPenthouse:
                         apartamentoPenthouse = Apartamento(
                             apaNumeroHabitaciones=numeroHabitaciones,
                             apaAreaConstruida=areaConstruida,
@@ -635,28 +635,28 @@ def registrarProyecto(request):
                         )
                         apartamentoPenthouse.save()
                     #creamos los inmubles segun el numero de su tipo
-                    if numeroInmubleTipoA!="":
+                    if numeroInmubleTipoA:
                         for i in range(int(numeroInmubleTipoA)):
                             inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                                 inmEstado="Disponible",
                                                 inmApartamento=apartametoA,
                                                 inmProyecto=proyecto)
                             inmueble.save()
-                    if numeroInmubleTipoB!="":
+                    if numeroInmubleTipoB:
                         for i in range(int(numeroInmubleTipoB)):
                             inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                                 inmEstado="Disponible",
                                                 inmApartamento=apartamentoB,
                                                 inmProyecto=proyecto)
                             inmueble.save()
-                    if numeroInmubleTipoC!="":
+                    if numeroInmubleTipoC:
                         for i in range(int(numeroInmubleTipoC)):
                             inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                                 inmEstado="Disponible",
                                                 inmApartamento=apartamentoC,
                                                 inmProyecto=proyecto)
                             inmueble.save()
-                    if numeroInmueblePenthouse!="":
+                    if numeroInmueblePenthouse:
                         for i in range(int(numeroInmueblePenthouse)):
                             inmueble = Inmueble(inmEntregaDeObra=obraEntregable,
                                                 inmEstado="Disponible",
