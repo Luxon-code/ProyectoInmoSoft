@@ -104,6 +104,7 @@ def vistaDetalleProyecto(request, proyecto_id):
                 proyecto = {
                     'id': proyect.id,
                     'nombre': proyect.proNombre,
+                    'costoSeparacion':proyect.proCostoSeparacion,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'parqueadero':proyect.proParqueadero,
@@ -112,13 +113,14 @@ def vistaDetalleProyecto(request, proyecto_id):
                     'precio':inmueble.inmCasa.casPrecioVivienda,
                     'numInmuebles':proyect.proTotalInmuebles,
                     'numdivision':proyect.proNumeroManzanasTorres,
-                    'tipo':"Casas",
+                    'tipo':proyect.proTipo,
                     'division':"Manzanas",
                 }
         else:
                 proyecto = {
                     'id':proyect.id,
                     'nombre': proyect.proNombre,
+                    'costoSeparacion':proyect.proCostoSeparacion,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'parqueadero':proyect.proParqueadero,
@@ -127,7 +129,7 @@ def vistaDetalleProyecto(request, proyecto_id):
                     'precio':inmueble.inmApartamento.apaPrecioVivienda,
                     'numInmuebles':proyect.proTotalInmuebles,
                     'numdivision':proyect.proNumeroManzanasTorres,
-                    'tipo':"apartamento",
+                    'tipo':proyect.proTipo,
                     'division':"Torres",
                 }
         if request.user.is_authenticated:
@@ -141,7 +143,8 @@ def vistaDetalleProyecto(request, proyecto_id):
 @soloAdmin
 def vistaModificarProyecto(request):
     if request.user.is_authenticated:
-        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia}  
+        retorno = {"user":request.user,'entregaObra':entregaDeObra,'parqueaderos':tipoDeParqueadero, 'fiducia':fiducia,
+                   'tipos':tipoDeProyecto}  
         return render(request,'administrador/modificarProyectos.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"
@@ -684,6 +687,7 @@ def listarProyectos(request):
                 proyecto = {
                     'id': proyect.id,
                     'nombre': proyect.proNombre,
+                    'tipo':proyect.proTipo,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'foto':str(proyect.proFoto),
@@ -695,6 +699,7 @@ def listarProyectos(request):
             else:
                 proyecto = {
                     'id':proyect.id,
+                    'tipo':proyect.proTipo,
                     'nombre': proyect.proNombre,
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
@@ -714,7 +719,7 @@ def listarProyectos(request):
 def listarInmuebles(request,id):
     try:
         inmuebles=[]
-        inmuebless= Inmueble.objects.filter(inmProyecto= id).all()
+        inmuebless= Inmueble.objects.filter(inmProyecto= id,inmEstado='Disponible')
         for inmuebl in inmuebless:
             if inmuebl.inmCasa:
                 inmueble={
@@ -748,6 +753,9 @@ def buscarProyecto(request, id):
             'id': proyect.id,
             'nombre': proyect.proNombre,
             'fiducia':proyect.proFiducia,
+            'tipo':proyect.proTipo,
+            'costoSeparacion':proyect.proCostoSeparacion,
+            'cantParquedero':proyect.proCantidadParqueadero,
             'departamento': proyect.proUbicacion.ubiDepartamento,
             'municipio': proyect.proUbicacion.ubiCuidad,
             'descripcion': proyect.proDescripcion,
@@ -803,6 +811,9 @@ def modificarProyecto(request, id):
         try:
                 nombreProyecto = request.POST["txtNombreProyecto"]
                 fiducia = request.POST["cbFiducia"]
+                tipo = request.POST["cbTipo"]
+                costoSeparacion = request.POST["txtCostoSeparacion"]
+                cantParquederos = request.POST["txtCantParqueadero"]
                 parqueadero = request.POST["cbParqueadero"]
                 foto = request.FILES.get("fileFoto", False)
                 direccion = request.POST["txtDireccion"]
@@ -815,6 +826,9 @@ def modificarProyecto(request, id):
                     proyecto.proFiducia = fiducia
                     proyecto.proParqueadero = parqueadero
                     proyecto.proDescripcion = descripcion
+                    proyecto.proTipo = tipo
+                    proyecto.proCostoSeparacion = costoSeparacion
+                    proyecto.proCantidadParqueadero = cantParquederos
                     if(foto):
                         os.remove('./media/'+str(proyecto.proFoto))
                         proyecto.proFoto = foto

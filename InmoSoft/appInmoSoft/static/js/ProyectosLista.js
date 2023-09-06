@@ -13,7 +13,7 @@ function readProyectos() {
                         <a href="/vistaDetalleProyecto/${proyecto.id}" style="text-decoration: none;">
                             <div class="card my-3 cardProyecto" style="width: 20rem;">
                                 <div class="card-header text-center bg-danger text-white text-uppercase">
-                                    Nuevo Proyecto
+                                    Nuevo Proyecto ${proyecto.tipo}
                                 </div>
                                 <div class="bg-danger">
                                     <img src="${imageUrl}" class="card-img-top" style=height:11rem;>

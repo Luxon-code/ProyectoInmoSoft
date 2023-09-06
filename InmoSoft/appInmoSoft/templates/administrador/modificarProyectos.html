@@ -81,6 +81,30 @@
                         </div>
                         <div class="mt-3 col-lg-6">
                             <div>
+                                <label for="cbTipo">Tipo de proyecto:</label> <br>
+                                <select name="cbTipo" id="cbTipo" class="form-select"
+                                     required>
+                                    <option value="">Selecione</option>
+                                    {% for tipo in tipos %}
+                                        <option value="{{tipo.0}}">{{tipo.0}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="txtCostoSeparacion">Costo de separacion:</label> <br>
+                                <input class="form-control" type="number" placeholder="Nombre de proyecto" name="txtCostoSeparacion" id="txtCostoSeparacion" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="txtCantParqueadero">Cantidad de parqueaderos:</label> <br>
+                                <input class="form-control" type="number" placeholder="Nombre de proyecto" name="txtCantParqueadero" id="txtCantParqueadero" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-12">
+                            <div>
                                 <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
                                 <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto" accept="image/*" onchange="cambiarImagen(event)" >
                             </div>
@@ -194,6 +218,9 @@
             document.getElementById('txtMunicipio').value = data.proyecto.municipio;
             document.getElementById('txtDireccion').value = data.proyecto.direccion;
             document.getElementById('txtDescripcion').value = data.proyecto.descripcion;
+            document.getElementById('txtCostoSeparacion').value = data.proyecto.costoSeparacion;
+            document.getElementById('txtCantParqueadero').value = data.proyecto.cantParquedero;
+            document.getElementById('cbTipo').value = data.proyecto.tipo;
             // Establecer la imagen usando la URL obtenida
             const imgElement = document.querySelector('.imgPerfil2 img');
             imgElement.src = `/media/${data.proyecto.foto}`;
