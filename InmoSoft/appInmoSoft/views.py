@@ -32,6 +32,7 @@ def vistaRegistrarUsuario(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
 @soloAdmin
 def vistaModificarUsuario(request):
     if request.user.is_authenticated:
@@ -76,6 +77,7 @@ def vistaPerfilUsuario(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
 @soloAdmin
 def vistaRegistrarProyecto(request):
     if request.user.is_authenticated:
@@ -95,7 +97,6 @@ def vistaRegistrarCasaoApartamento(request):
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
     
-
 def vistaDetalleProyecto(request, proyecto_id):
         proyect = Proyecto.objects.filter(id=proyecto_id).first()
         inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
@@ -138,8 +139,7 @@ def vistaDetalleProyecto(request, proyecto_id):
         else:
             retorno = {'proyecto':proyecto}
             return render(request, 'detalleInmueble.html', retorno)
-        
-    
+ 
 @soloAdmin
 def vistaModificarProyecto(request):
     if request.user.is_authenticated:
@@ -163,6 +163,15 @@ def vistaImmueblesDisponibles(request, id):
 #-------------------------------------FUNCIONES--------------------------#       
 
 def registrarUsuario(request):
+    """
+    Registra un nuevo usuario en el sistema.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP que contiene la información del usuario a registrar.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que generalmente redirige al usuario a una página de registro o muestra un mensaje de éxito o error.
+    """
     try:
         cedula = request.POST["txtCedula"]
         nombres = request.POST["txtNombres"]
@@ -255,6 +264,16 @@ def generarPassword():
     return password
 
 def getUsuarios(request):
+    """
+    Obtiene la lista de usuarios registrados en el sistema y devuelve una respuesta JSON con la información.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene la lista de usuarios en formato de diccionario.
+                      En caso de error, la respuesta contendrá un mensaje de error.
+    """
     try:
         retorno = {
             "usuarios":list(User.objects.all().values()),
@@ -264,6 +283,16 @@ def getUsuarios(request):
         mensaje=f"{error}"
         
 def cambiarEstadoUsuario(request,id):
+    """
+    Cambia el estado (activo/inactivo) de un usuario en el sistema y devuelve una respuesta JSON con el resultado.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del usuario cuyo estado se desea cambiar.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que indica si el cambio de estado fue exitoso y contiene un mensaje correspondiente.
+    """
     estado = False
     try:
         with transaction.atomic():
@@ -290,6 +319,15 @@ def cambiarEstadoUsuario(request,id):
     return JsonResponse(retorno)
 
 def iniciarSesion(request):
+    """
+    Maneja el inicio de sesión de usuarios en el sistema.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al usuario a la página de inicio correspondiente o muestra un mensaje de error.
+    """
     if request.method == 'POST':
         recaptcha_token = request.POST.get('recaptchaToken')
         response = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
@@ -315,7 +353,19 @@ def iniciarSesion(request):
         else:
             mensaje = "validar recapcha"
             return render(request, "inicioSesion.html", {"mensaje": mensaje})
+        
 def iniciarSesionAPI(request,usuario,contraseña):
+    """
+    Maneja el inicio de sesión de usuarios a través de una API.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        usuario (str): El nombre de usuario proporcionado para iniciar sesión.
+        contraseña (str): La contraseña proporcionada para iniciar sesión.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que indica si el inicio de sesión fue exitoso y contiene información del usuario o un mensaje de error.
+    """
     username = usuario
     password = contraseña
     user = authenticate(username=username, password=password)
@@ -338,11 +388,30 @@ def iniciarSesionAPI(request,usuario,contraseña):
                                 'foto':""})
 
 def cerrarSesion(request):
+    """
+    Cierra la sesión de usuario en el sistema y redirige a la página de inicio de sesión.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al usuario a la página de inicio de sesión con un mensaje de confirmación.
+    """
     auth.logout(request)
     return render(request, "inicioSesion.html",
                   {"mensaje": "Ha cerrado la sesión"})
     
 def modificarDatosUserPerfil(request,id):
+    """
+    Modifica los datos de un usuario en su perfil y guarda los cambios en la base de datos.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del usuario cuyos datos se desean modificar.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al perfil del usuario con un mensaje de éxito o error.
+    """
     if request.method == "POST":
         try:
             cedula = request.POST["txtCedula"]
@@ -390,6 +459,16 @@ def modificarDatosUserPerfil(request,id):
             return render(request, 'asesor/perfilUsuario.html',retorno)
         
 def cambiarContraseñaUsuario(request,id):
+    """
+    Cambia la contraseña de un usuario y guarda los cambios en la base de datos.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del usuario cuya contraseña se desea cambiar.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al perfil del usuario con un mensaje de éxito o error.
+    """
     if request.method == 'POST':
         try:
             contraseñaActual = request.POST['txtContraseñaActual']
@@ -423,6 +502,15 @@ def cambiarContraseñaUsuario(request,id):
 
 datosForm1 = {}
 def datosFormulario1(request):
+    """
+    Recopila y almacena los datos del primer formulario de registro de proyecto en la sesión del usuario.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al usuario a la siguiente etapa del registro del proyecto.
+    """
     datosForm1 = {
         'nombreProyecto': request.POST.get('txtNombreProyecto'),
         'tipoProyecto': request.POST.get('cbTipoProyecto'),
@@ -448,6 +536,16 @@ def datosFormulario1(request):
     return render(request, 'administrador/registrarCasaoApartamento.html', datosForm1)
 
 def registrarProyecto(request):
+    """
+    Registra un proyecto en la base de datos, incluyendo sus detalles y tipos de inmuebles asociados.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que redirige al usuario a la página de inicio del administrador con un mensaje de éxito o error.
+    """
+    
     if request.method == 'POST':
         try:
             tipoProyecto = request.POST.get('tipoProyecto')
@@ -676,8 +774,17 @@ def registrarProyecto(request):
         retorno = {"mensaje":mensaje,"estado":False}
         return render(request, 'administrador/registrarCasaoApartamento.html',retorno)
     
-
 def listarProyectos(request):
+    """
+    Recupera y lista los proyectos disponibles junto con sus detalles, incluyendo su tipo, ubicación, descripción, foto, precio,
+    fecha de creación, fiducia y total de inmuebles disponibles.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene una lista de proyectos y sus detalles.
+    """
     try:
         proyectos = []
         proyects = Proyecto.objects.filter(proEstado=True).all()
@@ -717,6 +824,16 @@ def listarProyectos(request):
         return JsonResponse(mensaje)
     
 def listarInmuebles(request,id):
+    """
+    Lista los inmuebles disponibles de un proyecto específico junto con sus detalles, incluyendo el precio, tipo y disponibilidad.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del proyecto del cual se listarán los inmuebles.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene una lista de inmuebles y sus detalles.
+    """
     try:
         inmuebles=[]
         inmuebless= Inmueble.objects.filter(inmProyecto= id,inmEstado='Disponible')
@@ -741,11 +858,18 @@ def listarInmuebles(request,id):
     except Error as error:
         mensaje=f"{error}"
         return JsonResponse(mensaje)	
-            
-            
-        
-    
+               
 def buscarProyecto(request, id):
+    """
+    Busca y devuelve los detalles de un proyecto específico por su ID.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del proyecto que se desea buscar.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene los detalles del proyecto encontrado.
+    """
     try:
         proyect = Proyecto.objects.filter(id=id).first()
 
@@ -769,9 +893,17 @@ def buscarProyecto(request, id):
     except Error as error:
         mensaje = f"{error}"
         return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
-    
-    
+     
 def proyectosCarrusel(request):
+    """
+    Obtiene los últimos 5 proyectos activos y devuelve sus detalles para mostrar en un carrusel.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene los detalles de los proyectos para el carrusel.
+    """
     try:
         proyectos = []
         proyects = Proyecto.objects.filter(proEstado=True).order_by('-profechaHoraCreacion')[:5]
@@ -789,6 +921,16 @@ def proyectosCarrusel(request):
         return JsonResponse(mensaje)
     
 def proyectoDetalleCarrusel(request, id):
+    """
+    Obtiene las fotos de los inmuebles asociados a un proyecto específico para mostrar en un carrusel.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El identificador único del proyecto del cual se obtendrán las fotos.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene las fotos de los inmuebles asociados al proyecto.
+    """
     try:
         fotosInmuebles = []
         fotosInm = fotoInmuble.objects.filter(fotProyecto=id)
@@ -803,10 +945,17 @@ def proyectoDetalleCarrusel(request, id):
         mensaje={'error':error}
         return  JsonResponse(mensaje)
     
-    
-
-
 def modificarProyecto(request, id):
+    """
+    Modifica los datos de un proyecto existente en la base de datos.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El identificador único del proyecto que se desea modificar.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que indica si la modificación fue exitosa o si se produjo un error.
+    """
     if request.method == 'POST':
         try:
                 nombreProyecto = request.POST["txtNombreProyecto"]
