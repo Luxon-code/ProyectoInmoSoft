@@ -202,9 +202,9 @@ def registrarUsuario(request):
                 <br><b>Username: </b> {user.username}\
                 <br><b>Password: </b> {passwordGenerado}\
                 <br><br>Lo invitamos a ingresar a nuestro sistema en la url:\
-                http://Inmosoft.com'
+                https://inmosoft.pythonanywhere.com'
             thread = threading.Thread(
-                target=enviarCorreo, args=(asunto, mensajeCorreo, user.email))
+                target=enviarCorreo, args=(asunto, mensajeCorreo, [user.email]))
             thread.start()
             return render(request, 'administrador/registrarUsuario.html',retorno)
     except Exception as error:
@@ -220,7 +220,8 @@ def registrarUsuario(request):
                 "correo" : correo,"telefono" : telefono
                 }
     return render(request, "administrador/registrarUsuario.html",retorno)
-def enviarCorreo(asunto=None, mensaje=None, destinatario=None):
+
+def enviarCorreo(asunto=None, mensaje=None, destinatario=None,archivo=None):
     remitente = settings.EMAIL_HOST_USER
     template = get_template('enviarCorreo.html')
     contenido = template.render({
@@ -231,8 +232,10 @@ def enviarCorreo(asunto=None, mensaje=None, destinatario=None):
     })
     try:
         correo = EmailMultiAlternatives(
-            asunto, mensaje, remitente, [destinatario])
+            asunto, mensaje, remitente, destinatario)
         correo.attach_alternative(contenido, 'text/html')
+        if archivo != None:
+            correo.attach_file(archivo)
         correo.send(fail_silently=True)
     except SMTPException as error:
         print(error)
@@ -805,7 +808,6 @@ def proyectoDetalleCarrusel(request, id):
     
     
 
-
 def modificarProyecto(request, id):
     if request.method == 'POST':
         try:
@@ -846,11 +848,4 @@ def modificarProyecto(request, id):
             transaction.rollback()
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
-        return render(request, 'administrador/modificarProyectos.html',retorno)
-
-
-
-    
-    
-    
-        
+        return render(request, 'administrador/modificarProyectos.html',retorno)    
