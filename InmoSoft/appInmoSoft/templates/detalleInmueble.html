@@ -68,7 +68,7 @@
                 </div>
                 <div class="row d-flex justify-content-end">
                     <div class="col-lg-12 d-flex justify-content-end align-items-center">
-                        <span class="mx-2 fw-bold">¿Estas interesado en este proyecto?</span>
+                        <span class="mx-1"><b>¿Estas interesado en este proyecto?</b> Envianos tus datos para contactarte</span>
                         <a  id="btnCotizar" data-bs-toggle="modal" data-bs-target="#CotizarModal" class="btn btn-outline-secondary"><i class="bi bi-envelope"></i> Cotizar</a>
                     </div>
                 </div>
@@ -78,133 +78,57 @@
 </div>
 
 <div class="modal fade" id="CotizarModal" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="CotizarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- Add modal-xl class here -->
+    <div class="modal-dialog modal-dialog-centered"> <!-- Add modal-xl class here -->
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center bg-body-secondary bg-opacity-75">
-                <h2>Cotizar Proyecto</h2>
+                <h3>Cotizar Proyecto</h3>
             </div>
                 <div class="modal-body">
-                  <form action="" enctype="multipart/form-data" method="post" id="formularioDatos1"> 
+                    <div class="row">
+                        <h4 class="text-center">Ingrese sus datos</h4>
+                    </div>
+                  <form action="/cotizarProyecto/{{proyecto.id}}/" enctype="multipart/form-data" method="post" id="formularioDatos1"> 
                     {% csrf_token %}
-                    <div class="row">     
-                        <div class="mt-3 col-lg-6">
+                    <div class="row">
+                        <div class="mt-3 col-lg-12">
                             <div>
-                                <label for="txtNombreProyecto">Nombre del proyecto:</label> <br>
-                                <input class="form-control" type="text" placeholder="Nombre de proyecto" name="txtNombreProyecto" id="txtNombreProyecto" required/>
+                                <label for="txtCedula">Cedula:</label> <br>
+                                <input class="form-control" type="number" placeholder="Numero de indentificacion" name="txtCedula" id="txtCedula" required/>
                             </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
+                        </div>   
+                        <div class="mt-3 col-lg-12">
                             <div>
-                                <label for="txtFiducia">Fiducia:</label> <br>
-                                <select name="cbFiducia" id="cbFiducia" class="form-select"
-                                     required>
-                                    <option value="">Seleccione</option>
-                                    {% for fidu in fiducia %}
-                                    <option value="{{fidu.0}}">{{fidu.0}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="cbParqueadero">Parqueadero:</label> <br>
-                                <select name="cbParqueadero" id="cbParqueadero" class="form-select"
-                                     required>
-                                    <option value="">Selecione</option>
-                                    {% for parqueadero in parqueaderos %}
-                                        <option value="{{parqueadero.0}}">{{parqueadero.0}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="cbTipo">Tipo de proyecto:</label> <br>
-                                <select name="cbTipo" id="cbTipo" class="form-select"
-                                     required>
-                                    <option value="">Selecione</option>
-                                    {% for tipo in tipos %}
-                                        <option value="{{tipo.0}}">{{tipo.0}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="txtCostoSeparacion">Costo de separacion:</label> <br>
-                                <input class="form-control" type="number" placeholder="Nombre de proyecto" name="txtCostoSeparacion" id="txtCostoSeparacion" required/>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="txtCantParqueadero">Cantidad de parqueaderos:</label> <br>
-                                <input class="form-control" type="number" placeholder="Nombre de proyecto" name="txtCantParqueadero" id="txtCantParqueadero" required/>
+                                <label for="txtNombre">Nombres:</label> <br>
+                                <input class="form-control" type="text" placeholder="Nombre(s)" name="txtNombre" id="txtNombre" required/>
                             </div>
                         </div>
                         <div class="mt-3 col-lg-12">
                             <div>
-                                <label for="fileFoto" class="fw-bold">Imagen del Proyecto: </label>
-                                <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto" accept="image/*" onchange="cambiarImagen(event)" >
+                                <label for="txtApellido">Apellidos:</label> <br>
+                                <input class="form-control" type="text" placeholder="Apellido(s)" name="txtApellido" id="txtApellido" required/>
                             </div>
-                        </div>
-                        <div class="col-12 text-center m-2 imgPerfil2">
-                            <img src="/media/simboloPNG.png" class="" alt="img-proyecto" style="width:10rem;height: 10rem;">
                         </div>
                         <div class="mt-3 col-lg-12">
                             <div>
-                                <label for="txtDescripcion">Descripcion del Proyecto:</label>
-                                <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="5"
-                                    class="form-control" required> </textarea>
+                                <label for="txtCelular">Numero de celular:</label> <br>
+                                <input class="form-control" type="number" placeholder="Numero de celular" name="txtCelular" id="txtCelular" required/>
                             </div>
+                        </div>
+                        <div class="mt-3 col-lg-12">
+                            <div>
+                                <label for="txtCorreo">Correo electronico:</label> <br>
+                                <input class="form-control" type="email" placeholder="Correo electronico" name="txtCorreo" id="txtCorreo" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-12">
+                            <p class="lead  fs-6 fst-italic fw-light">"Le solicitamos ciertos datos personales con el único propósito de procesar su solicitud y contactarnos con usted. Queremos asegurarle que sus datos serán tratados con la máxima confidencialidad y seguridad. Cumplimos con todas las leyes de privacidad de datos y hemos implementado medidas para proteger sus datos"</p>
                         </div>
                     </div>
                     <hr>
-                    <div class="row">
-                        <h3 class="text-center">Ubicacion</h3>
-                    </div>
-                    <div class="row">
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="txtDepartamento">Departamento Actual:</label> <br>
-                                <input class="form-control" type="text" placeholder="" name="txtDepartamento" id="txtDepartamento" readonly/>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="txtMunicipio">Municipio Actual:</label> <br>
-                                <input class="form-control" type="text" placeholder="" name="txtMunicipio" id="txtMunicipio" readonly/>
-                            </div>
-                        </div>
-                        <h5 class="text-center mt-2">Cambiar Ubicación:</h5>
-                        <div class="mt-3 col-lg-4">
-                            <div>
-                                <label for="cbDepartamento">Departamento:</label> <br>
-                                <select name="cbDepartamento" id="cbDepartamento" class="form-select"
-                                 onchange="actualizarMunicipios()" >
-                                    <option value="">Selecione</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-4">
-                            <div>
-                                <label for="cbMunicipio">Municipio:</label> <br>
-                                <select name="cbMunicipio" id="cbMunicipio" class="form-select"
-                                    aria-label="Default select example" >
-                                    <option value="">Seleccione</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-4">
-                            <div>
-                                <label for="txtDireccion">Direccion:</label>
-                                <input type="text" class="form-control" placeholder="Direccion" name="txtDireccion" id="txtDireccion" required>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row m-3">
                         <div class="col-12 text-center">
                             <a type="button" data-bs-dismiss="modal" class="btn btn-outline-danger">Cancelar</a>
-                            <button type="submit" class="btn btn-outline-secondary" id="modificarBtn" >Modificar</button>
+                            <button type="submit" class="btn btn-outline-secondary" id="modificarBtn" ><i class="bi bi-envelope"></i> Enviar</button>
                         </div>
                     </div>
                   </form>

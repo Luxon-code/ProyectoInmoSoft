@@ -1005,5 +1005,17 @@ def modificarProyecto(request, id):
             transaction.rollback()
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
-            retorno = {"mensaje":mensaje,"estado":False}
-        return render(request, 'administrador/modificarProyectos.html',retorno)    
+        return render(request, 'administrador/modificarProyectos.html',retorno)
+    
+def enviarCotizacion(request,id):
+    if request.method == 'POST':
+        try:
+            cedula = request.POST.get('txtCedula')
+            nombre = request.POST.get('txtNombre')
+            apellido = request.POST.get('txtApellido')
+            celular = request.POST.get('txtCelular')
+            correo = request.POST.get('txtCorreo')
+            proyecto = Proyecto.objects.get(id=id)
+        except Error as error:
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}    
