@@ -158,8 +158,15 @@ def vistaImmueblesDisponibles(request, id):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
-    
-        
+
+@soloAsesor  
+def vistaSepararInmueble(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}  
+        return render(request,'asesor/separarInmueble.html',retorno)  
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})    
 #-------------------------------------FUNCIONES--------------------------#       
 
 def registrarUsuario(request):

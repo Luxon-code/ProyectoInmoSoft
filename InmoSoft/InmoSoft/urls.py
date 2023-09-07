@@ -46,6 +46,7 @@ urlpatterns = [
     path('guardarDatosFormulario1/',views.datosFormulario1),
     path('registrarProyecto/',views.registrarProyecto),
     path('buscarProyecto/<int:id>/',views.buscarProyecto),
+    path('separarInmueble/',views.vistaSepararInmueble),
     path('modificarProyecto/<int:id>/',views.modificarProyecto),
     path('iniciarSesion/',views.iniciarSesion),
     path('Api/inicioSesion/<str:usuario>/<str:contraseña>',views.iniciarSesionAPI),

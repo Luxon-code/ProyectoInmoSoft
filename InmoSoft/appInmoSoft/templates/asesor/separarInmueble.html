@@ -1,0 +1,191 @@
+{% extends "index.html" %}
+{% block encabezado %}
+    {% include "asesor/encabezado.html" %}
+{%endblock %}
+{% block contenido %}
+<div class="row d-flex justify-content-center align-items-center" style="margin-top:6rem; margin-bottom: 6rem;">
+    <div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
+        <div class="d-flex justify-content-center">
+            <h3 class="text-center bg-bold">SEPARACIÓN DE PROYECTO</h3>
+        </div>
+        <h3 class="bg-bold">Datos Personales</h3>
+        <form action="" enctype="multipart/form-data" method="post" id="">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="row">
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtNombre">Nombre:</label> <br>
+                            <input class="form-control" type="text" placeholder="Nombre" name="txtNombre" id="txtNombre" required/>
+                        </div>
+                    </div>
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtApellido">Apellido:</label> <br>
+                            <input class="form-control" type="text" placeholder="Apellido" name="txtApellido" id="txtApellido" required/>
+                        </div>
+                    </div>
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtCedula">Cédula:</label> <br>
+                            <input class="form-control" type="text" placeholder="Cedula" name="txtCedula" id="txtCedula" required/>
+                        </div>
+                    </div>
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtTelefono">Telefono:</label> <br>
+                            <input class="form-control" type="text" placeholder="Telefono" name="txtTelefono" id="txtTelefono" required/>
+                        </div>
+                    </div>                
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtDireccion">Dirección:</label> <br>
+                            <input class="form-control" type="text" placeholder="Dirección" name="txtDireccion" id="txtDireccion" required/>
+                        </div>
+                    </div>
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="txtCorreo">Correo:</label> <br>
+                            <input class="form-control" type="text" placeholder="Correo" name="txtCorreo" id="txtCorreo" required/>
+                        </div>
+                    </div>
+                    <div class="mt-3 col-lg-4">
+                        <div>
+                            <label for="cbEstadoCivil">Estado Civil:</label> <br>
+                            <select class="form-select" id="cbEstadoCivil" name="cbEstadoCivil">
+                                <option>Seleccione</option>
+                                <option>Soltero</option>
+                                <option>Casado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-3">
+                    <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                    </div>
+                    <div class="col-4 text-center">
+                        <span class="fw-bold">Datos Familiar</span>
+                    </div>
+                    <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                    </div>
+                </div>
+                <h3 class="bg-bold">Datos Conyugue/Hijo</h3>
+                <div class="form-group row">
+                    <div class="row">
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtNombreFamiliar">Nombre:</label> <br>
+                                <input class="form-control" type="text" placeholder="Nombre" name="txtNombreFamiliar" id="txtNombreFamiliar" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtApellidoFamiliar">Apellido:</label> <br>
+                                <input class="form-control" type="text" placeholder="Apellido" name="txtApellidoFamiliar" id="txtApellidoFamiliar" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtCedulaFamiliar">Cédula:</label> <br>
+                                <input class="form-control" type="text" placeholder="Cedula" name="txtCedulaFamiliar" id="txtCedulaFamiliar" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtTelefonoFamiliar">Telefono:</label> <br>
+                                <input class="form-control" type="text" placeholder="Telefono" name="txtTelefonoFamiliar" id="txtTelefonoFamiliar" required/>
+                            </div>
+                        </div>                
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtDireccionFamiliar">Dirección:</label> <br>
+                                <input class="form-control" type="text" placeholder="Dirección" name="txtDireccionFamiliar" id="txtDireccionFamiliar" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-4">
+                            <div>
+                                <label for="txtCorreoFamiliar">Correo:</label> <br>
+                                <input class="form-control" type="text" placeholder="Correo" name="txtCorreoFamiliar" id="txtCorreoFamiliar" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-3">
+                        <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                        </div>
+                        <div class="col-4 text-center">
+                            <span class="fw-bold">Plan de Pago</span>
+                        </div>
+                        <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                        </div>
+                    </div>
+                    </div>
+                    <div class="w-75 table-responsive" style="margin: 0 auto">
+                        <table class="mt-3 table table-bordered table-hover">
+                            <thead>
+                                <tr class="text-center bg-secondary text-white">
+                                    <th>Fecha</th>
+                                    <th>Plan de Pago</th>
+                                    <th>Meses</th>
+                                    <th>Cuota Inicial</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    <td>00/00/00</td>
+                                    <td>$ 1´000.000</td>
+                                    <td>Enero</td>
+                                    <td>$ 60</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>00/00/00</td>
+                                    <td>$ 1´000.000</td>
+                                    <td>Febrero</td>
+                                    <td>$ 60</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>00/00/00</td>
+                                    <td>$ 1´000.000</td>
+                                    <td>Marzo</td>
+                                    <td>$ 60</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>00/00/00</td>
+                                    <td>$ 1´000.000</td>
+                                    <td>Abril</td>
+                                    <td>$ 60</td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>00/00/00</td>
+                                    <td>$ 1´000.000</td>
+                                    <td>Mayo</td>
+                                    <td>$ 60</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3 class="bg-bold">Valor Total Del Inmueble = $ 3000</h3>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-outline-secondary" id="btnApartar">Apartar</button>
+                        <button type="button" class="btn btn-outline-secondary" id="btnCancelar">Cancelar</button>
+                    </div>
+                    <div class="row p-3">
+                        <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                        </div>
+                        <div class="col-4 text-center">
+                            <span class="fw-bold">ASESOR</span>
+                        </div>
+                        <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% load static%}
+<link rel="stylesheet" href="{% static 'css/body.css' %}">
+<script src="{% static '../static/js/buscador.js' %}"></script>
+{%endblock %}
+{% block piePagina %}
+    {% include "piePagina.html" %}
+{%endblock %}
