@@ -136,7 +136,39 @@
         </div>
     </div>
 </div>
-
+{% if mensaje %}
+{% if estado %}
+  <script>
+    Swal.fire({
+      title: 'Cotizar Proyecto',
+      text: '{{mensaje}}',
+      icon: 'success',               
+      confirmButtonColor: '#3085d6',             
+      confirmButtonText: 'Aceptar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        url= "/vistaDetalleProyecto/"+{{id}}
+        location.assign(url)
+      }
+  })
+</script>
+{% else %}
+<script>
+  Swal.fire({
+    title: 'Cotizar Proyecto',
+    text: '{{mensaje}}',
+    icon: 'warning',               
+    confirmButtonColor: '#3085d6',             
+    confirmButtonText: 'Aceptar'
+}).then((result) => {
+    if (result.isConfirmed) {
+        url= "/vistaDetalleProyecto/"+{{id}}
+        location.assign(url)
+    }
+})
+</script>
+{% endif %}
+{% endif %}
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
 <script src="{% static '../static/js/proyectoDetal.js' %}"></script>

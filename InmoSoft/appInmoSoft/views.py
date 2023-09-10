@@ -1008,14 +1008,85 @@ def modificarProyecto(request, id):
         return render(request, 'administrador/modificarProyectos.html',retorno)
     
 def enviarCotizacion(request,id):
+    """
+    Esta función maneja la lógica para enviar una cotización por correo electrónico y realizar otras tareas relacionadas.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del proyecto.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que indica si el envio fue exitoso o si se produjo un error.
+    """
     if request.method == 'POST':
         try:
-            cedula = request.POST.get('txtCedula')
-            nombre = request.POST.get('txtNombre')
-            apellido = request.POST.get('txtApellido')
-            celular = request.POST.get('txtCelular')
-            correo = request.POST.get('txtCorreo')
-            proyecto = Proyecto.objects.get(id=id)
+            proyect = Proyecto.objects.get(pk=id)
+            inmueble = Inmueble.objects.get(pk=proyect.id)
+            datos = {
+                'cedula': request.POST.get('txtCedula'),
+                'nombre': request.POST.get('txtNombre'),
+                'apellido': request.POST.get('txtApellido'),
+                'celular': request.POST.get('txtCelular'),
+                'correo': request.POST.get('txtCorreo'),
+                'nombreProyecto': proyect.proNombre,
+                'fiducia': proyect.proFiducia,
+                'tipo': proyect.proTipo,
+                'costoSeparacion': proyect.proCostoSeparacion,
+                'cantParquedero': proyect.proCantidadParqueadero,
+                'departamento': proyect.proUbicacion.ubiDepartamento,
+                'municipio': proyect.proUbicacion.ubiCuidad,
+                'descripcion': proyect.proDescripcion,
+                'parqueadero': proyect.proParqueadero,
+                'foto': str(proyect.proFoto),
+                'precio': inmueble.inmCasa.casPrecioVivienda if inmueble.inmCasa else inmueble.inmApartamento.apaPrecioVivienda,
+                'direccion': proyect.proUbicacion.ubiDireccion
+            }
+            archivo = generarPdfCotizacion(datos)
+            # enviar correo al usuario
+            asunto = 'Cotizacion Sistema InmoSoft'
+            mensajeCorreo = f'Cordial saludo, <b>{datos["nombre"]} {datos["apellido"]}</b>, nos permitimos.\
+                informarle que usted ha pedido la cotizacion de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
+                por lo tanto, en lo mas pronto posible uno de nuestros asesores se comunicara con usted.<br>\
+                Nos permitimos enviarle un pdf adjunto sobre su cotizacion.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                https://inmosoft.pythonanywhere.com'
+            thread = threading.Thread(
+                target=enviarCorreo, args=(asunto, mensajeCorreo, [datos['correo']],archivo))
+            thread.start()
+            usuarios = User.objects.filter(userTipo='Asesor')
+            for usuario in usuarios:
+                asunto = 'Cotizacion Sistema InmoSoft'
+                mensajeCorreo = f'Cordial saludo, <b>{usuario.first_name} {usuario.last_name}</b>, nos permitimos.\
+                informarle que la persona {datos["nombre"]} {datos["apellido"]} ha pedido la cotizacion de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
+                por lo tanto, en lo mas pronto posible le pedimos que se comunique con el para generar una posible venta.<br>\
+                Nos permitimos enviarle un pdf adjunto con los datos de la persona y el proyecto interesado.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                https://inmosoft.pythonanywhere.com'
+                thread = threading.Thread(
+                    target=enviarCorreo, args=(asunto, mensajeCorreo, [usuario.email],archivo))
+                thread.start()
+            mensaje = "Se le enviado un correo electronico a su correo con la informacion de su cotizacion"
+            retorno= {"mensaje":mensaje,"estado":True,"id":proyect.id}
+            return render(request,'detalleInmueble.html',retorno)
         except Error as error:
             mensaje = f"{error}"
-            retorno = {"mensaje":mensaje,"estado":False}    
+            retorno = {"mensaje":mensaje,"estado":False,"id":proyect.id}
+            return render(request,'detalleInmueble.html',retorno)
+            
+            
+def generarPdfCotizacion(datos):
+    """
+    Esta función genera un archivo PDF de cotización utilizando la clase PdfCotizacion personalizada.
+
+    Args:
+        datos (dict): Un diccionario que contiene los datos de cotización a incluir en el PDF.
+
+    Returns:
+        str: La ruta del archivo PDF generado.
+    """
+    from appInmoSoft.pdfCotizacion import PdfCotizacion
+    pdf = PdfCotizacion()
+    pdf.add_page()
+    pdf.mostrarDatos(datos)
+    pdf.output(f'media/cotizacion.pdf','F')
+    return "media/cotizacion.pdf"
