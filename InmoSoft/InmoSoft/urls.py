@@ -46,7 +46,7 @@ urlpatterns = [
     path('guardarDatosFormulario1/',views.datosFormulario1),
     path('registrarProyecto/',views.registrarProyecto),
     path('buscarProyecto/<int:id>/',views.buscarProyecto),
-    path('separarInmueble/',views.vistaSepararInmueble),
+    path('vistaSepararInmueble/<int:id>/',views.vistaSepararInmueble),
     path('modificarProyecto/<int:id>/',views.modificarProyecto),
     path('cotizarProyecto/<int:id>/',views.enviarCotizacion),
     path('iniciarSesion/',views.iniciarSesion),

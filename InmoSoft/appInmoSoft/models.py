@@ -140,7 +140,6 @@ class Cliente(models.Model):
     cliCedula =  models.CharField(max_length=20, db_comment="cedula del cliente")
     cliDireccion = models.CharField(max_length=20,db_comment="Direccion del cliente")
     cliEstadoCivil =  models.CharField(max_length=20,choices=estadoCivil, db_comment="Estado Civil del cliente")
-    cliFechaSeparacion = models.DateField(auto_now=True, db_comment="Fecha Separacion del cliente")
     clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
@@ -156,6 +155,7 @@ class Venta(models.Model):
 class PlanDePago(models.Model):
     plaFechaInicial = models.DateField(db_comment="Fecha de inicio del plan de pago")
     plaFechaFinal = models.DateField(db_comment="Fecha de final del plan de pago")
+    plaNumCuota= models.IntegerField(db_comment="Numero de cuotas")
     plaCuotaInicial = models.IntegerField(db_comment="Valor de la cuota Inicial")
     plaValorDeCuota = models.IntegerField(db_comment="Valor de la Cuota")
     plafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora de registro")

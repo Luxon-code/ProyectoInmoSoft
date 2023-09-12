@@ -160,9 +160,22 @@ def vistaImmueblesDisponibles(request, id):
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
 
 @soloAsesor  
-def vistaSepararInmueble(request):
+def vistaSepararInmueble(request,id):
     if request.user.is_authenticated:
-        retorno = {"user":request.user}  
+        inmueble = Inmueble.objects.get(pk=id)
+        if inmueble.inmCasa:
+            inmu = {
+                'id':inmueble.id,
+                'precio':inmueble.inmCasa.casPrecioVivienda,
+                'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
+            }
+        else:
+            inmu = {
+                'id':inmueble.id,
+                'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
+            }
+        retorno = {"user":request.user, 'inmueble':inmu}  
         return render(request,'asesor/separarInmueble.html',retorno)  
     else:
         mensaje = "Debe iniciar sesión"
@@ -1090,3 +1103,11 @@ def generarPdfCotizacion(datos):
     pdf.mostrarDatos(datos)
     pdf.output(f'media/cotizacion.pdf','F')
     return "media/cotizacion.pdf"
+
+
+
+
+    
+        
+    
+    

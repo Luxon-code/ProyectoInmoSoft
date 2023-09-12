@@ -75,37 +75,37 @@
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtNombreFamiliar">Nombre:</label> <br>
-                                <input class="form-control" type="text" placeholder="Nombre" name="txtNombreFamiliar" id="txtNombreFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Nombre" name="txtNombreFamiliar" id="txtNombreFamiliar" />
                             </div>
                         </div>
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtApellidoFamiliar">Apellido:</label> <br>
-                                <input class="form-control" type="text" placeholder="Apellido" name="txtApellidoFamiliar" id="txtApellidoFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Apellido" name="txtApellidoFamiliar" id="txtApellidoFamiliar" />
                             </div>
                         </div>
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtCedulaFamiliar">Cédula:</label> <br>
-                                <input class="form-control" type="text" placeholder="Cedula" name="txtCedulaFamiliar" id="txtCedulaFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Cedula" name="txtCedulaFamiliar" id="txtCedulaFamiliar"/>
                             </div>
                         </div>
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtTelefonoFamiliar">Telefono:</label> <br>
-                                <input class="form-control" type="text" placeholder="Telefono" name="txtTelefonoFamiliar" id="txtTelefonoFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Telefono" name="txtTelefonoFamiliar" id="txtTelefonoFamiliar"/>
                             </div>
                         </div>                
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtDireccionFamiliar">Dirección:</label> <br>
-                                <input class="form-control" type="text" placeholder="Dirección" name="txtDireccionFamiliar" id="txtDireccionFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Dirección" name="txtDireccionFamiliar" id="txtDireccionFamiliar"/>
                             </div>
                         </div>
                         <div class="mt-3 col-lg-4">
                             <div>
                                 <label for="txtCorreoFamiliar">Correo:</label> <br>
-                                <input class="form-control" type="text" placeholder="Correo" name="txtCorreoFamiliar" id="txtCorreoFamiliar" required/>
+                                <input class="form-control" type="text" placeholder="Correo" name="txtCorreoFamiliar" id="txtCorreoFamiliar"/>
                             </div>
                         </div>
                     </div>
@@ -117,19 +117,34 @@
                         </div>
                         <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
                         </div>
+                        
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="CuotaIni">Cuota Inicial:</label> <br>
+                                <input class="form-control" type="number" placeholder="" name="txtCuotaIni" id="txtCuotaIni" required/>
+                            </div>
+                        </div>
+                        <div class="mt-3 col-lg-6">
+                            <div>
+                                <label for="txtNumeroCuotas">Numero de cuotas:</label> <br>
+                                <input class="form-control" type="number" placeholder="" name="txtNumeroCuotas" id="txtNumeroCuotas" required/>
+                            </div>
+                        </div>
+                        
                     </div>
                     </div>
-                    <div class="w-75 table-responsive" style="margin: 0 auto">
-                        <table class="mt-3 table table-bordered table-hover">
+                    
+                    <div class="w-75 table-responsive" style="margin: 0 auto; max-height: 300px;">
+                        <table class="mt-3 table table-bordered table-hover" id="tablaPlanPago">
                             <thead>
                                 <tr class="text-center bg-secondary text-white">
                                     <th>Fecha</th>
                                     <th>Plan de Pago</th>
                                     <th>Meses</th>
-                                    <th>Cuota Inicial</th>
+                                    <th>Cuota</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tablaPlan" >
                                 <tr class="text-center">
                                     <td>00/00/00</td>
                                     <td>$ 1´000.000</td>
@@ -160,11 +175,17 @@
                                     <td>Mayo</td>
                                     <td>$ 60</td>
                                 </tr>
+                
                             </tbody>
                         </table>
-                        <h3 class="bg-bold">Valor Total Del Inmueble = $ 3000</h3>
+                        <h3 class="bg-bold">Valor Total Del Inmueble = $ {{inmueble.precio}}</h3>
+                        <input type="number" value="{{inmueble.precio}}" id="precioInmuble" hidden>
+                        <input type="number" value="{{inmueble.costoSeparacion}}" id="costoSeparacion" hidden>
+                        <input type="hidden" id="fechaInicio" hidden>
+                        <input type="hidden" id="fechaFinal" hidden>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-outline-secondary" id="btnCalcularPlan">Calcular</button>
                         <button type="button" class="btn btn-outline-secondary" id="btnApartar">Apartar</button>
                         <button type="button" class="btn btn-outline-secondary" id="btnCancelar">Cancelar</button>
                     </div>
@@ -185,6 +206,7 @@
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
 <script src="{% static '../static/js/buscador.js' %}"></script>
+<script src="{% static '../static/js/planPago.js' %}"></script>
 {%endblock %}
 {% block piePagina %}
     {% include "piePagina.html" %}
