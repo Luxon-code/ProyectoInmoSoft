@@ -9,7 +9,7 @@
             <h3 class="text-center bg-bold">SEPARACIÓN DE PROYECTO</h3>
         </div>
         <h3 class="bg-bold">Datos Personales</h3>
-        <form action="" enctype="multipart/form-data" method="post" id="">
+        <form action="/SepararInmueble/{{inmueble.id}}/" enctype="multipart/form-data" method="POST" id="">
             {% csrf_token %}
             <div class="form-group row">
                 <div class="row">
@@ -174,8 +174,10 @@
                         <h3 class="bg-bold">Valor Total Del Inmueble = $ {{inmueble.precioMostrar}}</h3>
                         <input type="number" value="{{inmueble.precio}}" id="precioInmuble" hidden>
                         <input type="number" value="{{inmueble.costoSeparacion}}" id="costoSeparacion" hidden>
-                        <input type="hidden" id="fechaInicio" hidden required>
-                        <input type="hidden" id="fechaFinal" hidden required>
+                        <input type="hidden" id="fechaInicio" name="fechaInicio" hidden required>
+                        <input type="hidden" id="fechaFinal" name="fechaFinal" hidden required>
+                        <input type="hidden" id="cuotaInicial" name="cuotaInicial" hidden required>
+                        <input type="hidden" id="valorCuota" name="valorCuota" hidden required>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="button" class="btn btn-outline-secondary" id="btnCalcularPlan">Calcular plan de pago</button>
@@ -196,9 +198,40 @@
         </form>
     </div>
 </div>
+{% if mensaje %}
+{% if estado %}
+  <script>
+    Swal.fire({
+      title: 'Separar Inmueble',
+      text: '{{mensaje}}',
+      icon: 'success',               
+      confirmButtonColor: '#3085d6',             
+      confirmButtonText: 'Aceptar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        url= "/vistaImmueblesDisponibles/"+{{idProyecto}}
+        location.assign(url)
+      }
+  })
+</script>
+{% else %}
+<script>
+  Swal.fire({
+    title: 'Separar Inmueble',
+    text: '{{mensaje}}',
+    icon: 'warning',               
+    confirmButtonColor: '#3085d6',             
+    confirmButtonText: 'Aceptar'
+}).then((result) => {
+    if (result.isConfirmed) {
+    }
+})
+</script>
+{% endif %}
+{% endif %}
 <script>
     function validateForm(){
-        if(fechaInicio.value!=""&&fechaFinal.value!=""){
+        if(fechaInicio.value!=""&&fechaFinal.value!=""&&cuotaInicial.value!=""&&valorCuota.value!=""){
             return true;
         }else{
             Swal.fire("Separar Inmueble","Calcule el plan de pago","warning")

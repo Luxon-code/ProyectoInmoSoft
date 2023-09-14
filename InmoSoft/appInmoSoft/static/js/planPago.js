@@ -11,9 +11,12 @@ document.getElementById("btnCalcularPlan").addEventListener("click", function() 
         var valorSeparacion = parseFloat(document.getElementById('costoSeparacion').value);
     
         // Calculamos el 30% del valor del inmueble
-        var treintaPorCiento = Math.round(valorInmueble * 0.3);
+        var cuotaInicial = Math.round(valorInmueble * 0.3);
         // Calcula el valor de cada cuota mensual
-        const valorPorCuota = Math.round((treintaPorCiento - valorSeparacion) / numCuotas);
+        const valorPorCuota = Math.round((cuotaInicial - valorSeparacion) / numCuotas);
+
+        document.getElementById("cuotaInicial").value=cuotaInicial;
+        valorCuota.value=valorPorCuota;
     
         // Limpia la tabla existente
         resultadoTabla.innerHTML = "";
@@ -52,7 +55,7 @@ document.getElementById("btnCalcularPlan").addEventListener("click", function() 
             const año = fecha.getFullYear();
     
             fechaCell.innerHTML = `${dia}/${mes}/${año}`;
-            planPagoCell.innerHTML = `$${treintaPorCiento.toLocaleString('es-ES', { style: 'decimal' })}`;
+            planPagoCell.innerHTML = `$${cuotaInicial.toLocaleString('es-ES', { style: 'decimal' })}`;
             mesesCell.innerHTML = fecha.toLocaleString('default', { month: 'long' });
             cuotaCell.innerHTML = `$${valorPorCuota.toLocaleString('es-ES', { style: 'decimal' })}`;
         }

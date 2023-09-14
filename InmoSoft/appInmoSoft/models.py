@@ -122,24 +122,24 @@ class Inmueble(models.Model):
 
 
 class Familiar(models.Model):
-    faNombre= models.CharField(max_length=20,db_comment="Nombre del familiar")
-    faApellido = models.CharField(max_length=20,db_comment="Apellido del familiar")
-    faTelefono =  models.CharField(max_length=20, db_comment="Telefono del familiar")
-    faCorreo = models.CharField(max_length=20,db_comment="Correo del familiar")
-    faCedula =  models.CharField(max_length=20, db_comment="cedula del familiar")
-    faDireccion = models.CharField(max_length=20,db_comment="Direccion del familiar")
+    faNombre= models.CharField(max_length=50,db_comment="Nombre del familiar")
+    faApellido = models.CharField(max_length=50,db_comment="Apellido del familiar")
+    faTelefono =  models.CharField(max_length=50, db_comment="Telefono del familiar")
+    faCorreo = models.CharField(max_length=50,db_comment="Correo del familiar")
+    faCedula =  models.CharField(max_length=50, db_comment="cedula del familiar")
+    faDireccion = models.CharField(max_length=50,db_comment="Direccion del familiar")
     fafechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     fafechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
 class Cliente(models.Model):
-    cliNombre = models.CharField(max_length=20,db_comment="Nombre del cliente")
-    cliApellido = models.CharField(max_length=20,db_comment="Apellido del cliente")
-    cliTelefono =  models.CharField(max_length=20, db_comment="Telefono del cliente")
-    cliCorreo = models.CharField(max_length=20,db_comment="Correo del cliente")
+    cliNombre = models.CharField(max_length=50,db_comment="Nombre del cliente")
+    cliApellido = models.CharField(max_length=50,db_comment="Apellido del cliente")
+    cliTelefono =  models.CharField(max_length=50, db_comment="Telefono del cliente")
+    cliCorreo = models.CharField(max_length=50,db_comment="Correo del cliente")
     cliFamiliar=models.ForeignKey(Familiar,on_delete=models.PROTECT,db_comment="Familiar del cliente",null=True)
-    cliCedula =  models.CharField(max_length=20, db_comment="cedula del cliente")
-    cliDireccion = models.CharField(max_length=20,db_comment="Direccion del cliente")
-    cliEstadoCivil =  models.CharField(max_length=20,choices=estadoCivil, db_comment="Estado Civil del cliente")
+    cliCedula =  models.CharField(max_length=50, db_comment="cedula del cliente")
+    cliDireccion = models.CharField(max_length=50,db_comment="Direccion del cliente")
+    cliEstadoCivil =  models.CharField(max_length=50,choices=estadoCivil, db_comment="Estado Civil del cliente")
     clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 

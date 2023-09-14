@@ -1110,9 +1110,60 @@ def generarPdfCotizacion(datos):
 def separarInmueble(request,id):
     if request.method == 'POST':
         try:
-            pass
+            #Datos del cliente
+            nombre = request.POST.get('txtNombre')
+            apellido = request.POST.get('txtApellido')
+            cedula = request.POST.get('txtCedula')
+            telefono = request.POST.get('txtTelefono')
+            direccion = request.POST.get('txtDireccion')
+            correo = request.POST.get('txtCorreo')
+            estadoCivil = request.POST.get('cbEstadoCivil')
+            #datos del familiar o conyugue
+            nombreFamiliar = request.POST.get('txtNombreFamiliar')
+            apellidoFamiliar = request.POST.get('txtApellidoFamiliar')
+            cedulaFamiliar = request.POST.get('txtCedulaFamiliar')
+            telefonoFamiliar = request.POST.get('txtTelefonoFamiliar')
+            direccionFamiliar = request.POST.get('txtDireccionFamiliar')
+            correoFamiliar = request.POST.get('txtCorreoFamiliar')
+            #datos del plan de pago
+            numeroCuotas = request.POST.get('txtNumeroCuotas')
+            fechaInicio = request.POST.get('fechaInicio')
+            fechaInicio = datetime.strptime(fechaInicio,"%d/%m/%Y")
+            fechaInicio = fechaInicio.strftime("%Y-%m-%d")
+            fechaFinal = request.POST.get('fechaFinal')
+            fechaFinal = datetime.strptime(fechaFinal,"%d/%m/%Y")
+            fechaFinal = fechaFinal.strftime("%Y-%m-%d")
+            cuotaInicial = request.POST.get('cuotaInicial')
+            valorCuota = request.POST.get('valorCuota')
             with transaction.atomic():
-                pass
+                if(nombreFamiliar and apellidoFamiliar and cedulaFamiliar
+                   and telefonoFamiliar and direccionFamiliar and correoFamiliar):
+                    familiar = Familiar(faNombre=nombreFamiliar,faApellido=apellidoFamiliar,
+                                        faTelefono=telefonoFamiliar,faCorreo=correoFamiliar,
+                                        faCedula=cedulaFamiliar,faDireccion=direccionFamiliar)
+                    familiar.save()
+                    cliente = Cliente(cliNombre=nombre,cliApellido=apellido,
+                                  cliTelefono=telefono,cliCedula=cedula,cliCorreo=correo,
+                                  cliDireccion=direccion,cliEstadoCivil=estadoCivil,cliFamiliar=familiar)
+                    cliente.save()
+                else:
+                    cliente = Cliente(cliNombre=nombre,cliApellido=apellido,
+                                  cliTelefono=telefono,cliCedula=cedula,cliCorreo=correo,
+                                  cliDireccion=direccion,cliEstadoCivil=estadoCivil)
+                    cliente.save()
+                inmueble = Inmueble.objects.get(pk=id)
+                inmueble.inmEstado = "Separado"
+                inmueble.save()
+                venta = Venta(venUsuario=request.user,venInmueble=inmueble,venCliente=cliente)
+                venta.save()
+                planPago = PlanDePago(plaFechaInicial=fechaInicio,plaFechaFinal=fechaFinal,
+                                      plaNumCuota=numeroCuotas,plaCuotaInicial=cuotaInicial,
+                                      plaValorDeCuota=valorCuota,plaVenta=venta)
+                planPago.save()
+                mensaje="Inmueble separado correctamente"
+                retorno = {"mensaje":mensaje,"estado":True,'idProyecto':inmueble.inmProyecto.id}
+                return render(request,"asesor/separarInmueble.html",retorno)
         except Exception as error:
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
+            return render(request,"asesor/separarInmueble.html",retorno)
