@@ -29,9 +29,9 @@ document.getElementById("btnCalcularPlan").addEventListener("click", function() 
     
         // Calcula la fecha de finalización del plan de pago
         const fechaFinal = new Date();
-        fechaFinal.setMonth(fechaFinal.getMonth() + numCuotas); // Ajusta según la duración del plan
+        fechaFinal.setMonth(fechaFinal.getMonth() + numCuotas-1); // Ajusta según la duración del plan
         const diaFinal = fechaFinal.getDate();
-        const mesFinal = fechaFinal.getMonth() ; // Suma 1 porque los meses son 0-indexados
+        const mesFinal = fechaFinal.getMonth()+1 ; // Suma 1 porque los meses son 0-indexados
         const añoFinal = fechaFinal.getFullYear();
     
         // Asigna los valores de las fechas de inicio y finalización a los campos ocultos

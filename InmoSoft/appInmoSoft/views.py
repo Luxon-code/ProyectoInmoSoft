@@ -1160,6 +1160,7 @@ def separarInmueble(request,id):
                                       plaNumCuota=numeroCuotas,plaCuotaInicial=cuotaInicial,
                                       plaValorDeCuota=valorCuota,plaVenta=venta)
                 planPago.save()
+                archivo = generarPdfSeparacion(planPago)
                 mensaje="Inmueble separado correctamente"
                 retorno = {"mensaje":mensaje,"estado":True,'idProyecto':inmueble.inmProyecto.id}
                 return render(request,"asesor/separarInmueble.html",retorno)
@@ -1167,3 +1168,11 @@ def separarInmueble(request,id):
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
             return render(request,"asesor/separarInmueble.html",retorno)
+        
+def generarPdfSeparacion(planPago:PlanDePago):
+    from appInmoSoft.pdfSeparacion import PdfSeparacion
+    pdf = PdfSeparacion()
+    pdf.add_page()
+    pdf.mostrarDatos(planPago)
+    pdf.output(f'media/separacion.pdf','F')
+    return "media/separacion.pdf"
