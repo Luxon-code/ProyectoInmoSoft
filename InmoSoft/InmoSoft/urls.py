@@ -47,6 +47,7 @@ urlpatterns = [
     path('registrarProyecto/',views.registrarProyecto),
     path('buscarProyecto/<int:id>/',views.buscarProyecto),
     path('vistaSepararInmueble/<int:id>/',views.vistaSepararInmueble),
+    path('SepararInmueble/<int:id>/',views.separarInmueble),
     path('modificarProyecto/<int:id>/',views.modificarProyecto),
     path('cotizarProyecto/<int:id>/',views.enviarCotizacion),
     path('iniciarSesion/',views.iniciarSesion),

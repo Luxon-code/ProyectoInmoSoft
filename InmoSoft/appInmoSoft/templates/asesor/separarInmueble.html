@@ -28,13 +28,13 @@
                     <div class="mt-3 col-lg-4">
                         <div>
                             <label for="txtCedula">Cédula:</label> <br>
-                            <input class="form-control" type="text" placeholder="Cedula" name="txtCedula" id="txtCedula" required/>
+                            <input class="form-control" type="number" placeholder="Cedula" name="txtCedula" id="txtCedula" required/>
                         </div>
                     </div>
                     <div class="mt-3 col-lg-4">
                         <div>
                             <label for="txtTelefono">Telefono:</label> <br>
-                            <input class="form-control" type="text" placeholder="Telefono" name="txtTelefono" id="txtTelefono" required/>
+                            <input class="form-control" type="number" placeholder="Telefono" name="txtTelefono" id="txtTelefono" required/>
                         </div>
                     </div>                
                     <div class="mt-3 col-lg-4">
@@ -46,16 +46,16 @@
                     <div class="mt-3 col-lg-4">
                         <div>
                             <label for="txtCorreo">Correo:</label> <br>
-                            <input class="form-control" type="text" placeholder="Correo" name="txtCorreo" id="txtCorreo" required/>
+                            <input class="form-control" type="email" placeholder="Correo" name="txtCorreo" id="txtCorreo" required/>
                         </div>
                     </div>
                     <div class="mt-3 col-lg-4">
                         <div>
                             <label for="cbEstadoCivil">Estado Civil:</label> <br>
-                            <select class="form-select" id="cbEstadoCivil" name="cbEstadoCivil">
-                                <option>Seleccione</option>
-                                <option>Soltero</option>
-                                <option>Casado</option>
+                            <select class="form-select" id="cbEstadoCivil" name="cbEstadoCivil" required>
+                                <option value="">Seleccione</option>
+                                <option value="Soltero">Soltero</option>
+                                <option value="Casado">Casado</option>
                             </select>
                         </div>
                     </div>
@@ -117,14 +117,7 @@
                         </div>
                         <div class="col-4 border-bottom border-black text-center" style="height: 0.9rem">
                         </div>
-                        
-                        <div class="mt-3 col-lg-6">
-                            <div>
-                                <label for="CuotaIni">Cuota Inicial:</label> <br>
-                                <input class="form-control" type="number" placeholder="" name="txtCuotaIni" id="txtCuotaIni" required/>
-                            </div>
-                        </div>
-                        <div class="mt-3 col-lg-6">
+                        <div class="mt-3 col-lg-12">
                             <div>
                                 <label for="txtNumeroCuotas">Numero de cuotas:</label> <br>
                                 <input class="form-control" type="number" placeholder="" name="txtNumeroCuotas" id="txtNumeroCuotas" required/>
@@ -139,9 +132,9 @@
                             <thead>
                                 <tr class="text-center bg-secondary text-white">
                                     <th>Fecha</th>
-                                    <th>Plan de Pago</th>
+                                    <th>Cuota Inicial</th>
                                     <th>Meses</th>
-                                    <th>Cuota</th>
+                                    <th>Valor por cuota</th>
                                 </tr>
                             </thead>
                             <tbody id="tablaPlan" >
@@ -178,15 +171,15 @@
                 
                             </tbody>
                         </table>
-                        <h3 class="bg-bold">Valor Total Del Inmueble = $ {{inmueble.precio}}</h3>
+                        <h3 class="bg-bold">Valor Total Del Inmueble = $ {{inmueble.precioMostrar}}</h3>
                         <input type="number" value="{{inmueble.precio}}" id="precioInmuble" hidden>
                         <input type="number" value="{{inmueble.costoSeparacion}}" id="costoSeparacion" hidden>
-                        <input type="hidden" id="fechaInicio" hidden>
-                        <input type="hidden" id="fechaFinal" hidden>
+                        <input type="hidden" id="fechaInicio" hidden required>
+                        <input type="hidden" id="fechaFinal" hidden required>
                     </div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="button" class="btn btn-outline-secondary" id="btnCalcularPlan">Calcular</button>
-                        <button type="button" class="btn btn-outline-secondary" id="btnApartar">Apartar</button>
+                        <button type="button" class="btn btn-outline-secondary" id="btnCalcularPlan">Calcular plan de pago</button>
+                        <button type="submit"  onclick="return validateForm()" class="btn btn-outline-secondary" id="btnApartar">Apartar</button>
                         <button type="button" class="btn btn-outline-secondary" id="btnCancelar">Cancelar</button>
                     </div>
                     <div class="row p-3">
@@ -203,6 +196,16 @@
         </form>
     </div>
 </div>
+<script>
+    function validateForm(){
+        if(fechaInicio.value!=""&&fechaFinal.value!=""){
+            return true;
+        }else{
+            Swal.fire("Separar Inmueble","Calcule el plan de pago","warning")
+        }
+        return false;
+    }
+</script>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
 <script src="{% static '../static/js/buscador.js' %}"></script>

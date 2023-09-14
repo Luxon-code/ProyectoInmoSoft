@@ -105,13 +105,13 @@ def vistaDetalleProyecto(request, proyecto_id):
                 proyecto = {
                     'id': proyect.id,
                     'nombre': proyect.proNombre,
-                    'costoSeparacion':proyect.proCostoSeparacion,
+                    'costoSeparacion':f"{proyect.proCostoSeparacion:,}",
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'parqueadero':proyect.proParqueadero,
                     'areaConstruida':inmueble.inmCasa.casAreaConstruida,
                     'foto':proyect.proFoto,
-                    'precio':inmueble.inmCasa.casPrecioVivienda,
+                    'precio':f"{inmueble.inmCasa.casPrecioVivienda:,}",
                     'numInmuebles':proyect.proTotalInmuebles,
                     'numdivision':proyect.proNumeroManzanasTorres,
                     'tipo':proyect.proTipo,
@@ -121,13 +121,13 @@ def vistaDetalleProyecto(request, proyecto_id):
                 proyecto = {
                     'id':proyect.id,
                     'nombre': proyect.proNombre,
-                    'costoSeparacion':proyect.proCostoSeparacion,
+                    'costoSeparacion':f"{proyect.proCostoSeparacion:,}",
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'parqueadero':proyect.proParqueadero,
                     'areaConstruida':inmueble.inmApartamento.apaAreaConstruida,
                     'foto':proyect.proFoto,
-                    'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                    'precio':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
                     'numInmuebles':proyect.proTotalInmuebles,
                     'numdivision':proyect.proNumeroManzanasTorres,
                     'tipo':proyect.proTipo,
@@ -166,12 +166,14 @@ def vistaSepararInmueble(request,id):
         if inmueble.inmCasa:
             inmu = {
                 'id':inmueble.id,
+                'precioMostrar':f"{inmueble.inmCasa.casPrecioVivienda:,}",
                 'precio':inmueble.inmCasa.casPrecioVivienda,
                 'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
             }
         else:
             inmu = {
                 'id':inmueble.id,
+                'precioMostrar':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
                 'precio':inmueble.inmApartamento.apaPrecioVivienda,
                 'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
             }
@@ -821,7 +823,7 @@ def listarProyectos(request):
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'foto':str(proyect.proFoto),
-                    'precio':inmueble.inmCasa.casPrecioVivienda,
+                    'precio':f"{inmueble.inmCasa.casPrecioVivienda:,}",
                     'fecha':proyect.profechaHoraCreacion,
                     'fiducia':proyect.proFiducia,
                     'totalinmuebles':proyect.proTotalInmuebles,
@@ -834,7 +836,7 @@ def listarProyectos(request):
                     'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
                     'descripcion':proyect.proDescripcion,
                     'foto':str(proyect.proFoto),
-                    'precio':inmueble.inmApartamento.apaPrecioVivienda,
+                    'precio':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
                     'fecha':proyect.profechaHoraCreacion,
                     'fiducia':proyect.proFiducia,
                     'totalinmuebles':proyect.proTotalInmuebles,
@@ -1105,9 +1107,12 @@ def generarPdfCotizacion(datos):
     return "media/cotizacion.pdf"
 
 
-
-
-    
-        
-    
-    
+def separarInmueble(request,id):
+    if request.method == 'POST':
+        try:
+            pass
+            with transaction.atomic():
+                pass
+        except Exception as error:
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}
