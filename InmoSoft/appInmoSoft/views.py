@@ -162,10 +162,12 @@ def vistaImmueblesDisponibles(request, id):
 @soloAsesor  
 def vistaSepararInmueble(request,id):
     if request.user.is_authenticated:
+        hoy = date.today()
         inmueble = Inmueble.objects.get(pk=id)
         if inmueble.inmCasa:
             inmu = {
                 'id':inmueble.id,
+                'hoy': hoy.strftime("%Y-%m-%d"),
                 'precioMostrar':f"{inmueble.inmCasa.casPrecioVivienda:,}",
                 'precio':inmueble.inmCasa.casPrecioVivienda,
                 'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
@@ -173,6 +175,7 @@ def vistaSepararInmueble(request,id):
         else:
             inmu = {
                 'id':inmueble.id,
+                'hoy': hoy.strftime("%Y-%m-%d"),
                 'precioMostrar':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
                 'precio':inmueble.inmApartamento.apaPrecioVivienda,
                 'costoSeparacion':inmueble.inmProyecto.proCostoSeparacion
@@ -1128,8 +1131,6 @@ def separarInmueble(request,id):
             #datos del plan de pago
             numeroCuotas = request.POST.get('txtNumeroCuotas')
             fechaInicio = request.POST.get('fechaInicio')
-            fechaInicio = datetime.strptime(fechaInicio,"%d/%m/%Y")
-            fechaInicio = fechaInicio.strftime("%Y-%m-%d")
             fechaFinal = request.POST.get('fechaFinal')
             fechaFinal = datetime.strptime(fechaFinal,"%d/%m/%Y")
             fechaFinal = fechaFinal.strftime("%Y-%m-%d")
@@ -1161,6 +1162,16 @@ def separarInmueble(request,id):
                                       plaValorDeCuota=valorCuota,plaVenta=venta)
                 planPago.save()
                 archivo = generarPdfSeparacion(planPago)
+                # enviar correo al usuario
+                asunto = 'Separacion de Inmueble Sistema InmoSoft'
+                mensajeCorreo = f'Cordial saludo, <b>{cliente.cliNombre} {cliente.cliApellido}</b>, nos permitimos.\
+                informarle que usted ha separado un inmueble de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
+                por lo tanto,Nos permitimos enviarle un pdf adjunto con toda la informacion sobre la separacion del inmueble incluyendo el plan de pago.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                https://inmosoft.pythonanywhere.com'
+                thread = threading.Thread(
+                    target=enviarCorreo, args=(asunto, mensajeCorreo, [cliente.cliCorreo],archivo))
+                thread.start()
                 mensaje="Inmueble separado correctamente"
                 retorno = {"mensaje":mensaje,"estado":True,'idProyecto':inmueble.inmProyecto.id}
                 return render(request,"asesor/separarInmueble.html",retorno)

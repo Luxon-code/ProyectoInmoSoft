@@ -123,7 +123,12 @@
                                 <input class="form-control" min="0" max="500" type="number" placeholder="" name="txtNumeroCuotas" id="txtNumeroCuotas" required/>
                             </div>
                         </div>
-                        
+                        <div class="mt-3 col-lg-12">
+                            <div>
+                                <label for="fechaInicio">Fecha Inicial:</label> <br>
+                                <input type="date" min="{{inmueble.hoy}}" class="form-control" id="fechaInicio" name="fechaInicio" required>
+                            </div>
+                        </div>
                     </div>
                     </div>
                     
@@ -174,7 +179,6 @@
                         <h3 class="bg-bold">Valor Total Del Inmueble = $ {{inmueble.precioMostrar}}</h3>
                         <input type="number" value="{{inmueble.precio}}" id="precioInmuble" hidden>
                         <input type="number" value="{{inmueble.costoSeparacion}}" id="costoSeparacion" hidden>
-                        <input type="hidden" id="fechaInicio" name="fechaInicio" hidden required>
                         <input type="hidden" id="fechaFinal" name="fechaFinal" hidden required>
                         <input type="hidden" id="cuotaInicial" name="cuotaInicial" hidden required>
                         <input type="hidden" id="valorCuota" name="valorCuota" hidden required>
@@ -231,7 +235,7 @@
 {% endif %}
 <script>
     function validateForm(){
-        if(fechaInicio.value!=""&&fechaFinal.value!=""&&cuotaInicial.value!=""&&valorCuota.value!=""){
+        if(fechaFinal.value!=""&&cuotaInicial.value!=""&&valorCuota.value!=""){
             return true;
         }else{
             Swal.fire("Separar Inmueble","Calcule el plan de pago","warning")
