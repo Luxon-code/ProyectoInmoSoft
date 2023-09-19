@@ -1,6 +1,8 @@
 from datetime import date, datetime
 from django.shortcuts import render, redirect
 from appInmoSoft.models import *
+from appInmoSoft.serializers import *
+from rest_framework import generics
 from django.contrib.auth.models import Group
 from django.db import Error, transaction
 from django.core.files.base import ContentFile
@@ -19,7 +21,6 @@ import requests
 from smtplib import SMTPException
 from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
-from django.core.exceptions import ValidationError
 # Create your views here.
 
 #-------VISTAS----------
@@ -247,6 +248,8 @@ def registrarUsuario(request):
             mensaje = "Ya existe un usuario con esta cedula"
         elif 'user.username' in str(error):
             mensaje = "Ya existe un usuario con este correo electronico"
+        elif 'user.email' in str(error):
+            mensaje = "Ya existe un usuario con este correo electronico"
         else:
             mensaje = error
     retorno = {"mensaje": mensaje,"estado":False,'roles':Group.objects.all(),
@@ -404,16 +407,16 @@ def iniciarSesionAPI(request,usuario,contraseña):
         if user.groups.filter(name='Administrador').exists():
            return JsonResponse({'mensaje':'Inicio de sesión exitoso como administrador','estado':True,'username':request.user.username,
                                 'correo':request.user.email,'nombre':request.user.first_name,'apellidos':request.user.last_name,
-                                'foto':str(request.user.userFoto)})
+                                'foto':str(request.user.userFoto),'idUser':request.user.id})
         else:
             return JsonResponse({'mensaje':'Inicio de sesión exitoso como asesor','estado':True,'username':request.user.username,
                                 'correo':request.user.email,'nombre':request.user.first_name,'apellidos':request.user.last_name,
-                                'foto':str(request.user.userFoto)})
+                                'foto':str(request.user.userFoto),'idUser':request.user.id})
     else:
         mensaje = "El Usuario o Contraseña Son Incorrectas"
         return JsonResponse({'mensaje':mensaje,'estado':False,'username':"",
                                 'correo':"",'nombre':"",'apellidos':"",
-                                'foto':""})
+                                'foto':"",'idUser':""})
 
 def cerrarSesion(request):
     """
@@ -1187,3 +1190,14 @@ def generarPdfSeparacion(planPago:PlanDePago):
     pdf.mostrarDatos(planPago)
     pdf.output(f'media/separacion.pdf','F')
     return "media/separacion.pdf"
+
+
+#-----------------------------/APIS/-----------------------------------------
+
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

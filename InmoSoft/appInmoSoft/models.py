@@ -50,7 +50,7 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         error_messages={
-            "unique": ("Ya existe un usuario con ese correo electronico"),
+            "unique": ("Ya existe un usuario con ese nombre de usuario"),
         },
     )
     email = models.EmailField(("email address"), blank=True,unique=True,
