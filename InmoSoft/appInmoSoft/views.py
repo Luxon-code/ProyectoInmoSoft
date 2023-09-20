@@ -21,6 +21,7 @@ import requests
 from smtplib import SMTPException
 from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
+from datetime import datetime, timedelta
 # Create your views here.
 
 #-------VISTAS----------
@@ -384,6 +385,7 @@ def iniciarSesion(request):
             print(user)
             if user is not None:
             # registrar la variable de sesión
+                verificarDesistimiento()
                 auth.login(request, user)
                 if user.groups.filter(name='Administrador').exists():
                     return redirect('/inicioAdministrador/')
@@ -1169,7 +1171,7 @@ def separarInmueble(request,id):
                 inmueble = Inmueble.objects.get(pk=id)
                 inmueble.inmEstado = "Separado"
                 inmueble.save()
-                venta = Venta(venUsuario=request.user,venInmueble=inmueble,venCliente=cliente)
+                venta = Venta(venUsuario=request.user,venInmueble=inmueble,venCliente=cliente,venFechaSeparacion=fechaInicio)
                 venta.save()
                 planPago = PlanDePago(plaFechaInicial=fechaInicio,plaFechaFinal=fechaFinal,
                                       plaNumCuota=numeroCuotas,plaCuotaInicial=cuotaInicial,
@@ -1201,6 +1203,29 @@ def generarPdfSeparacion(planPago:PlanDePago):
     pdf.mostrarDatos(planPago)
     pdf.output(f'media/separacion.pdf','F')
     return "media/separacion.pdf"
+
+def verificarDesistimiento():
+    try:
+        # Obtén todas las separaciones en estado "Separado"
+        inmuebles_separados = Inmueble.objects.filter(inmEstado="Separado")
+
+        # Obtén la fecha actual
+        fecha_actual = datetime.now()
+
+        # Itera a través de las separaciones y verifica si han pasado 3 días
+        for inmueble in inmuebles_separados:
+            venta = Venta.objects.filter(venInmueble=inmueble.id).first()
+            fecha_separacion = venta.venFechaSeparacion  # Asegúrate de tener un campo para la fecha de separación en tu modelo Inmueble
+
+            # Convierte la fecha de separación a datetime
+            fecha_separacion_datetime = datetime.combine(fecha_separacion, datetime.min.time())
+
+            if fecha_actual - fecha_separacion_datetime >= timedelta(days=3):
+                inmueble.inmEstado = "Disponible"
+                inmueble.save()
+    except Exception as e:
+        # Maneja cualquier error que pueda ocurrir durante la verificación
+        print(f"Error en la verificación de desistimiento: {e}")
 
 
 #-----------------------------/APIS/-----------------------------------------
