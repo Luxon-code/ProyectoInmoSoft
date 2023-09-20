@@ -168,6 +168,7 @@ def vistaSepararInmueble(request,id):
         if inmueble.inmCasa:
             inmu = {
                 'id':inmueble.id,
+                'idProyecto':inmueble.inmProyecto.id,
                 'hoy': hoy.strftime("%Y-%m-%d"),
                 'precioMostrar':f"{inmueble.inmCasa.casPrecioVivienda:,}",
                 'precio':inmueble.inmCasa.casPrecioVivienda,
@@ -176,6 +177,7 @@ def vistaSepararInmueble(request,id):
         else:
             inmu = {
                 'id':inmueble.id,
+                'idProyecto':inmueble.inmProyecto.id,
                 'hoy': hoy.strftime("%Y-%m-%d"),
                 'precioMostrar':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
                 'precio':inmueble.inmApartamento.apaPrecioVivienda,
@@ -185,7 +187,16 @@ def vistaSepararInmueble(request,id):
         return render(request,'asesor/separarInmueble.html',retorno)  
     else:
         mensaje = "Debe iniciar sesión"
-        return render(request,'inicioSesion.html',{"mensaje":mensaje})    
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})
+    
+def vistaListarVentasSeparadas(request):
+    if request.user.is_authenticated:
+        ventas = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Separado')
+        retorno = {"user":request.user, 'ventas':ventas}
+        return render(request,'asesor/vistaListarVentasSeparadas.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})   
 #-------------------------------------FUNCIONES--------------------------#       
 
 def registrarUsuario(request):
