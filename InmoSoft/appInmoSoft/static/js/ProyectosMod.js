@@ -21,7 +21,7 @@ function readProyectos() {
                     <td>${proyecto.ubicacion}</td>
                     <td>
                         <button class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${proyecto.id})">
-                            <i class="bi bi-pencil"></i> Editar
+                            <i class="fa fa-duotone fa-pen-to-square fa-fade"></i> Editar
                         </button>
                     </td>
                 </tr>`;

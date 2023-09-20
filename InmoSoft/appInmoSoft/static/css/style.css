@@ -4,6 +4,9 @@
     animation: pulse;
     animation-duration: 1s;
 }
+.cardProyecto{
+    box-shadow: 5px 5px 5px rgb(145, 140, 140);
+}
 
 .loader-container {
     position: fixed;

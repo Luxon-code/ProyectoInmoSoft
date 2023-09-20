@@ -3,28 +3,30 @@
     {% include "asesor/encabezado.html" %}
 {%endblock %}
 {% block contenido %}
-<div class="row">
-  <div id="carouselExampleDark" class="carousel slide">
-      <div class="carousel-indicators" id="indicadores">
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+<div class="bg-white p-5 rounded-5 text-dark shadow bg-opacity-75 w-100">
+  <div class="row mb-5">
+    <div id="carouselExampleDark" class="carousel slide w-100">
+        <div class="carousel-indicators" id="indicadores">
+          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner" id="CarruselProyectos">
+         
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
-      <div class="carousel-inner" id="CarruselProyectos">
-       
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-</div>
-<div class="row" id="listaProyectos">
- 
-
+  </div>
+  <div class="row" id="listaProyectos">
+   
+  
+  </div>
 </div>
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
