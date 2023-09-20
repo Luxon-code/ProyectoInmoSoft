@@ -189,12 +189,19 @@ def vistaSepararInmueble(request,id):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})
-    
+@soloAsesor 
 def vistaListarVentasSeparadas(request):
     if request.user.is_authenticated:
-        ventas = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Separado')
-        retorno = {"user":request.user, 'ventas':ventas}
+        retorno = {"user":request.user}
         return render(request,'asesor/vistaListarVentasSeparadas.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})   
+@soloAsesor 
+def vistaListarVentasVendidas(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}
+        return render(request,'asesor/vistaListarVentasVendidas.html',retorno)
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})   
@@ -937,7 +944,7 @@ def buscarProyecto(request, id):
     except Error as error:
         mensaje = f"{error}"
         return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
-     
+           
 def proyectosCarrusel(request):
     """
     Obtiene los últimos 5 proyectos activos y devuelve sus detalles para mostrar en un carrusel.
@@ -1227,7 +1234,38 @@ def verificarDesistimiento():
         # Maneja cualquier error que pueda ocurrir durante la verificación
         print(f"Error en la verificación de desistimiento: {e}")
 
-
+def listarVentasSeparadas(request):
+    try:
+        ventas = []
+        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Separado')
+        for venta in ventasModel:
+            ven = {
+                'id': venta.venInmueble.id,
+                'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
+                'proyecto': venta.venInmueble.inmProyecto.proNombre,
+                'estado': venta.venInmueble.inmEstado,
+            }
+            ventas.append(ven)
+        return JsonResponse({'ventas':ventas})
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500) 
+def listarVentasVendidas(request):
+    try:
+        ventas = []
+        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Vendido')
+        for venta in ventasModel:
+            ven = {
+                'id': venta.venInmueble.id,
+                'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
+                'proyecto': venta.venInmueble.inmProyecto.proNombre,
+                'estado': venta.venInmueble.inmEstado,
+            }
+            ventas.append(ven)
+        return JsonResponse({'ventas':ventas})
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500) 
 #-----------------------------/APIS/-----------------------------------------
 
 class UserList(generics.ListCreateAPIView):
