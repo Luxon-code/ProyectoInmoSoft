@@ -145,7 +145,7 @@ class Cliente(models.Model):
 
     
 class Venta(models.Model):
-    venFechaSeparacion = models.DateField(auto_now=True, db_comment="Fecha Separacion del cliente")
+    venFechaSeparacion = models.DateField(db_comment="Fecha Separacion del cliente")
     venFechaCreacion = models.DateField(auto_now=True, db_comment="Fecha de creacion")
     venfechaModificacion =  models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     venUsuario = models.ForeignKey(User,on_delete=models.PROTECT,db_comment="Asesor")
