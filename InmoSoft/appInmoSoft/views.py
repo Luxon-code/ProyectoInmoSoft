@@ -1230,6 +1230,25 @@ def verificarDesistimiento():
             if fecha_actual - fecha_separacion_datetime >= timedelta(days=3):
                 inmueble.inmEstado = "Disponible"
                 inmueble.save()
+                asunto = 'Liberacion de Inmueble Sistema InmoSoft'
+                mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos.\
+                informarle que el inmueble que usted ha separado de un proyecto, no se le ha realizado el primer pago acordado\
+                por lo tanto este inmueble quedara disponible otra vez para su venta apartir de este momento.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                https://inmosoft.pythonanywhere.com'
+                thread = threading.Thread(
+                    target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
+                thread.start()
+            elif fecha_actual - fecha_separacion_datetime >= timedelta(days=2):
+                asunto = 'Liberacion de Inmueble Sistema InmoSoft'
+                mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos.\
+                informarle que el inmueble que usted ha separado de un proyecto, no se le ha realizado el primer pago acordado\
+                por lo tanto este inmueble quedara disponible otra vez para su venta dentro de 1 día.Por favor realizar el pago.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                https://inmosoft.pythonanywhere.com'
+                thread = threading.Thread(
+                    target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
+                thread.start()
     except Exception as e:
         # Maneja cualquier error que pueda ocurrir durante la verificación
         print(f"Error en la verificación de desistimiento: {e}")
