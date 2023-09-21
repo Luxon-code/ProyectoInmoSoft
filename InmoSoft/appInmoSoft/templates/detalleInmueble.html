@@ -31,9 +31,7 @@
                         </button>
                       </div>
                   </div><br>
-                <div class="">
-                    <h5 class="bg-bold">Tipo de Proyecto: {{proyecto.tipo}}</h5>
-                </div>
+
                 <h4 class="bg-bold">Sobre el Proyecto</h4>
                 <div class="form-group row">
                     <div class="mt-3 col-lg-6">
@@ -61,9 +59,13 @@
                         <label for="txtNumImuebles" class="fw-bold">Número de imuebles:</label>
                         <input type="text" class="form-control" id="txtNumImuebles" placeholder="{{proyecto.numInmuebles}}" name="txtNumImuebles" disabled>
                     </div>
+                    <div class="d-flex justify-content-around mt-2">
+                        <h5 class="bg-bold">Tipo de Proyecto: {{proyecto.tipo}} </h5> 
+                        <h5 class="bg-bold">Ubicación: {{proyecto.ubicacion}}</h5>
+                    </div>
                     <div class="mt-3 col-lg-12">
                         <span class="fw-bold">Descripción</span>
-                        <p>{{proyecto.descripcion}}</p>
+                        <p>{{proyecto.descripcion}} Ubicado en {{proyecto.direccion}}</p>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-end">
