@@ -1,5 +1,12 @@
 function readVentasSeparadas(){
     let url = `/listarVentasSeparadas/`
+    tablaSeparados.innerHTML = `<tr>
+    <td colspan="5" class="text-center">
+        <div class="row d-flex justify-content-center">
+        <div class="custom-loader"></div>
+        </div>
+    </td>
+    </tr>`
     fetch(url)
     .then(response => response.json())
     .then(data => {
@@ -23,6 +30,13 @@ function readVentasSeparadas(){
 }
 function readVentasVendidas(){
     let url = `/listarVentasVendidas/`
+    tablaVendidos.innerHTML = `<tr>
+    <td colspan="5" class="text-center">
+        <div class="row d-flex justify-content-center">
+        <div class="custom-loader"></div>
+        </div>
+    </td>
+    </tr>`
     fetch(url)
     .then(response => response.json())
     .then(data => {
