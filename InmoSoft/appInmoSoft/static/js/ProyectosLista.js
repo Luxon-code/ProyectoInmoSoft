@@ -1,5 +1,5 @@
-function readProyectos() {
-    let url = `/listarProyectos/`;
+function readProyectos(page=null) {
+    let url = `/listarProyectos/?page=${page}`;
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -34,9 +34,42 @@ function readProyectos() {
 
             // Agregar el HTML de las tarjetas de proyectos al contenedor
             listaProyectos.innerHTML = projectsHTML;
+            generarBotonesPaginacion(data,page)
         })
         .catch(error => console.error('Error fetching data:', error));
 }
+
+function generarBotonesPaginacion(data,pagActual) {
+    const paginacionElement = document.getElementById('paginacion');
+    paginacionElement.innerHTML = ''; // Limpia el contenido anterior
+
+    // Verificar si hay más de una página antes de generar botones de paginación
+    if (data.num_paginas > 1) {
+        // Botón "Previous"
+        const previousButton = document.createElement('li');
+        previousButton.classList.add('page-item');
+        previousButton.innerHTML = `<a class="page-link paginacion" onclick="readProyectos(${pagActual!=null ?pagActual==1?1:pagActual-1:1})">Anterior</a>`;
+        paginacionElement.appendChild(previousButton);
+
+        // Botones de números de página
+        for (let i = 1; i <= data.num_paginas; i++) {
+            const pageButton = document.createElement('li');
+            pageButton.classList.add('page-item');
+            if (i === data.page) {
+                pageButton.classList.add('active');
+            }
+            pageButton.innerHTML = `<a class="page-link paginacion" onclick="readProyectos(${i})">${i}</a>`;
+            paginacionElement.appendChild(pageButton);
+        }
+
+        // Botón "Next"
+        const nextButton = document.createElement('li');
+        nextButton.classList.add('page-item');
+        nextButton.innerHTML = `<a class="page-link paginacion" onclick="readProyectos(${pagActual!=null ?pagActual==data.num_paginas?data.num_paginas:pagActual+1:2})">Siguiente</a>`;
+        paginacionElement.appendChild(nextButton);
+    }
+}
+
 
 function readCarrusel(){
     let url = `/proyectosCarrusel/`;
@@ -50,11 +83,13 @@ function readCarrusel(){
             let indicadoresHTML = ''
             data.proyectos.forEach((proyecto, index) => {
                 const imageUrl = `/media/${proyecto.foto}`;
-                const proyectoHTML = `<div class="carousel-item ${index==0?'active':''}" data-bs-interval="10000">
-                <img src="${imageUrl}" class="d-block" style="width: 100%; height: 25rem;" >
-                <div class="carousel-caption d-none d-md-block">
-                  <h5>${proyecto.nombre}</h5>
-                  <p>${proyecto.ubicacion}</p>
+                const proyectoHTML = `<div class="carousel-item ${index==0?'active':''}" data-bs-interval="3500">
+                <img src="${imageUrl}" class="rounded-5" style="width: 100%; height: 25rem;" >
+                <div class="carousel-caption d-flex justify-content-center">
+                    <div class="bg-white rounded-5 w-50 shadow bg-opacity-75">
+                        <h5>${proyecto.nombre}</h5>
+                        <p>${proyecto.ubicacion}</p>
+                    </div>
                 </div>
               </div>`;
                 const indicadorHTML = `<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="${index}" class=${index==0 ?"active":""} ${index==0?'aria-current="true"':null} aria-label="Slide ${index+1}"></button>`

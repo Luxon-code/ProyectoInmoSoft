@@ -13,7 +13,7 @@
                         class="card-img-top imgPrincipal" alt="...">
                 </div><br>
                 <div class="row" id= "carrousel">
-                    <div id="carouselExampleDark" class="carousel slide">
+                    <div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators" id="indicadores">
                             
                         </div>
@@ -70,7 +70,7 @@
                 </div>
                 <div class="row d-flex justify-content-end">
                     <div class="col-lg-6 d-flex justify-content-end">
-                        <a href="/vistaImmueblesDisponibles/{{proyecto.id}}" id="btnApartar" class="btn btn-secondary">Ver Inmuebles Disponibles</a>
+                        <a href="/vistaImmueblesDisponibles/{{proyecto.id}}" id="btnApartar" class="btn btn-secondary"><i class="fa fa-regular fa-eye fa-bounce"></i> Ver Inmuebles Disponibles</a>
                     </div>
                 </div>
             </div>
@@ -80,6 +80,7 @@
 
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
+<link rel="stylesheet" href="{% static 'css/buscador.css' %}">
 <script src="{% static '../static/js/proyectoDetal.js' %}"></script>
 <script src="{% static '../static/js/buscador.js' %}"></script>
 <script>

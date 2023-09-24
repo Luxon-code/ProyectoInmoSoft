@@ -4,9 +4,9 @@ function formatDate(dateString) {
 }
 
 function readProyectos() {
-    let url = `/listarProyectos/`
+    let url = `/listarProyectosModificar/`
     tblProyectos.innerHTML = `<tr>
-    <td colspan="5" class="text-center">
+    <td colspan="6" class="text-center">
         <div class="row d-flex justify-content-center">
         <div class="custom-loader"></div>
         </div>

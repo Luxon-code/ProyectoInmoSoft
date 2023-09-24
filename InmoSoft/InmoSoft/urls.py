@@ -38,6 +38,7 @@ urlpatterns = [
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
     path('listarProyectos/',views.listarProyectos,name="listarProyectos"),
+    path('listarProyectosModificar/',views.listarProyectosModificar),
     path('proyectosCarrusel/',views.proyectosCarrusel),
     path('proyectoDetalleCarrusel/<int:id>',views.proyectoDetalleCarrusel),
     path('cambiarEstadoUsuario/<int:id>',views.cambiarEstadoUsuario,name="cambiarEstadoUsuario"),

@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from appInmoSoft.models import *
 from appInmoSoft.serializers import *
@@ -840,7 +841,66 @@ def listarProyectos(request):
     """
     try:
         proyectos = []
-        proyects = Proyecto.objects.filter(proEstado=True).all()
+        proyects = Proyecto.objects.filter(proEstado=True).order_by('-profechaHoraCreacion').all()
+        elementos_por_pagina = 2
+        
+        # Obtén el número de página actual desde la solicitud (por defecto es 1)
+        pagina_actual = request.GET.get('page', 1)
+        
+        # Crea una instancia de Paginator
+        paginator = Paginator(proyects, elementos_por_pagina)
+        
+        # Obtiene la página actual
+        proyectos_pagina = paginator.get_page(pagina_actual)
+        num_paginas = paginator.num_pages
+        for proyect in proyectos_pagina:
+            inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
+            if inmueble.inmCasa:
+                proyecto = {
+                    'id': proyect.id,
+                    'nombre': proyect.proNombre,
+                    'tipo':proyect.proTipo,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'foto':str(proyect.proFoto),
+                    'precio':f"{inmueble.inmCasa.casPrecioVivienda:,}",
+                    'fecha':proyect.profechaHoraCreacion,
+                    'fiducia':proyect.proFiducia,
+                    'totalinmuebles':proyect.proTotalInmuebles,
+                }
+            else:
+                proyecto = {
+                    'id':proyect.id,
+                    'tipo':proyect.proTipo,
+                    'nombre': proyect.proNombre,
+                    'ubicacion':proyect.proUbicacion.ubiDepartamento +","+proyect.proUbicacion.ubiCuidad,
+                    'descripcion':proyect.proDescripcion,
+                    'foto':str(proyect.proFoto),
+                    'precio':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
+                    'fecha':proyect.profechaHoraCreacion,
+                    'fiducia':proyect.proFiducia,
+                    'totalinmuebles':proyect.proTotalInmuebles,
+                }
+            proyectos.append(proyecto)
+        retorno = {'proyectos':proyectos,'num_paginas':num_paginas}
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje=f"{error}"
+        return JsonResponse(mensaje)
+def listarProyectosModificar(request):
+    """
+    Recupera y lista los proyectos disponibles junto con sus detalles, incluyendo su tipo, ubicación, descripción, foto, precio,
+    fecha de creación, fiducia y total de inmuebles disponibles.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+
+    Returns:
+        JsonResponse: Una respuesta JSON que contiene una lista de proyectos y sus detalles.
+    """
+    try:
+        proyectos = []
+        proyects = Proyecto.objects.filter(proEstado=True).order_by('-profechaHoraCreacion').all()
         for proyect in proyects:
             inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
             if inmueble.inmCasa:

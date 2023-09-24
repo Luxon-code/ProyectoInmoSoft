@@ -20,7 +20,7 @@ function readVentasSeparadas(){
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                        <a href="#" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a>
+                        <a href="#" style="text-decoration: none; color: #6B85B3"><i class="fa fa-regular fa-address-book fa-fade fa-lg"></i></a>
                      </td>
                  </tr>`;
          });

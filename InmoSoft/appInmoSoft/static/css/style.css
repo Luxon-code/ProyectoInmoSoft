@@ -8,6 +8,15 @@
     box-shadow: 5px 5px 5px rgb(145, 140, 140);
 }
 
+.paginacion{
+  color: #1b1b1b;
+}
+
+.paginacion:hover{
+  color: #6483d8e8;
+  cursor: pointer;
+}
+
 .loader-container {
     position: fixed;
     top: 0;

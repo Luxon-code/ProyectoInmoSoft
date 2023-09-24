@@ -18,7 +18,7 @@ function readInmuebles(id) {
                 <td>$ ${element.Precio} COP</td>
                 <td>${element.tipo}</td>
                 <td>${element.disponibilidad}</td>
-                <td><a href="/vistaSepararInmueble/${element.id}/" class="btn btn-secondary">Apartar</a></td>
+                <td><a href="/vistaSepararInmueble/${element.id}/" class="btn btn-secondary"><i class="fa fa-solid fa-building-user fa-flip"></i> Apartar</a></td>
             </tr>`
         });
         tblInmuebles.innerHTML = table
