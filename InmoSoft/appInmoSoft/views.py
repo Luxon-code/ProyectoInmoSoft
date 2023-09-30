@@ -1277,6 +1277,60 @@ def generarPdfSeparacion(planPago:PlanDePago):
     pdf.output(f'media/separacion.pdf','F')
     return "media/separacion.pdf"
 
+def ObtenerPlanPago(request, id):
+    planpag = PlanDePago.objects.filter(plaVenta=id).first()
+    inmueble = Venta.objects.filter(id=id).first()
+    
+    try:    
+        planpago ={
+            'idInmueble':inmueble.venInmueble.id,
+            'idVenta':planpag.plaVenta.id,
+            'fechaInicio': planpag.plaFechaInicial,
+            'numCuotas': planpag.plaNumCuota,
+            'valorCuotas': planpag.plaValorDeCuota,
+            'valorCuotaInicial': planpag.plaCuotaInicial,
+            'fechaFinal': planpag.plaFechaFinal
+        }
+        retorno ={'planpago':planpago}
+        return JsonResponse(retorno)  # Return JSON response instead of rendering HTML
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
+
+def RegistrarPagoInicial(request, id):
+    if request.method == 'POST':
+        try:
+            valorPago = request.POST.get('txtCuotaInicial')
+            valorPendiente = request.POST.get('txtValorPendiente')
+            Recaudo = request.POST.get('txtCuotaInicial')
+            foto = request.FILES.get("fileFoto")
+            regpago= PlanDePago.objects.get(pk=id)
+            with transaction.atomic():
+                pago = RegistroPago(regValorPago = valorPago,
+                                    regPendiente= valorPendiente,
+                                    regRecaudo = Recaudo,
+                                    regPlanDePago= regpago,
+                                    regFoto= foto)
+                pago.save()
+                
+                venta = Venta.objects.get(pk=id)
+                inmuebl = venta.venInmueble.id
+                inmueble= Inmueble.objects.get(pk=inmuebl)
+                inmueble.inmEstado="Vendido"
+                inmueble.save()
+                mensaje="Pago Registrado correctamente"
+                retorno = {"mensaje":mensaje,"estado":True,}
+                return render(request,"asesor/vistaListarVentasSeparadas.html",retorno)
+        except Exception as error:
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}
+            return render(request,"asesor/vistaListarVentasSeparadas.html",retorno)
+                
+                
+                
+    
+    
+
 def verificarDesistimiento():
     try:
         # Obtén todas las separaciones en estado "Separado"
@@ -1325,6 +1379,7 @@ def listarVentasSeparadas(request):
         ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Separado')
         for venta in ventasModel:
             ven = {
+                'idVen':venta.id,
                 'id': venta.venInmueble.id,
                 'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
                 'proyecto': venta.venInmueble.inmProyecto.proNombre,
@@ -1341,6 +1396,7 @@ def listarVentasVendidas(request):
         ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Vendido')
         for venta in ventasModel:
             ven = {
+                'idVen':venta.id,
                 'id': venta.venInmueble.id,
                 'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
                 'proyecto': venta.venInmueble.inmProyecto.proNombre,

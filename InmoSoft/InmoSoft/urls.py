@@ -55,6 +55,8 @@ urlpatterns = [
     path('SepararInmueble/<int:id>/',views.separarInmueble),
     path('modificarProyecto/<int:id>/',views.modificarProyecto),
     path('cotizarProyecto/<int:id>/',views.enviarCotizacion),
+    path('ObtenerPlanPago/<int:id>/',views.ObtenerPlanPago),
+    path('RegistrarPagoInicial/<int:id>/',views.RegistrarPagoInicial),
     path('iniciarSesion/',views.iniciarSesion),
     path('Api/inicioSesion/<str:usuario>/<str:contraseña>',views.iniciarSesionAPI),
     path('cerrarSesion/',views.cerrarSesion),
