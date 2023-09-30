@@ -20,7 +20,9 @@ function readVentasSeparadas(){
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                        <a href="#" style="text-decoration: none; color: #6B85B3"><i class="fa fa-regular fa-address-book fa-fade fa-lg"></i></a>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${venta.idVen})">
+                            <i class="fa fa-duotone fa-pen-to-square fa-fade"></i> Editar
+                        </button>   
                      </td>
                  </tr>`;
          });
@@ -58,3 +60,35 @@ function readVentasVendidas(){
          cargarDataTable($("#tablaInmosoft"), "Inmubles Vendidos", 4);
     });
 }
+
+
+ // Obtener la fecha actual
+ var fechaActual = new Date();
+
+ // Obtener el elemento de entrada de fecha
+ var txtFechaInicial = document.getElementById("txtFechaInicial");
+
+ // Obtener el elemento de entrada de mes
+ var txtMes = document.getElementById("txtMes");
+
+ // Formatear la fecha en formato YY/MM/DD
+ var formatoFecha = fechaActual.getFullYear() + "/" + (fechaActual.getMonth() + 1).toString().padStart(2, '0') + "/" + fechaActual.getDate().toString().padStart(2, '0');
+
+ // Obtener el nombre del mes
+ var nombreMes = obtenerNombreMes(fechaActual.getMonth());
+
+ // Establecer el valor de los elementos de entrada
+ txtFechaInicial.value = formatoFecha;
+ txtMes.value = nombreMes;
+
+ // Función para obtener el nombre del mes
+ function obtenerNombreMes(mes) {
+     var meses = [
+         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+         "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+     ];
+     return meses[mes];
+ }
+
+
+ 

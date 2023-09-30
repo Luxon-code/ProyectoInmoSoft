@@ -37,6 +37,67 @@
     </div>
 </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl"> <!-- Add modal-xl class here -->
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center bg-body-secondary bg-opacity-75">
+                <h2>Registrar Pago</h2>
+            </div>
+                <div class="modal-body">
+
+                    <form action="" enctype="multipart/form-data" method="post" id="PagoInmueble"> 
+                        {% csrf_token %}
+                        <div class="row">     
+                            
+                            
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="txtFechaInicial"class="fw-bold">Fecha Inicial:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtFechaInicial" id="txtFechaInicial" readonly />
+                                </div>
+                            </div>
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="txtMes"class="fw-bold">Mes:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtMes" id="txtMes" readonly />
+                                </div>
+                            </div>
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="txtNumCuotas"class="fw-bold">numero de Cuotas:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtNumCuotas" id="txtNumCuotas" readonly />
+                                </div>
+                            </div>
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="txtCuotaInicial"class="fw-bold">Valor Cuota Inicial:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtCuotaInicial" id="txtCuotaInicial" readonly />
+                                </div>
+                            </div>
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="txtValorCuotas"class="fw-bold">Valor Cuotas:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtValorCuotas" id="txtValorCuotas" readonly />
+                                </div>
+                            </div>
+                            <input type="text"  name="txtValorPendiente" id="txtValorPendiente" hidden>
+                           
+                        </div>
+                        <div class="row m-3">
+                            <div class="col-12 text-center">
+                                <a type="button" data-bs-dismiss="modal" class="btn btn-outline-danger">Cancelar</a>
+                                <button type="submit"   class="btn btn-outline-secondary" id="btnRegistrarPago">Registrar Pago</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div> 
+        </div>
+    </div>
+</div>
+
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
 <link rel="stylesheet" href="{% static 'css/loaderTabla.css' %}">
@@ -45,6 +106,36 @@
 <script src="{% static '../static/js/ventas.js' %}"></script>
 <script>
     readVentasSeparadas()
+
+    function abrirModal(id) {
+        const url = `/ObtenerPlanPago/${id}/`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('txtFechaInicial').value = data.planpago.fechaInicio;
+                document.getElementById('txtNumCuotas').value = data.planpago.numCuotas;
+                document.getElementById('txtCuotaInicial').value = data.planpago.valorCuotaInicial;
+                document.getElementById('txtValorCuotas').value = data.planpago.valorCuotas;
+    
+                // Realizar el cálculo
+                const numCuotas = parseInt(data.planpago.numCuotas);
+                const valorCuotas = parseInt(data.planpago.valorCuotas);
+                const valorCuotaInicial = parseInt(data.planpago.valorCuotaInicial);
+    
+                const valorPendiente =  (numCuotas * valorCuotas);
+    
+                // Mostrar el resultado en el campo txtValorPendiente
+                document.getElementById('txtValorPendiente').value = valorPendiente;
+
+                const formulario = document.getElementById('PagoInmueble');
+                formulario.action = `/RegistrarPagoInicial/${data.planpago.idVenta}/`;
+            });
+    
+        // Mostrar el modal
+        $('#editarModal').modal('show');
+    }
+    
 </script>
 {%endblock %}
 {% block piePagina %}
