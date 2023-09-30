@@ -1299,12 +1299,14 @@ def RegistrarPagoInicial(request, id):
             valorPago = request.POST.get('txtCuotaInicial')
             valorPendiente = request.POST.get('txtValorPendiente')
             Recaudo = request.POST.get('txtCuotaInicial')
+            foto = request.FILES.get("fileFoto")
             regpago= PlanDePago.objects.get(pk=id)
             with transaction.atomic():
                 pago = RegistroPago(regValorPago = valorPago,
                                     regPendiente= valorPendiente,
                                     regRecaudo = Recaudo,
-                                    regPlanDePago= regpago)
+                                    regPlanDePago= regpago,
+                                    regFoto= foto)
                 pago.save()
                 
                 venta = Venta.objects.get(pk=id)

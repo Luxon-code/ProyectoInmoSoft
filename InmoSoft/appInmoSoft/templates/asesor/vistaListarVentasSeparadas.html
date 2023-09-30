@@ -82,6 +82,15 @@
                                     <input class="form-control" type="text" placeholder="" name="txtValorCuotas" id="txtValorCuotas" readonly />
                                 </div>
                             </div>
+                            <div class="mt-3 col-lg-6">
+                                <div>
+                                    <label for="fileFoto" class="fw-bold">Vale de Pago: </label>
+                                    <input type="file" name="fileFoto" class="form-control" id="fileFoto" placeholder="Foto"  accept="image/*" required />
+                                </div>
+                            </div>
+                            <div class="col-12 text-center m-2 imgPerfil2">
+                                <img src="../media/simboloPNG.png" class="" alt="img-pago" style="width:10rem;height: 10rem;">
+                            </div>
                             <input type="text"  name="txtValorPendiente" id="txtValorPendiente" hidden>
                            
                         </div>
@@ -130,11 +139,39 @@
 
                 const formulario = document.getElementById('PagoInmueble');
                 formulario.action = `/RegistrarPagoInicial/${data.planpago.idVenta}/`;
+
+                
+
             });
     
         // Mostrar el modal
         $('#editarModal').modal('show');
     }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        function previewImage(event) {
+            var input = event.target;
+            var imgPerfil = document.querySelector('.imgPerfil2 img');
+    
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+    
+                reader.onload = function(e) {
+                    imgPerfil.src = e.target.result;
+                }
+    
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                // Imagen por defecto en caso de no seleccionar ninguna
+                imgPerfil.src = '../media/simboloPNG.png';
+            }
+        }
+    
+        var fileInput = document.getElementById('fileFoto');
+        fileInput.addEventListener('change', previewImage);
+    });
+  
+    
     
 </script>
 {%endblock %}

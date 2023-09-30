@@ -170,3 +170,4 @@ class RegistroPago(models.Model):
     regfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     regfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     regPlanDePago = models.ForeignKey(PlanDePago, on_delete=models.PROTECT, db_comment="plan de pago")
+    regFoto = models.FileField(upload_to=f"fotosReg/", null=True, blank=True,db_comment="")
