@@ -1144,6 +1144,10 @@ def enviarCotizacion(request,id):
                 'precio': inmueble.inmCasa.casPrecioVivienda if inmueble.inmCasa else inmueble.inmApartamento.apaPrecioVivienda,
                 'direccion': proyect.proUbicacion.ubiDireccion
             }
+            clienteInteresado = ClienteInteresado(cliNombre=datos['nombre'],cliApellido=datos['apellido'],
+                                                  cliTelefono=datos['celular'],cliCorreo=datos['correo'],
+                                                  cliCedula=datos['cedula'],cliProyecto=proyect)
+            clienteInteresado.save()
             archivo = generarPdfCotizacion(datos)
             # enviar correo al usuario
             asunto = 'Cotizacion Sistema InmoSoft'
@@ -1356,3 +1360,9 @@ class UserList(generics.ListCreateAPIView):
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+class ClienteInteresadoList(generics.ListCreateAPIView):
+    serializer_class = ClienteInteresadoSerializer
+    def get_queryset(self):
+        proyecto = self.kwargs['proyecto'] 
+        return ClienteInteresado.objects.filter(cliProyecto=proyecto)

@@ -143,7 +143,15 @@ class Cliente(models.Model):
     clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
-    
+class ClienteInteresado(models.Model):
+    cliNombre = models.CharField(max_length=50,db_comment="Nombre del cliente")
+    cliApellido = models.CharField(max_length=50,db_comment="Apellido del cliente")
+    cliTelefono =  models.CharField(max_length=50, db_comment="Telefono del cliente")
+    cliCorreo = models.CharField(max_length=50,db_comment="Correo del cliente")
+    cliCedula =  models.CharField(max_length=50, db_comment="cedula del cliente")
+    cliProyecto = models.ForeignKey(Proyecto,on_delete=models.PROTECT,db_comment="Proyecto interesado del cliente")
+    clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
+    clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 class Venta(models.Model):
     venFechaSeparacion = models.DateField(db_comment="Fecha Separacion del cliente")
     venFechaCreacion = models.DateField(auto_now=True, db_comment="Fecha de creacion")
