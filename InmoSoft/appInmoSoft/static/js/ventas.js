@@ -14,15 +14,14 @@ function readVentasSeparadas(){
          let table = ""
          data.ventas.forEach((venta) => {
              table += `
+             
                  <tr class="text-center">
                      <td>${venta.id}</td>
                      <td>${venta.cliente}</td>
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                        <button class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${venta.idVen})">
-                            <i class="fa fa-duotone fa-pen-to-square fa-fade"></i> Editar
-                        </button>   
+                     <a onclick="abrirModal(${venta.idVen})" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a> 
                      </td>
                  </tr>`;
          });
