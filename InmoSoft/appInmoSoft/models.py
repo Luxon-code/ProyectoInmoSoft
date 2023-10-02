@@ -166,6 +166,7 @@ class RegistroPago(models.Model):
     regFechaPago=models.DateField(auto_now=True, db_comment="Fecha de pago")
     regValorPago=models.IntegerField(db_comment="Valor de pagode la cuota")
     regPendiente=models.IntegerField(db_comment="Valor pendiente")
+    regNumCuota=models.IntegerField(db_comment="Número de cuota")
     regRecaudo= models.IntegerField(db_comment="Recaudo total")
     regfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     regfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")

@@ -208,6 +208,8 @@ def vistaListarVentasVendidas(request):
     else:
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})   
+    
+
 #-------------------------------------FUNCIONES--------------------------#       
 
 def registrarUsuario(request):
@@ -1301,12 +1303,15 @@ def RegistrarPagoInicial(request, id):
             Recaudo = request.POST.get('txtCuotaInicial')
             foto = request.FILES.get("fileFoto")
             regpago= PlanDePago.objects.get(pk=id)
+            cuota = 1
             with transaction.atomic():
                 pago = RegistroPago(regValorPago = valorPago,
                                     regPendiente= valorPendiente,
                                     regRecaudo = Recaudo,
                                     regPlanDePago= regpago,
-                                    regFoto= foto)
+                                    regFoto= foto,
+                                    regNumCuota= cuota)
+                
                 pago.save()
                 
                 venta = Venta.objects.get(pk=id)
@@ -1321,6 +1326,59 @@ def RegistrarPagoInicial(request, id):
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
             return render(request,"asesor/vistaListarVentasSeparadas.html",retorno)
+        
+def obtenerPagosRegistrados(request, id):
+    planpag = PlanDePago.objects.filter(plaVenta=id).first()
+    idPlan = planpag.id
+    registroPagos = RegistroPago.objects.filter(regPlanDePago=idPlan).first()
+    
+    try:
+        registroPago ={
+            'id':registroPagos.id,
+            'valorPago':planpag.plaValorDeCuota,
+            'fechaInicio':planpag.plaFechaInicial,
+            'fechaPago': registroPagos.regFechaPago,
+            'numCuota': registroPagos.regNumCuota,
+            'valorPendiente': registroPagos.regPendiente,
+            'valorRecaudado': registroPagos.regRecaudo,    
+        }
+        retorno ={'registroPago':registroPago}
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
+    
+def actualizarPago(request, id):
+     if request.method == 'POST':
+        try:
+            fechapago = request.POST.get('txtFechaPago')
+            valorcuota = request.POST.get('txtValorCuota')
+            pendiente = request.POST.get('txtValorPendiente')
+            total = request.POST.get('txtValorPagoTotal')
+            numcuota = request.POST.get('txtNumCuota')
+            foto = request.FILES.get("fileFoto")
+            with transaction.atomic():
+                registro = RegistroPago.objects.filter(pk=id).first()
+                registro.regFechaPago = fechapago
+                registro.regValorPago = valorcuota
+                registro.regPendiente = pendiente
+                registro.regRecaudo = total
+                registro.regNumCuota =  numcuota
+                if(foto):
+                        os.remove('./media/'+str(registro.regFoto))
+                        registro.regFoto = foto
+                registro.save()
+                mensaje = "Pago realizado correctamente"
+                retorno = {"mensaje": mensaje,"estado": True}
+                return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+        except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}
+        return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+    
+    
+    
                 
                 
                 

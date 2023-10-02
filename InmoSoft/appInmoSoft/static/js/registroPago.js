@@ -1,34 +1,3 @@
-function readVentasSeparadas(){
-    let url = `/listarVentasSeparadas/`
-    tablaSeparados.innerHTML = `<tr>
-    <td colspan="5" class="text-center">
-        <div class="row d-flex justify-content-center">
-        <div class="custom-loader"></div>
-        </div>
-    </td>
-    </tr>`
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-         let table = ""
-         data.ventas.forEach((venta) => {
-             table += `
-             
-                 <tr class="text-center">
-                     <td>${venta.id}</td>
-                     <td>${venta.cliente}</td>
-                     <td>${venta.proyecto}</td>
-                     <td>${venta.estado}</td>
-                     <td>
-                     <a onclick="abrirModal(${venta.idVen})" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a> 
-                     </td>
-                 </tr>`;
-         });
-         tablaSeparados.innerHTML = table;
-         cargarDataTable($("#tablaInmosoft"), "Inmuebles Separados", 4);
-    });
-}
 function readVentasVendidas(){
     let url = `/listarVentasVendidas/`
     tablaVendidos.innerHTML = `<tr>
@@ -51,7 +20,7 @@ function readVentasVendidas(){
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                     <a onclick="abrirModal(${venta.idVen})" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a> 
+                        <a onclick="abrirModal(${venta.idVen})" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a> 
                      </td>
                  </tr>`;
          });
@@ -89,5 +58,3 @@ function readVentasVendidas(){
      return meses[mes];
  }
 
-
- 
