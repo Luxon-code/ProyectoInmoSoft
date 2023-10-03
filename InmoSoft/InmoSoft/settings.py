@@ -139,8 +139,8 @@ GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld2Ud8mAAAAADRTJN0vMNK4ZYyCaBYQcByGF60g'
 
 #variables configuración correo
 EMAIL_HOST="sandbox.smtp.mailtrap.io"
-EMAIL_PORT="2525"
-EMAIL_HOST_USER="8193035cda119f" 
-EMAIL_HOST_PASSWORD='6d9bbe39c0895e' 
+EMAIL_PORT="587"
+EMAIL_HOST_USER="84f38167d449b3" 
+EMAIL_HOST_PASSWORD='d230e02faa7d33' 
 #variable para personalizar lo que manda django por defecto en el correo de mandar contraseña
 PASSWORD_RESET_EMAIL_TEMPLATE = 'recuperarContraseña/password_reset_email.html'

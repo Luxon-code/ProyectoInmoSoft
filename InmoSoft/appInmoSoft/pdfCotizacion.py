@@ -1,6 +1,7 @@
 from fpdf import FPDF
-from datetime import datetime
-
+from PIL import Image
+from io import BytesIO
+import tempfile
 
 class PdfCotizacion(FPDF):
     def header(self):
@@ -25,7 +26,7 @@ class PdfCotizacion(FPDF):
         self.set_font('Arial', 'I', 8)
         self.cell(0, 10, f'Página {self.page_no()}', 0, 0, 'C')
         
-    def mostrarDatos(self,datos):
+    def mostrarDatos(self, datos):
         #cliente
         self.set_font('Arial','B',14)
         self.cell(0,10,'Información del Cliente',0,1,'C')
@@ -56,7 +57,18 @@ class PdfCotizacion(FPDF):
         self.ln()
         self.set_font('Arial','B',12)
         self.cell(0,10,datos["nombreProyecto"],0,1,'C')
-        self.image(f'media/{datos["foto"]}',w=100,h=60,x=55)
+        # Ruta de la imagen (reemplaza con la ruta de tu imagen)
+        imagen_entrada = f'media/{datos["foto"]}'
+        # Abre la imagen utilizando Pillow
+        imagen = Image.open(imagen_entrada)
+        imagen = imagen.convert('RGB')
+        
+        # Guarda la imagen convertida como un archivo temporal
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.jpg')
+        imagen.save(temp_file.name, format='JPEG')
+        
+        # Muestra la imagen en el PDF
+        self.image(temp_file.name, w=100, h=60, x=55)
         self.ln()
         self.cell(0,10,"Descripcion",0,1,"L")
         self.set_font('Arial','',12)

@@ -143,7 +143,15 @@ class Cliente(models.Model):
     clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 
-    
+class ClienteInteresado(models.Model):
+    cliNombre = models.CharField(max_length=50,db_comment="Nombre del cliente")
+    cliApellido = models.CharField(max_length=50,db_comment="Apellido del cliente")
+    cliTelefono =  models.CharField(max_length=50, db_comment="Telefono del cliente")
+    cliCorreo = models.CharField(max_length=50,db_comment="Correo del cliente")
+    cliCedula =  models.CharField(max_length=50, db_comment="cedula del cliente")
+    cliProyecto = models.ForeignKey(Proyecto,on_delete=models.PROTECT,db_comment="Proyecto interesado del cliente")
+    clifechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
+    clifechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
 class Venta(models.Model):
     venFechaSeparacion = models.DateField(db_comment="Fecha Separacion del cliente")
     venFechaCreacion = models.DateField(auto_now=True, db_comment="Fecha de creacion")
@@ -164,10 +172,16 @@ class PlanDePago(models.Model):
     
 class RegistroPago(models.Model):
     regFechaPago=models.DateField(auto_now=True, db_comment="Fecha de pago")
+<<<<<<< HEAD
     regValorPago=models.IntegerField(db_comment="Valor de pagode la cuota")
     regPendiente=models.IntegerField(db_comment="Valor pendiente")
     regNumCuota=models.IntegerField(db_comment="Número de cuota")
     regRecaudo= models.IntegerField(db_comment="Recaudo total")
+=======
+    regValorPago=models.BigIntegerField(db_comment="Valor de pagode la cuota")
+    regPendiente=models.BigIntegerField(db_comment="Valor pendiente")
+    regRecaudo= models.BigIntegerField(db_comment="Recaudo total")
+>>>>>>> caff90065b7924755f306dafe0a239e007713311
     regfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     regfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     regPlanDePago = models.ForeignKey(PlanDePago, on_delete=models.PROTECT, db_comment="plan de pago")
