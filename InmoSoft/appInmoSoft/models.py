@@ -172,16 +172,10 @@ class PlanDePago(models.Model):
     
 class RegistroPago(models.Model):
     regFechaPago=models.DateField(auto_now=True, db_comment="Fecha de pago")
-<<<<<<< HEAD
-    regValorPago=models.IntegerField(db_comment="Valor de pagode la cuota")
-    regPendiente=models.IntegerField(db_comment="Valor pendiente")
-    regNumCuota=models.IntegerField(db_comment="Número de cuota")
-    regRecaudo= models.IntegerField(db_comment="Recaudo total")
-=======
     regValorPago=models.BigIntegerField(db_comment="Valor de pagode la cuota")
     regPendiente=models.BigIntegerField(db_comment="Valor pendiente")
+    regNumCuota=models.BigIntegerField(db_comment="Número de cuota")
     regRecaudo= models.BigIntegerField(db_comment="Recaudo total")
->>>>>>> caff90065b7924755f306dafe0a239e007713311
     regfechaHoraCreacion  = models.DateTimeField(auto_now_add=True,db_comment="Fecha y hora del registro")
     regfechaHoraActualizacion = models.DateTimeField(auto_now=True,db_comment="Fecha y hora última actualización")
     regPlanDePago = models.ForeignKey(PlanDePago, on_delete=models.PROTECT, db_comment="plan de pago")
