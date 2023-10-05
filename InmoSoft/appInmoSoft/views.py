@@ -5,6 +5,7 @@ from appInmoSoft.models import *
 from appInmoSoft.serializers import *
 from rest_framework import generics
 from django.contrib.auth.models import Group
+from django.views.decorators.csrf import csrf_exempt
 from django.db import Error, transaction
 from django.core.files.base import ContentFile
 import random
@@ -1181,7 +1182,77 @@ def enviarCotizacion(request,id):
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False,"id":proyect.id}
             return render(request,'detalleInmueble.html',retorno)
-            
+@csrf_exempt
+def apiEnviarCotizacion(request,id):
+    import json
+    """
+    Esta función maneja la lógica para enviar una cotización por correo electrónico y realizar otras tareas relacionadas.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP recibida.
+        id (int): El ID del proyecto.
+
+    Returns:
+        HttpResponse: Una respuesta JSON que indica si el envio fue exitoso o si se produjo un error.
+    """
+    try:
+        data = json.loads(request.body)
+        proyect = Proyecto.objects.get(pk=id)
+        inmueble = Inmueble.objects.get(pk=proyect.id)
+        datos = {
+            'cedula': data.get('txtCedula'),
+            'nombre': data.get('txtNombre'),
+            'apellido': data.get('txtApellido'),
+            'celular': data.get('txtCelular'),
+            'correo': data.get('txtCorreo'),
+            'nombreProyecto': proyect.proNombre,
+            'fiducia': proyect.proFiducia,
+            'tipo': proyect.proTipo,
+            'costoSeparacion': proyect.proCostoSeparacion,
+            'cantParquedero': proyect.proCantidadParqueadero,
+            'departamento': proyect.proUbicacion.ubiDepartamento,
+            'municipio': proyect.proUbicacion.ubiCuidad,
+            'descripcion': proyect.proDescripcion,
+            'parqueadero': proyect.proParqueadero,
+            'foto': str(proyect.proFoto),
+            'precio': inmueble.inmCasa.casPrecioVivienda if inmueble.inmCasa else inmueble.inmApartamento.apaPrecioVivienda,
+            'direccion': proyect.proUbicacion.ubiDireccion
+        }
+        clienteInteresado = ClienteInteresado(cliNombre=datos['nombre'],cliApellido=datos['apellido'],
+                                              cliTelefono=datos['celular'],cliCorreo=datos['correo'],
+                                              cliCedula=datos['cedula'],cliProyecto=proyect)
+        clienteInteresado.save()
+        archivo = generarPdfCotizacion(datos)
+        # enviar correo al usuario
+        asunto = 'Cotizacion Sistema InmoSoft'
+        mensajeCorreo = f'Cordial saludo, <b>{datos["nombre"]} {datos["apellido"]}</b>, nos permitimos.\
+            informarle que usted ha pedido la cotizacion de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
+            por lo tanto, en lo mas pronto posible uno de nuestros asesores se comunicara con usted.<br>\
+            Nos permitimos enviarle un pdf adjunto sobre su cotizacion.<br>\
+            <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+            https://inmosoft.pythonanywhere.com'
+        thread = threading.Thread(
+            target=enviarCorreo, args=(asunto, mensajeCorreo, [datos['correo']],archivo))
+        thread.start()
+        usuarios = User.objects.filter(userTipo='Asesor')
+        for usuario in usuarios:
+            asunto = 'Cotizacion Sistema InmoSoft'
+            mensajeCorreo = f'Cordial saludo, <b>{usuario.first_name} {usuario.last_name}</b>, nos permitimos.\
+            informarle que la persona {datos["nombre"]} {datos["apellido"]} ha pedido la cotizacion de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
+            por lo tanto, en lo mas pronto posible le pedimos que se comunique con el para generar una posible venta.<br>\
+            Nos permitimos enviarle un pdf adjunto con los datos de la persona y el proyecto interesado.<br>\
+            <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+            https://inmosoft.pythonanywhere.com'
+            thread = threading.Thread(
+                target=enviarCorreo, args=(asunto, mensajeCorreo, [usuario.email],archivo))
+            thread.start()
+        mensaje = "Se le enviado un correo electronico a su correo con la informacion de su cotizacion"
+        retorno= {"mensaje":mensaje,"estado":True,"id":proyect.id}
+        return JsonResponse(retorno)
+    except Error as error:
+        mensaje = f"{error}"
+        retorno = {"mensaje":mensaje,"estado":False,"id":proyect.id}
+        return JsonResponse(retorno)
             
 def generarPdfCotizacion(datos):
     """
