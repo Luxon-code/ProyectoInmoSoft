@@ -159,6 +159,7 @@ class Venta(models.Model):
     venUsuario = models.ForeignKey(User,on_delete=models.PROTECT,db_comment="Asesor")
     venInmueble = models.ForeignKey(Inmueble, on_delete=models.PROTECT,db_comment="Inmueble disponible para la venta")
     venCliente = models.ForeignKey(Cliente,on_delete=models.PROTECT,db_column="Cliente interesado en el inmueble")
+    venEstadoMora = models.BooleanField(default=False,db_comment="Estado de mora")
     
 class PlanDePago(models.Model):
     plaFechaInicial = models.DateField(db_comment="Fecha de inicio del plan de pago")
@@ -172,7 +173,7 @@ class PlanDePago(models.Model):
     
 class RegistroPago(models.Model):
     regFechaPago=models.DateField(auto_now=True, db_comment="Fecha de pago")
-    regValorPago=models.BigIntegerField(db_comment="Valor de pagode la cuota")
+    regValorPago=models.BigIntegerField(db_comment="Valor de pago de la cuota")
     regPendiente=models.BigIntegerField(db_comment="Valor pendiente")
     regNumCuota=models.BigIntegerField(db_comment="Número de cuota")
     regRecaudo= models.BigIntegerField(db_comment="Recaudo total")

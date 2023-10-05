@@ -34,6 +34,7 @@ urlpatterns = [
     path("inicioAdministrador/",views.vistaInicioAdministrador),
     path('inicioAsesor/', views.vistaInicioAsesor),
     path('vistaImmueblesDisponibles/<int:id>/', views.vistaImmueblesDisponibles),
+    path ('vistaListaMora', views.vistaListaMora),
     path('listarInmuebles/<int:id>/', views.listarInmuebles),
     path('registrarUsuario/',views.registrarUsuario),
     path('getUsuarios/',views.getUsuarios),
