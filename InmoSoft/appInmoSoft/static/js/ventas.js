@@ -21,7 +21,7 @@ function readVentasSeparadas(){
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                     <a href="#" onclick="abrirModal(${venta.idVen})" style="text-decoration: none; color: #6B85B3"><i class="fa fa-duotone fa-file-circle-plus fa-fade fa-lg"></i></a> 
+                     <a href="#" class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${venta.idVen})"><i class="fa-solid fa-file-invoice-dollar fa-fade"></i> Pago</a> 
                      </td>
                  </tr>`;
          });

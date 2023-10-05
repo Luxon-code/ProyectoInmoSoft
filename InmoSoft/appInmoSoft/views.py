@@ -210,6 +210,16 @@ def vistaListarVentasVendidas(request):
         mensaje = "Debe iniciar sesión"
         return render(request,'inicioSesion.html',{"mensaje":mensaje})   
     
+@soloAsesor
+def vistaListaMora(request):
+    if request.user.is_authenticated:
+        retorno = {"user":request.user}
+        return render(request,'asesor/vistaListaMora.html',retorno)
+    else:
+        mensaje = "Debe iniciar sesión"
+        return render(request,'inicioSesion.html',{"mensaje":mensaje})   
+
+    
 
 #-------------------------------------FUNCIONES--------------------------#       
 
@@ -1536,6 +1546,21 @@ def listarVentasVendidas(request):
     except Error as error:
         mensaje = f"{error}"
         return JsonResponse({'mensaje': mensaje}, status=500) 
+    
+def EnviarListaMora(request, id):
+    try:
+        venta = Venta.objects.filter(pk=id).first()
+        venta.venEstadoMora = True  # Cambia el estado de mora a True
+        venta.save()
+        mensaje = "El usuario se ha enviado a la lista de mora"
+        retorno = {"mensaje": mensaje,"estado": True}
+        return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+    except Error as error:
+            transaction.rollback()
+            mensaje = f"{error}"
+            retorno = {"mensaje":mensaje,"estado":False}
+            return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+
 #-----------------------------/APIS/-----------------------------------------
 
 class UserList(generics.ListCreateAPIView):
