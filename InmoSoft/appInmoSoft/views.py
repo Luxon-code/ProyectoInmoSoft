@@ -16,7 +16,7 @@ from django.contrib import auth
 from django.conf import settings
 from .decorators import soloAdmin,soloAsesor
 import os
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.template.loader import get_template
 import threading
 import requests
@@ -293,7 +293,7 @@ def registrarUsuario(request):
                 }
     return render(request, "administrador/registrarUsuario.html",retorno)
 
-def enviarCorreo(asunto=None, mensaje=None, destinatario=None,archivo=None):
+def enviarCorreo(asunto=None, mensaje=None, destinatario=None, archivo=None):
     remitente = settings.EMAIL_HOST_USER
     template = get_template('enviarCorreo.html')
     contenido = template.render({
@@ -303,13 +303,17 @@ def enviarCorreo(asunto=None, mensaje=None, destinatario=None,archivo=None):
         'remitente': remitente,
     })
     try:
-        correo = EmailMultiAlternatives(
-            asunto, mensaje, remitente, destinatario)
-        correo.attach_alternative(contenido, 'text/html')
+        correo = EmailMessage(
+            asunto,
+            contenido,  # Utilizamos el contenido HTML como el cuerpo del correo
+            remitente,
+            destinatario,
+        )
+        correo.content_subtype = "html"
         if archivo != None:
             correo.attach_file(archivo)
         correo.send(fail_silently=True)
-    except SMTPException as error:
+    except Exception as error:
         print(error)
         
 def generarPassword():
@@ -998,21 +1002,39 @@ def buscarProyecto(request, id):
     """
     try:
         proyect = Proyecto.objects.filter(id=id).first()
-
-        proyecto = {
-            'id': proyect.id,
-            'nombre': proyect.proNombre,
-            'fiducia':proyect.proFiducia,
-            'tipo':proyect.proTipo,
-            'costoSeparacion':proyect.proCostoSeparacion,
-            'cantParquedero':proyect.proCantidadParqueadero,
-            'departamento': proyect.proUbicacion.ubiDepartamento,
-            'municipio': proyect.proUbicacion.ubiCuidad,
-            'descripcion': proyect.proDescripcion,
-            'parqueadero': proyect.proParqueadero,
-            'foto': str(proyect.proFoto),
-            'direccion': proyect.proUbicacion.ubiDireccion
-        }
+        inmueble = Inmueble.objects.filter(inmProyecto=proyect.id).first()
+        if inmueble.inmCasa:
+            proyecto = {
+                'id': proyect.id,
+                'nombre': proyect.proNombre,
+                'fiducia':proyect.proFiducia,
+                'tipo':proyect.proTipo,
+                'costoSeparacion':proyect.proCostoSeparacion,
+                'cantParquedero':proyect.proCantidadParqueadero,
+                'departamento': proyect.proUbicacion.ubiDepartamento,
+                'municipio': proyect.proUbicacion.ubiCuidad,
+                'descripcion': proyect.proDescripcion,
+                'parqueadero': proyect.proParqueadero,
+                'foto': str(proyect.proFoto),
+                'direccion': proyect.proUbicacion.ubiDireccion,
+                'precio':f"{inmueble.inmCasa.casPrecioVivienda:,}",
+            }
+        else:
+            proyecto = {
+                'id': proyect.id,
+                'nombre': proyect.proNombre,
+                'fiducia':proyect.proFiducia,
+                'tipo':proyect.proTipo,
+                'costoSeparacion':proyect.proCostoSeparacion,
+                'cantParquedero':proyect.proCantidadParqueadero,
+                'departamento': proyect.proUbicacion.ubiDepartamento,
+                'municipio': proyect.proUbicacion.ubiCuidad,
+                'descripcion': proyect.proDescripcion,
+                'parqueadero': proyect.proParqueadero,
+                'foto': str(proyect.proFoto),
+                'direccion': proyect.proUbicacion.ubiDireccion,
+                'precio':f"{inmueble.inmApartamento.apaPrecioVivienda:,}",
+            }
         
         retorno = {'proyecto': proyecto}
         return JsonResponse(retorno)  # Return JSON response instead of rendering HTML

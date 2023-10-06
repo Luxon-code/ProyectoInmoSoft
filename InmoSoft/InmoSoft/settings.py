@@ -138,9 +138,10 @@ AUTH_USER_MODEL = 'appInmoSoft.User'
 GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld2Ud8mAAAAADRTJN0vMNK4ZYyCaBYQcByGF60g'
 
 #variables configuración correo
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = 'bdf43f595b707f'
-EMAIL_HOST_PASSWORD = 'a899ac8fe8dba6'
-EMAIL_PORT = '2525'
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER="jt9906157@gmail.com"
+EMAIL_HOST_PASSWORD='pkyj crmw mkma qbtz'
 #variable para personalizar lo que manda django por defecto en el correo de mandar contraseña
 PASSWORD_RESET_EMAIL_TEMPLATE = 'recuperarContraseña/password_reset_email.html'
