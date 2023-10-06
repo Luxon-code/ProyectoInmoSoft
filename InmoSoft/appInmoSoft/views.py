@@ -1419,6 +1419,7 @@ def obtenerPagosRegistrados(request, id):
     
     try:
         registroPago ={
+            'numCuotas': planpag.plaNumCuota,
             'id':registroPagos.id,
             'valorPago':planpag.plaValorDeCuota,
             'fechaInicio':planpag.plaFechaInicial,
@@ -1453,7 +1454,11 @@ def actualizarPago(request, id):
                         os.remove('./media/'+str(registro.regFoto))
                         registro.regFoto = foto
                 registro.save()
-                mensaje = "Pago realizado correctamente"
+                planPago = PlanDePago.objects.get(pk=registro.regPlanDePago.id)
+                venta = Venta.objects.get(pk=planPago.plaVenta.id)
+                venta.venEstadoMora = False
+                venta.save()
+                mensaje = "Pago Registrado correctamente"
                 retorno = {"mensaje": mensaje,"estado": True}
                 return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
         except Error as error:
@@ -1532,7 +1537,7 @@ def listarVentasSeparadas(request):
 def listarVentasVendidas(request):
     try:
         ventas = []
-        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Vendido')
+        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Vendido',venEstadoMora=False)
         for venta in ventasModel:
             ven = {
                 'idVen':venta.id,
@@ -1550,17 +1555,54 @@ def listarVentasVendidas(request):
 def EnviarListaMora(request, id):
     try:
         venta = Venta.objects.filter(pk=id).first()
-        venta.venEstadoMora = True  # Cambia el estado de mora a True
-        venta.save()
-        mensaje = "El usuario se ha enviado a la lista de mora"
-        retorno = {"mensaje": mensaje,"estado": True}
+        plapago = PlanDePago.objects.filter(plaVenta=venta.id).first()
+        registroPago = RegistroPago.objects.filter(regPlanDePago=plapago.id).first()
+        if registroPago.regNumCuota < plapago.plaNumCuota:
+            venta.venEstadoMora = True  # Cambia el estado de mora a True
+            venta.save()
+            estado = True
+            mensaje = "El Cliente se ha enviado a la lista de mora"
+            asunto = 'Liberacion de Inmueble Sistema InmoSoft'
+            mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos\
+            informarle que el inmueble que usted ha separado de un proyecto,actualmuente se encuentra atrasado en su ultimo pago.\
+            por lo tanto en lo mas pronto posible por favor realizar el pago.<br>\
+            <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+            https://inmosoft.pythonanywhere.com'
+            thread = threading.Thread(
+                target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
+            thread.start()
+        else:
+            estado = False
+            mensaje = "Este Cliente ha completado su pago"
+        retorno = {"mensaje": mensaje,"estado": estado}
         return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
     except Error as error:
             transaction.rollback()
             mensaje = f"{error}"
             retorno = {"mensaje":mensaje,"estado":False}
             return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
-
+    
+def ObtenerListaMora (request):
+    try:
+        Mora=[]
+        listaMora = Venta.objects.filter(venUsuario=request.user,venEstadoMora=True)
+        for usumora in listaMora:
+            planPago = PlanDePago.objects.filter(plaVenta=usumora.id).first()
+            registroPago = RegistroPago.objects.filter(regPlanDePago=planPago.id).first()
+            mora={
+                'idVen':usumora.id,
+                'id': usumora.venInmueble.id,
+                'cliente': f"{usumora.venCliente.cliNombre} {usumora.venCliente.cliApellido}",
+                'proyecto': usumora.venInmueble.inmProyecto.proNombre,
+                'estado': usumora.venInmueble.inmEstado,
+                'numCuotaActual':registroPago.regNumCuota,
+                'idRegistroPago':registroPago.id,
+            }
+            Mora.append(mora)
+        return JsonResponse({'ListaMora':Mora})
+    except Error as error:
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)
 #-----------------------------/APIS/-----------------------------------------
 
 class UserList(generics.ListCreateAPIView):

@@ -14,7 +14,7 @@ function readInmuebles(id) {
             let table = ""
             data.inmuebles.forEach((element,index)=> {
                 table+= `<tr class="text-center">
-                <th scope="row">${index+1}</th>
+                <th scope="row">${element.id}</th>
                 <td>$ ${element.Precio} COP</td>
                 <td>${element.tipo}</td>
                 <td>${element.disponibilidad}</td>
