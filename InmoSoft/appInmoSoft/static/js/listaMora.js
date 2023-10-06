@@ -21,7 +21,7 @@ function readListaMora(){
                      <td>${Mora.cliente}</td>
                      <td>${Mora.estado}</td>
                      <td>
-                     <a href="/actualizarPago/${Mora.idRegistroPago}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-file-invoice-dollar fa-fade"></i> Pago</a> 
+                     <a href="#" class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${Mora.idVen})"><i class="fa-solid fa-file-invoice-dollar fa-fade"></i> Pago</a> 
                      </td>
                  </tr>`;
          });
