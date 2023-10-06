@@ -72,16 +72,18 @@
                             </div>
                             <div class="mt-3 col-lg-6">
                                 <div>
-                                    <label for="txtCuotaInicial"class="fw-bold">Valor Cuota Inicial:</label> <br>
-                                    <input class="form-control" type="text" placeholder="" name="txtCuotaInicial" id="txtCuotaInicial" readonly />
+                                    <label for="txtCuotaInicialMostrar"class="fw-bold">Valor Cuota Inicial:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtCuotaInicialMostrar" id="txtCuotaInicialMostrar" readonly />
                                 </div>
                             </div>
+                            <input class="form-control" type="hidden" placeholder="" name="txtCuotaInicial" id="txtCuotaInicial" />
                             <div class="mt-3 col-lg-6">
                                 <div>
-                                    <label for="txtValorCuotas"class="fw-bold">Valor Cuotas:</label> <br>
-                                    <input class="form-control" type="text" placeholder="" name="txtValorCuotas" id="txtValorCuotas" readonly />
+                                    <label for="txtValorCuotasMostrar"class="fw-bold">Valor Por Cuota:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtValorCuotasMostrar" id="txtValorCuotasMostrar" readonly />
                                 </div>
                             </div>
+                            <input class="form-control" type="hidden" placeholder="" name="txtValorCuotas" id="txtValorCuotas" />
                             <div class="mt-3 col-lg-6">
                                 <div>
                                     <label for="fileFoto" class="fw-bold">Vale de Pago: </label>
@@ -125,7 +127,9 @@
                 document.getElementById('txtFechaInicial').value = data.planpago.fechaInicio;
                 document.getElementById('txtNumCuotas').value = data.planpago.numCuotas;
                 document.getElementById('txtCuotaInicial').value = data.planpago.valorCuotaInicial;
+                document.getElementById('txtCuotaInicialMostrar').value = data.planpago.valorCuotaInicial.toLocaleString('es-ES', { style: 'decimal' });
                 document.getElementById('txtValorCuotas').value = data.planpago.valorCuotas;
+                document.getElementById('txtValorCuotasMostrar').value = data.planpago.valorCuotas.toLocaleString('es-ES', { style: 'decimal' });
     
                 // Realizar el cálculo
                 const numCuotas = parseInt(data.planpago.numCuotas);

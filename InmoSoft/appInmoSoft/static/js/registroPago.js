@@ -20,7 +20,7 @@ function readVentasVendidas(){
                      <td>${venta.proyecto}</td>
                      <td>${venta.estado}</td>
                      <td>
-                        <a href="#" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-money-bill-1-wave fa-fade"></i> Mora</a>
+                        <a href="/EnviarListaMora/${venta.idVen}/" class="btn btn-outline-secondary btn-sm" ><i class="fa-solid fa-money-bill-1-wave fa-fade"></i> Mora</a>
                         <a href="#" class="btn btn-outline-secondary btn-sm" onclick="abrirModal(${venta.idVen})"><i class="fa-solid fa-file-invoice-dollar fa-fade"></i> Pago</a> 
                      </td>
                  </tr>`;

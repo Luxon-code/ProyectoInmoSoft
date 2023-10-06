@@ -71,10 +71,11 @@
                             </div>
                             <div class="mt-3 col-lg-6">
                                 <div>
-                                    <label for="txtValorCuota"class="fw-bold">Valor Cuota:</label> <br>
-                                    <input class="form-control" type="text" placeholder="" name="txtValorCuota" id="txtValorCuota" readonly />
+                                    <label for="txtValorCuotaMostrar"class="fw-bold">Valor Cuota:</label> <br>
+                                    <input class="form-control" type="text" placeholder="" name="txtValorCuotaMostrar" id="txtValorCuotaMostrar" readonly />
                                 </div>
                             </div>
+                            <input class="form-control" type="hidden" placeholder="" name="txtValorCuota" id="txtValorCuota"/>
                             <div class="mt-3 col-lg-12">
                                 <div>
                                     <label for="fileFoto" class="fw-bold">Vale de Pago: </label>
@@ -118,8 +119,10 @@
                 console.log(data);
                 document.getElementById('txtFechaInicial').value = data.registroPago.fechaInicio;
                 cuota = parseInt(data.registroPago.numCuota)+1;
+                numeroCuotas = parseInt(data.registroPago.numCuotas);
                 document.getElementById('txtNumCuota').value = cuota;
                 document.getElementById('txtValorCuota').value = data.registroPago.valorPago;
+                document.getElementById('txtValorCuotaMostrar').value = data.registroPago.valorPago.toLocaleString('es-ES', { style: 'decimal' });
                 valorpago= parseInt(data.registroPago.valorPago);
                 valorpendiente = parseInt(data.registroPago.valorPendiente)-valorpago;
                 valortotal = parseInt(data.registroPago.valorRecaudado)+valorpago;
@@ -174,14 +177,22 @@
 
                 const formulario = document.getElementById('PagoInmueble');
                 formulario.action = `/actualizarPago/${data.registroPago.id}/`;
-
-
-                
+                if(cuota<=numeroCuotas){
+                    $('#editarModal').modal('show');
+                }else{
+                    Swal.fire({
+                        title: 'Registro de Pago',
+                        text: 'Esta persona ha completado su pago',
+                        icon: 'warning',               
+                        confirmButtonColor: '#3085d6',             
+                        confirmButtonText: 'Aceptar'
+                    })
+                }
 
             });
     
         // Mostrar el modal
-        $('#editarModal').modal('show');
+        
     }
 
     document.addEventListener('DOMContentLoaded', function() {

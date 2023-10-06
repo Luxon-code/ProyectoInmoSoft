@@ -14,7 +14,7 @@
                 <thead>
                     <tr class="text-center bg-secondary text-white">
                         <th>N° de inmueble</th>
-                        <th>Nombre de cliente</th>
+                        <th>N° de cuota</th>
                         <th>Nombre del Cliente</th>
                         <th>Estado</th>
                         <th>Registrar Pago</th>
@@ -39,11 +39,48 @@
 </div>
 
 
+
 {% load static%}
 <link rel="stylesheet" href="{% static 'css/body.css' %}">
 <link rel="stylesheet" href="{% static 'css/loaderTabla.css' %}">
 <link rel="stylesheet" href="{% static 'css/buscador.css' %}">
 <script src="{% static '../static/js/buscador.js' %}"></script>
+<script src="{% static '../static/js/listaMora.js' %}"></script>
+
+<script>
+    readListaMora()
+</script>
+
+</script>
+{% if mensaje %}
+{% if estado %}
+  <script>
+    Swal.fire({
+      title: 'Registro de Pago',
+      text: '{{mensaje}}',
+      icon: 'success',               
+      confirmButtonColor: '#3085d6',             
+      confirmButtonText: 'Aceptar'
+  }).then((result) => {
+      if (result.isConfirmed) {
+        url= "/vistaVentasVendidas/"
+        location.assign(url)
+      }
+  })
+</script>
+{% else %}
+<script>
+  Swal.fire({
+    title: 'Registro de Pago',
+    text: '{{mensaje}}',
+    icon: 'warning',               
+    confirmButtonColor: '#3085d6',             
+    confirmButtonText: 'Aceptar'
+}).then((result) => {
+    if (result.isConfirmed) {
+    }
+})
+</script>
 
 {%endblock %}
 {% block piePagina %}
