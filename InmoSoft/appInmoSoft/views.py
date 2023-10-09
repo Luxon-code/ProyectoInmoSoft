@@ -24,6 +24,7 @@ from smtplib import SMTPException
 from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
 from datetime import datetime, timedelta
+from django.db.models import Count
 # Create your views here.
 
 #-------VISTAS----------
@@ -1303,11 +1304,26 @@ def generarPdfCotizacion(datos):
     pdf.output(f'media/cotizacion.pdf','F')
     return "media/cotizacion.pdf"
 
+def separarInmueble(request, id):
+    """
+Esta función maneja la separación de un inmueble y realiza las siguientes acciones:
+- Registra la información del cliente, incluyendo datos personales y familiares si se proporcionan.
+- Cambia el estado del inmueble a "Separado".
+- Crea una venta asociada al inmueble y al cliente con la fecha de separación especificada.
+- Crea un plan de pago asociado a la venta.
+- Genera un archivo PDF con detalles de la separación y lo envía por correo electrónico al cliente.
+- Devuelve una respuesta HTTP con un mensaje de éxito o un mensaje de error.
 
-def separarInmueble(request,id):
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID del inmueble que se va a separar.
+
+Returns:
+    HttpResponse: Una respuesta HTTP que indica si la separación fue exitosa o si se produjo un error.
+"""
     if request.method == 'POST':
         try:
-            #Datos del cliente
+            # Datos del cliente
             nombre = request.POST.get('txtNombre')
             apellido = request.POST.get('txtApellido')
             cedula = request.POST.get('txtCedula')
@@ -1315,149 +1331,275 @@ def separarInmueble(request,id):
             direccion = request.POST.get('txtDireccion')
             correo = request.POST.get('txtCorreo')
             estadoCivil = request.POST.get('cbEstadoCivil')
-            #datos del familiar o conyugue
+            
+            # Datos del familiar o cónyuge (si se proporcionan)
             nombreFamiliar = request.POST.get('txtNombreFamiliar')
             apellidoFamiliar = request.POST.get('txtApellidoFamiliar')
             cedulaFamiliar = request.POST.get('txtCedulaFamiliar')
             telefonoFamiliar = request.POST.get('txtTelefonoFamiliar')
             direccionFamiliar = request.POST.get('txtDireccionFamiliar')
             correoFamiliar = request.POST.get('txtCorreoFamiliar')
-            #datos del plan de pago
+            
+            # Datos del plan de pago
             numeroCuotas = request.POST.get('txtNumeroCuotas')
             fechaInicio = request.POST.get('fechaInicio')
             fechaFinal = request.POST.get('fechaFinal')
-            fechaFinal = datetime.strptime(fechaFinal,"%d/%m/%Y")
+            fechaFinal = datetime.strptime(fechaFinal, "%d/%m/%Y")
             fechaFinal = fechaFinal.strftime("%Y-%m-%d")
             cuotaInicial = request.POST.get('cuotaInicial')
             valorCuota = request.POST.get('valorCuota')
+            
             with transaction.atomic():
-                if(nombreFamiliar and apellidoFamiliar and cedulaFamiliar
+                if (nombreFamiliar and apellidoFamiliar and cedulaFamiliar
                    and telefonoFamiliar and direccionFamiliar and correoFamiliar):
-                    familiar = Familiar(faNombre=nombreFamiliar,faApellido=apellidoFamiliar,
-                                        faTelefono=telefonoFamiliar,faCorreo=correoFamiliar,
-                                        faCedula=cedulaFamiliar,faDireccion=direccionFamiliar)
+                    # Registra un familiar si se proporcionan sus datos
+                    familiar = Familiar(
+                        faNombre=nombreFamiliar, faApellido=apellidoFamiliar,
+                        faTelefono=telefonoFamiliar, faCorreo=correoFamiliar,
+                        faCedula=cedulaFamiliar, faDireccion=direccionFamiliar
+                    )
                     familiar.save()
-                    cliente = Cliente(cliNombre=nombre,cliApellido=apellido,
-                                  cliTelefono=telefono,cliCedula=cedula,cliCorreo=correo,
-                                  cliDireccion=direccion,cliEstadoCivil=estadoCivil,cliFamiliar=familiar)
+                    
+                    # Registra un cliente con datos del familiar
+                    cliente = Cliente(
+                        cliNombre=nombre, cliApellido=apellido,
+                        cliTelefono=telefono, cliCedula=cedula, cliCorreo=correo,
+                        cliDireccion=direccion, cliEstadoCivil=estadoCivil, cliFamiliar=familiar
+                    )
                     cliente.save()
                 else:
-                    cliente = Cliente(cliNombre=nombre,cliApellido=apellido,
-                                  cliTelefono=telefono,cliCedula=cedula,cliCorreo=correo,
-                                  cliDireccion=direccion,cliEstadoCivil=estadoCivil)
+                    # Registra un cliente sin datos de familiar
+                    cliente = Cliente(
+                        cliNombre=nombre, cliApellido=apellido,
+                        cliTelefono=telefono, cliCedula=cedula, cliCorreo=correo,
+                        cliDireccion=direccion, cliEstadoCivil=estadoCivil
+                    )
                     cliente.save()
+                
+                # Cambia el estado del inmueble a "Separado"
                 inmueble = Inmueble.objects.get(pk=id)
                 inmueble.inmEstado = "Separado"
                 inmueble.save()
-                venta = Venta(venUsuario=request.user,venInmueble=inmueble,venCliente=cliente,venFechaSeparacion=fechaInicio)
+                
+                # Crea una venta asociada al inmueble y al cliente con la fecha de separación especificada
+                venta = Venta(venUsuario=request.user, venInmueble=inmueble, venCliente=cliente, venFechaSeparacion=fechaInicio)
                 venta.save()
-                planPago = PlanDePago(plaFechaInicial=fechaInicio,plaFechaFinal=fechaFinal,
-                                      plaNumCuota=numeroCuotas,plaCuotaInicial=cuotaInicial,
-                                      plaValorDeCuota=valorCuota,plaVenta=venta)
+                
+                # Crea un plan de pago asociado a la venta
+                planPago = PlanDePago(
+                    plaFechaInicial=fechaInicio, plaFechaFinal=fechaFinal,
+                    plaNumCuota=numeroCuotas, plaCuotaInicial=cuotaInicial,
+                    plaValorDeCuota=valorCuota, plaVenta=venta
+                )
                 planPago.save()
+                
+                # Genera un archivo PDF con detalles de la separación
                 archivo = generarPdfSeparacion(planPago)
-                # enviar correo al usuario
+                
+                # Envia correo electrónico al cliente con el archivo PDF adjunto
                 asunto = 'Separacion de Inmueble Sistema InmoSoft'
                 mensajeCorreo = f'Cordial saludo, <b>{cliente.cliNombre} {cliente.cliApellido}</b>, nos permitimos.\
-                informarle que usted ha separado un inmueble de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila\
-                por lo tanto,Nos permitimos enviarle un pdf adjunto con toda la informacion sobre la separacion del inmueble incluyendo el plan de pago.<br>\
-                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                informarle que usted ha separado un inmueble de un proyecto en nuestro Sistema Inmosoft de la ciudad de Neiva-Huila.\
+                Por lo tanto, nos permitimos enviarle un PDF adjunto con toda la información sobre la separación del inmueble, incluyendo el plan de pago.<br>\
+                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la URL:\
                 https://inmosoft.pythonanywhere.com'
+                
+                # Inicia un hilo para enviar el correo electrónico
                 thread = threading.Thread(
-                    target=enviarCorreo, args=(asunto, mensajeCorreo, [cliente.cliCorreo],archivo))
+                    target=enviarCorreo, args=(asunto, mensajeCorreo, [cliente.cliCorreo], archivo))
                 thread.start()
-                mensaje="Inmueble separado correctamente"
-                retorno = {"mensaje":mensaje,"estado":True,'idProyecto':inmueble.inmProyecto.id}
-                return render(request,"asesor/separarInmueble.html",retorno)
+                
+                mensaje = "Inmueble separado correctamente"
+                retorno = {"mensaje": mensaje, "estado": True, 'idProyecto': inmueble.inmProyecto.id}
+                return render(request, "asesor/separarInmueble.html", retorno)
         except Exception as error:
             mensaje = f"{error}"
-            retorno = {"mensaje":mensaje,"estado":False}
-            return render(request,"asesor/separarInmueble.html",retorno)
+            retorno = {"mensaje": mensaje, "estado": False}
+            return render(request, "asesor/separarInmueble.html", retorno)
+
         
-def generarPdfSeparacion(planPago:PlanDePago):
+
+def generarPdfSeparacion(planPago: PlanDePago):
+    """
+Esta función genera un archivo PDF que muestra los detalles de la separación de un inmueble en base a un plan de pago proporcionado.
+
+Args:
+    planPago (PlanDePago): El plan de pago asociado a la separación del inmueble.
+
+Returns:
+    str: La ruta al archivo PDF generado.
+"""
+    # Importa la clase PdfSeparacion desde el módulo pdfSeparacion
     from appInmoSoft.pdfSeparacion import PdfSeparacion
+    # Crea una instancia de la clase PdfSeparacion
     pdf = PdfSeparacion()
+    # Agrega una página al PDF
     pdf.add_page()
+    # Muestra los datos del plan de pago en el PDF
     pdf.mostrarDatos(planPago)
-    pdf.output(f'media/separacion.pdf','F')
+    # Genera el archivo PDF y lo guarda en la ruta 'media/separacion.pdf'
+    pdf.output(f'media/separacion.pdf', 'F')
+    # Devuelve la ruta al archivo PDF generado
     return "media/separacion.pdf"
 
+
+
 def ObtenerPlanPago(request, id):
+    """
+Esta función obtiene información sobre el plan de pago asociado a una venta específica y devuelve los datos en formato JSON.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID de la venta para la cual se desea obtener el plan de pago.
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene la información del plan de pago.
+    En caso de error, se devuelve un mensaje de error con un código de estado HTTP 500.
+"""
+    # Obtiene el plan de pago asociado a la venta
     planpag = PlanDePago.objects.filter(plaVenta=id).first()
+    
+    # Obtiene la información del inmueble asociado a la venta
     inmueble = Venta.objects.filter(id=id).first()
     
-    try:    
-        planpago ={
-            'idInmueble':inmueble.venInmueble.id,
-            'idVenta':planpag.plaVenta.id,
+    try:
+        # Crea un diccionario 'planpago' con la información relevante del plan de pago
+        planpago = {
+            'idInmueble': inmueble.venInmueble.id,
+            'idVenta': planpag.plaVenta.id,
             'fechaInicio': planpag.plaFechaInicial,
             'numCuotas': planpag.plaNumCuota,
             'valorCuotas': planpag.plaValorDeCuota,
             'valorCuotaInicial': planpag.plaCuotaInicial,
             'fechaFinal': planpag.plaFechaFinal
         }
-        retorno ={'planpago':planpago}
-        return JsonResponse(retorno)  # Return JSON response instead of rendering HTML
+        
+        retorno = {'planpago': planpago}
+        
+        # Devuelve una respuesta JSON con la información del plan de pago.
+        return JsonResponse(retorno)
+    
     except Error as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
         mensaje = f"{error}"
-        return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
+        return JsonResponse({'mensaje': mensaje}, status=500)
+
+
 
 def RegistrarPagoInicial(request, id):
+    """
+Esta función maneja el registro del pago inicial para un plan de pago y realiza las siguientes acciones:
+- Registra la información del pago, incluyendo el valor de la cuota inicial, el valor pendiente, el valor del recaudo y la imagen de la factura de pago.
+- Actualiza el estado del inmueble asociado a "Vendido".
+- Devuelve una respuesta HTTP con un mensaje de éxito o un mensaje de error.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID del plan de pago al que se va a registrar el pago inicial.
+
+Returns:
+    HttpResponse: Una respuesta HTTP que indica si el registro del pago inicial fue exitoso o si se produjo un error.
+"""
     if request.method == 'POST':
         try:
             valorPago = request.POST.get('txtCuotaInicial')
             valorPendiente = request.POST.get('txtValorPendiente')
-            Recaudo = request.POST.get('txtCuotaInicial')
+            recaudo = request.POST.get('txtCuotaInicial')  # Corregido: 'Recaudo' en lugar de 'CuotaInicial'
             foto = request.FILES.get("fileFoto")
-            regpago= PlanDePago.objects.get(pk=id)
+            regpago = PlanDePago.objects.get(pk=id)
             cuota = 1
+            
             with transaction.atomic():
-                pago = RegistroPago(regValorPago = valorPago,
-                                    regPendiente= valorPendiente,
-                                    regRecaudo = Recaudo,
-                                    regPlanDePago= regpago,
-                                    regFoto= foto,
-                                    regNumCuota= cuota)
+                # Registra la información del pago inicial
+                pago = RegistroPago(
+                    regValorPago=valorPago,
+                    regPendiente=valorPendiente,
+                    regRecaudo=recaudo,  
+                    regPlanDePago=regpago,
+                    regFoto=foto,
+                    regNumCuota=cuota
+                )
                 
                 pago.save()
                 
                 venta = Venta.objects.get(pk=id)
                 inmuebl = venta.venInmueble.id
-                inmueble= Inmueble.objects.get(pk=inmuebl)
-                inmueble.inmEstado="Vendido"
+                inmueble = Inmueble.objects.get(pk=inmuebl)
+                
+                # Actualiza el estado del inmueble a "Vendido"
+                inmueble.inmEstado = "Vendido"
                 inmueble.save()
-                mensaje="Pago Registrado correctamente"
-                retorno = {"mensaje":mensaje,"estado":True,}
-                return render(request,"asesor/vistaListarVentasSeparadas.html",retorno)
+                
+                mensaje = "Pago Registrado correctamente"
+                retorno = {"mensaje": mensaje, "estado": True}
+                
+                return render(request, "asesor/vistaListarVentasSeparadas.html", retorno)
         except Exception as error:
             mensaje = f"{error}"
-            retorno = {"mensaje":mensaje,"estado":False}
-            return render(request,"asesor/vistaListarVentasSeparadas.html",retorno)
-        
+            retorno = {"mensaje": mensaje, "estado": False}
+            return render(request, "asesor/vistaListarVentasSeparadas.html", retorno)
+
+
 def obtenerPagosRegistrados(request, id):
+    """
+Esta función obtiene información sobre los pagos registrados para un plan de pago específico y devuelve los datos en formato JSON.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID de la venta asociada al plan de pago.
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene la información de los pagos registrados.
+    En caso de error, se devuelve un mensaje de error con un código de estado HTTP 500.
+"""
+    # Obtiene el plan de pago asociado a la venta
     planpag = PlanDePago.objects.filter(plaVenta=id).first()
     idPlan = planpag.id
+    
+    # Obtiene el primer registro de pago asociado al plan de pago
     registroPagos = RegistroPago.objects.filter(regPlanDePago=idPlan).first()
     
     try:
-        registroPago ={
+        # Crea un diccionario 'registroPago' con la información relevante de los pagos registrados
+        registroPago = {
             'numCuotas': planpag.plaNumCuota,
-            'id':registroPagos.id,
-            'valorPago':planpag.plaValorDeCuota,
-            'fechaInicio':planpag.plaFechaInicial,
+            'id': registroPagos.id,
+            'valorPago': planpag.plaValorDeCuota,
+            'fechaInicio': planpag.plaFechaInicial,
             'fechaPago': registroPagos.regFechaPago,
             'numCuota': registroPagos.regNumCuota,
             'valorPendiente': registroPagos.regPendiente,
-            'valorRecaudado': registroPagos.regRecaudo,    
+            'valorRecaudado': registroPagos.regRecaudo,
         }
-        retorno ={'registroPago':registroPago}
+        
+        retorno = {'registroPago': registroPago}
+        
+        # Devuelve una respuesta JSON con la información de los pagos registrados.
         return JsonResponse(retorno)
-    except Error as error:
-        mensaje = f"{error}"
-        return JsonResponse({'mensaje': mensaje}, status=500)  # Return JSON response with error message
     
+    except Error as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)
+
+    
+
 def actualizarPago(request, id):
-     if request.method == 'POST':
+    """
+Esta función maneja la actualización de un registro de pago y realiza las siguientes acciones:
+- Actualiza la fecha de pago, el valor de la cuota, el valor pendiente, el valor total, y el número de cuota en el registro de pago.
+- Actualiza la imagen de la factura de pago si se proporciona una nueva imagen.
+- Marca la venta asociada como no morosa.
+- Devuelve una respuesta HTTP con un mensaje de éxito o un mensaje de error.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID del registro de pago que se va a actualizar.
+
+Returns:
+    HttpResponse: Una respuesta HTTP que indica si la actualización fue exitosa o si se produjo un error.
+"""
+    if request.method == 'POST':
         try:
             fechapago = request.POST.get('txtFechaPago')
             valorcuota = request.POST.get('txtValorCuota')
@@ -1465,47 +1607,58 @@ def actualizarPago(request, id):
             total = request.POST.get('txtValorPagoTotal')
             numcuota = request.POST.get('txtNumCuota')
             foto = request.FILES.get("fileFoto")
+            
             with transaction.atomic():
                 registro = RegistroPago.objects.filter(pk=id).first()
                 registro.regFechaPago = fechapago
                 registro.regValorPago = valorcuota
                 registro.regPendiente = pendiente
                 registro.regRecaudo = total
-                registro.regNumCuota =  numcuota
-                if(foto):
-                        os.remove('./media/'+str(registro.regFoto))
-                        registro.regFoto = foto
+                registro.regNumCuota = numcuota
+                
+                # Actualiza la imagen de la factura de pago si se proporciona una nueva imagen
+                if foto:
+                    os.remove('./media/'+str(registro.regFoto))
+                    registro.regFoto = foto
+                    
                 registro.save()
+                
                 planPago = PlanDePago.objects.get(pk=registro.regPlanDePago.id)
                 venta = Venta.objects.get(pk=planPago.plaVenta.id)
+                
+                # Marca la venta asociada como no morosa
                 venta.venEstadoMora = False
                 venta.save()
+                
                 mensaje = "Pago Registrado correctamente"
-                retorno = {"mensaje": mensaje,"estado": True}
-                return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+                retorno = {"mensaje": mensaje, "estado": True}
+                return render(request, 'asesor/vistaListarVentasVendidas.html', retorno)
+        
         except Error as error:
             transaction.rollback()
             mensaje = f"{error}"
-            retorno = {"mensaje":mensaje,"estado":False}
-        return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
-    
-    
-    
-                
-                
-                
-    
-    
+            retorno = {"mensaje": mensaje, "estado": False}
+        
+        return render(request, 'asesor/vistaListarVentasVendidas.html', retorno)
 
 def verificarDesistimiento():
+    """
+Esta función se encarga de verificar si ha pasado un cierto
+número de días desde la fecha de separación de inmuebles en estado 
+"Separado" y tomar acciones en consecuencia, como cambiar el estado del inmueble o enviar 
+correos electrónicos de notificación.
+
+Returns:
+    None
+"""
     try:
-        # Obtén todas las separaciones en estado "Separado"
+        # Obtiene todas las separaciones en estado "Separado"
         inmuebles_separados = Inmueble.objects.filter(inmEstado="Separado")
 
-        # Obtén la fecha actual
+        # Obtiene la fecha actual
         fecha_actual = datetime.now()
 
-        # Itera a través de las separaciones y verifica si han pasado 3 días
+        # Itera a través de las separaciones y verifica si han pasado 3 días o 2 días
         for inmueble in inmuebles_separados:
             venta = Venta.objects.filter(venInmueble=inmueble.id).first()
             fecha_separacion = venta.venFechaSeparacion  # Asegúrate de tener un campo para la fecha de separación en tu modelo Inmueble
@@ -1514,117 +1667,337 @@ def verificarDesistimiento():
             fecha_separacion_datetime = datetime.combine(fecha_separacion, datetime.min.time())
 
             if fecha_actual - fecha_separacion_datetime >= timedelta(days=3):
+                # Cambia el estado del inmueble a "Disponible" si han pasado 3 días
                 inmueble.inmEstado = "Disponible"
                 inmueble.save()
                 asunto = 'Liberacion de Inmueble Sistema InmoSoft'
                 mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos.\
                 informarle que el inmueble que usted ha separado de un proyecto, no se le ha realizado el primer pago acordado\
-                por lo tanto este inmueble quedara disponible otra vez para su venta apartir de este momento.<br>\
-                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                por lo tanto este inmueble quedará disponible nuevamente para su venta a partir de este momento.<br>\
+                <br><br>Para cualquier duda, lo invitamos a ingresar a nuestro sistema en la URL:\
                 https://inmosoft.pythonanywhere.com'
                 thread = threading.Thread(
-                    target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
+                    target=enviarCorreo, args=(asunto, mensajeCorreo, [venta.venCliente.cliCorreo]))
                 thread.start()
             elif fecha_actual - fecha_separacion_datetime >= timedelta(days=2):
+                # Envía un correo electrónico de notificación si han pasado 2 días
                 asunto = 'Liberacion de Inmueble Sistema InmoSoft'
                 mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos.\
                 informarle que el inmueble que usted ha separado de un proyecto, no se le ha realizado el primer pago acordado\
-                por lo tanto este inmueble quedara disponible otra vez para su venta dentro de 1 día.Por favor realizar el pago.<br>\
-                <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+                por lo tanto este inmueble quedará disponible nuevamente para su venta dentro de 1 día. Por favor, realice el pago.<br>\
+                <br><br>Para cualquier duda, lo invitamos a ingresar a nuestro sistema en la URL:\
                 https://inmosoft.pythonanywhere.com'
                 thread = threading.Thread(
-                    target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
+                    target=enviarCorreo, args=(asunto, mensajeCorreo, [venta.venCliente.cliCorreo]))
                 thread.start()
     except Exception as e:
         # Maneja cualquier error que pueda ocurrir durante la verificación
         print(f"Error en la verificación de desistimiento: {e}")
 
+
 def listarVentasSeparadas(request):
+    """
+Esta función se encarga de listar las ventas separadas por el usuario actual.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene la lista de ventas separadas y su información asociada.
+    En caso de error, se devuelve un mensaje de error con un código de estado HTTP 500.
+"""
     try:
+        # Inicializa una lista vacía para almacenar la información de las ventas separadas.
         ventas = []
-        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Separado')
+        
+        # Filtra las ventas separadas para el usuario actual.
+        ventasModel = Venta.objects.filter(venUsuario=request.user, venInmueble__inmEstado='Separado')
+        
+        # Itera sobre la lista de ventas separadas.
         for venta in ventasModel:
+            # Crea un diccionario 'ven' con la información relevante de la venta separada.
             ven = {
-                'idVen':venta.id,
+                'idVen': venta.id,
                 'id': venta.venInmueble.id,
                 'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
                 'proyecto': venta.venInmueble.inmProyecto.proNombre,
                 'estado': venta.venInmueble.inmEstado,
             }
+            
+            # Agrega los datos de la venta separada a la lista 'ventas'.
             ventas.append(ven)
-        return JsonResponse({'ventas':ventas})
+        
+        # Devuelve una respuesta JSON con la lista de ventas separadas.
+        return JsonResponse({'ventas': ventas})
+    
     except Error as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
         mensaje = f"{error}"
-        return JsonResponse({'mensaje': mensaje}, status=500) 
+        return JsonResponse({'mensaje': mensaje}, status=500)
+
+    
 def listarVentasVendidas(request):
+    """
+Esta función se encarga de listar las ventas vendidas por el usuario actual que no se encuentren en estado de mora.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene la lista de ventas vendidas y su información asociada.
+    En caso de error, se devuelve un mensaje de error con un código de estado HTTP 500.
+"""
     try:
+        # Inicializa una lista vacía para almacenar la información de las ventas vendidas.
         ventas = []
-        ventasModel = Venta.objects.filter(venUsuario=request.user,venInmueble__inmEstado='Vendido',venEstadoMora=False)
+        
+        # Filtra las ventas vendidas para el usuario actual que no están en estado de mora.
+        ventasModel = Venta.objects.filter(venUsuario=request.user, venInmueble__inmEstado='Vendido', venEstadoMora=False)
+        
+        # Itera sobre la lista de ventas vendidas.
         for venta in ventasModel:
+            # Crea un diccionario 'ven' con la información relevante de la venta vendida.
             ven = {
-                'idVen':venta.id,
+                'idVen': venta.id,
                 'id': venta.venInmueble.id,
                 'cliente': f"{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}",
                 'proyecto': venta.venInmueble.inmProyecto.proNombre,
                 'estado': venta.venInmueble.inmEstado,
             }
+            
+            # Agrega los datos de la venta vendida a la lista 'ventas'.
             ventas.append(ven)
-        return JsonResponse({'ventas':ventas})
+        
+        # Devuelve una respuesta JSON con la lista de ventas vendidas.
+        return JsonResponse({'ventas': ventas})
+    
     except Error as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
         mensaje = f"{error}"
-        return JsonResponse({'mensaje': mensaje}, status=500) 
+        return JsonResponse({'mensaje': mensaje}, status=500)
+
     
 def EnviarListaMora(request, id):
+    """
+Esta función maneja la lógica para enviar a un cliente a la lista de mora si no ha completado su pago de un inmueble.
+Además, envía un correo electrónico de notificación al cliente.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    id (int): El ID de la venta asociada al cliente.
+
+Returns:
+    HttpResponse: Una respuesta HTTP que indica si el cliente ha sido enviado a la lista de mora y si se envió el correo electrónico.
+"""
     try:
+        # Obtiene la venta correspondiente al ID proporcionado.
         venta = Venta.objects.filter(pk=id).first()
+        
+        # Obtiene el plan de pago asociado a la venta.
         plapago = PlanDePago.objects.filter(plaVenta=venta.id).first()
+        
+        # Obtiene el registro de pago asociado al plan de pago.
         registroPago = RegistroPago.objects.filter(regPlanDePago=plapago.id).first()
+        
         if registroPago.regNumCuota < plapago.plaNumCuota:
-            venta.venEstadoMora = True  # Cambia el estado de mora a True
+            # Si el número de cuota actual es menor que el total de cuotas, cambia el estado de mora a True.
+            venta.venEstadoMora = True
             venta.save()
             estado = True
             mensaje = "El Cliente se ha enviado a la lista de mora"
+            
+            # Configura los datos para enviar un correo electrónico de notificación.
             asunto = 'Liberacion de Inmueble Sistema InmoSoft'
             mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos\
-            informarle que el inmueble que usted ha separado de un proyecto,actualmuente se encuentra atrasado en su ultimo pago.\
-            por lo tanto en lo mas pronto posible por favor realizar el pago.<br>\
-            <br><br>Para cualquier duda lo invitamos a ingresar a nuestro sistema en la url:\
+            informarle que el inmueble que usted ha separado de un proyecto, actualmente se encuentra atrasado en su último pago.\
+            Por favor, realice el pago lo antes posible.<br>\
+            <br><br>Para cualquier duda, lo invitamos a ingresar a nuestro sistema en la URL:\
             https://inmosoft.pythonanywhere.com'
+            
+            # Inicia un subproceso para enviar el correo electrónico de notificación.
             thread = threading.Thread(
                 target=enviarCorreo, args=(asunto, mensajeCorreo,[venta.venCliente.cliCorreo]))
             thread.start()
         else:
             estado = False
             mensaje = "Este Cliente ha completado su pago"
-        retorno = {"mensaje": mensaje,"estado": estado}
-        return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
-    except Error as error:
-            transaction.rollback()
-            mensaje = f"{error}"
-            retorno = {"mensaje":mensaje,"estado":False}
-            return render(request, 'asesor/vistaListarVentasVendidas.html',retorno)
+        
+        retorno = {"mensaje": mensaje, "estado": estado}
+        
+        # Renderiza una vista de lista de ventas vendidas con el resultado del proceso.
+        return render(request, 'asesor/vistaListarVentasVendidas.html', retorno)
     
-def ObtenerListaMora (request):
+    except Error as error:
+        # En caso de error, realiza un rollback de la transacción y muestra un mensaje de error.
+        transaction.rollback()
+        mensaje = f"{error}"
+        retorno = {"mensaje": mensaje, "estado": False}
+        
+        # Renderiza una vista de lista de ventas vendidas con el mensaje de error.
+        return render(request, 'asesor/vistaListarVentasVendidas.html', retorno)
+
+    
+def ObtenerListaMora(request):
+    """
+Esta función obtiene una lista de ventas en mora para el usuario actual y devuelve la información relevante en formato JSON.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene la lista de ventas en mora y su información asociada.
+    En caso de error, se devuelve un mensaje de error con un código de estado HTTP 500.
+"""
     try:
-        Mora=[]
-        listaMora = Venta.objects.filter(venUsuario=request.user,venEstadoMora=True)
+        # Inicializa una lista vacía para almacenar la información de ventas en mora.
+        Mora = []
+        
+        # Filtra las ventas en mora para el usuario actual.
+        listaMora = Venta.objects.filter(venUsuario=request.user, venEstadoMora=True)
+        
+        # Itera sobre la lista de ventas en mora.
         for usumora in listaMora:
+            # Obtiene el plan de pago asociado a la venta en mora.
             planPago = PlanDePago.objects.filter(plaVenta=usumora.id).first()
+            
+            # Obtiene el registro de pago asociado al plan de pago.
             registroPago = RegistroPago.objects.filter(regPlanDePago=planPago.id).first()
-            mora={
-                'idVen':usumora.id,
+            
+            # Crea un diccionario 'mora' con la información relevante de la venta en mora.
+            mora = {
+                'idVen': usumora.id,
                 'id': usumora.venInmueble.id,
                 'cliente': f"{usumora.venCliente.cliNombre} {usumora.venCliente.cliApellido}",
                 'proyecto': usumora.venInmueble.inmProyecto.proNombre,
                 'estado': usumora.venInmueble.inmEstado,
-                'numCuotaActual':registroPago.regNumCuota,
-                'idRegistroPago':registroPago.id,
+                'numCuotaActual': registroPago.regNumCuota,
+                'idRegistroPago': registroPago.id,
             }
+            
+            # Agrega los datos de la venta en mora a la lista 'Mora'.
             Mora.append(mora)
-        return JsonResponse({'ListaMora':Mora})
+        
+        # Devuelve una respuesta JSON con la lista de ventas en mora.
+        return JsonResponse({'ListaMora': Mora})
+    
     except Error as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
         mensaje = f"{error}"
         return JsonResponse({'mensaje': mensaje}, status=500)
+
+
+def numeroVentasPorAsesor(request, filtro_tiempo=None):
+    """
+Esta función se encarga de calcular y proporcionar datos de ventas por asesor en función de un período de tiempo especificado.
+
+Args:
+    request (HttpRequest): La solicitud HTTP recibida.
+    filtro_tiempo (str, opcional): Un parámetro que determina el período de tiempo para filtrar las ventas.
+        Puede ser 'Mensual', 'Trimestral', 'Semestral', 'Anual' o None (sin filtro de tiempo).
+
+Returns:
+    HttpResponse: Una respuesta HTTP en formato JSON que contiene los datos de ventas por asesor si la operación se realiza con éxito.
+    En caso de error, se devuelve una respuesta con un mensaje de error y un código de estado HTTP 500.
+"""
+    try:
+        # Inicializa una lista vacía para almacenar los datos de ventas por asesor.
+        numeroVentasPorAsesor = []
+        
+        # Obtiene una lista de ventas y cuenta las ventas por cada usuario.
+        ventas = Venta.objects.values('venUsuario__username').annotate(numero_ventas=Count('id')).filter(venInmueble__inmEstado='Vendido')
+
+        # Aplica un filtro de tiempo si se proporciona un valor para filtro_tiempo.
+        if filtro_tiempo == 'Mensual':
+            ventas = ventas.filter(venFechaSeparacion__gte=mes_pasado())
+        elif filtro_tiempo == 'Trimestral':
+            ventas = ventas.filter(venFechaSeparacion__gte=trimestre_pasado())
+        elif filtro_tiempo == 'Semestral':
+            ventas = ventas.filter(venFechaSeparacion__gte=semestre_pasado())
+        elif filtro_tiempo == 'Anual':
+            ventas = ventas.filter(venFechaSeparacion__gte=last_year())
+
+        # Itera sobre la lista de ventas resultante.
+        for venta in ventas:
+            # Obtiene todas las ventas del asesor actual.
+            ventas_del_asesor = Venta.objects.filter(venUsuario__username=venta['venUsuario__username'])
+            
+            # Encuentra la fecha de última modificación de las ventas del asesor.
+            ultima_modificacion = ventas_del_asesor.latest('venFechaSeparacion').venFechaSeparacion
+            
+            # Obtiene información del usuario asociado al asesor.
+            usuario = User.objects.filter(username=venta['venUsuario__username']).first()
+            
+            # Crea un diccionario con la información del asesor y sus ventas.
+            venta_data = {
+                'username': f"{usuario.first_name} {usuario.last_name}",
+                'numeroVenta': venta['numero_ventas'],
+                'ultimaModificacion': ultima_modificacion.strftime('%Y-%m-%d')
+            }
+            
+            # Agrega los datos de ventas por asesor a la lista.
+            numeroVentasPorAsesor.append(venta_data)
+
+        # Devuelve una respuesta JSON con los datos de ventas por asesor.
+        return JsonResponse({'numeroVentasPorAsesor': numeroVentasPorAsesor})
+    
+    except Exception as error:
+        # En caso de error, devuelve un mensaje de error con un código de estado HTTP 500.
+        mensaje = f"{error}"
+        return JsonResponse({'mensaje': mensaje}, status=500)
+
+# Funciones de ayuda para calcular fechas pasadas
+
+# Esta función calcula la fecha que corresponde al mes pasado a partir de la fecha actual.
+def mes_pasado():
+    today = datetime.now()
+    last_month = today - timedelta(days=30)
+    return last_month
+
+# Esta función calcula la fecha que corresponde al trimestre pasado a partir de la fecha actual.
+def trimestre_pasado():
+    today = datetime.now()
+    last_quarter = today - timedelta(days=90)
+    return last_quarter
+
+# Esta función calcula la fecha que corresponde al semestre pasado a partir de la fecha actual.
+def semestre_pasado():
+    today = datetime.now()
+    last_half_year = today - timedelta(days=180)
+    return last_half_year
+
+# Esta función calcula la fecha que corresponde al año pasado a partir de la fecha actual.
+def last_year():
+    today = datetime.now()
+    last_year = today - timedelta(days=365)
+    return last_year
+
+
+from django.db.models.functions import ExtractMonth, ExtractYear
+import calendar
+
+def ventas_por_mes(request):
+    meses_espanol = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ]
+
+    ventas_por_mes = (
+        Venta.objects
+        .annotate(month=ExtractMonth('venFechaSeparacion'))
+        .annotate(year=ExtractYear('venFechaSeparacion'))
+        .values('month', 'year')
+        .annotate(total=Count('id'))
+        .order_by('year', 'month')
+        .filter(venInmueble__inmEstado='Vendido')
+    )
+
+    data = {
+        'labels': [f"{meses_espanol[mes['month'] - 1]} {mes['year']}" for mes in ventas_por_mes],
+        'data': [mes['total'] for mes in ventas_por_mes],
+    }
+
+    return JsonResponse(data)
+    
 #-----------------------------/APIS/-----------------------------------------
 
 class UserList(generics.ListCreateAPIView):
