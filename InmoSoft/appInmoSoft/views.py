@@ -25,6 +25,8 @@ from django.http import JsonResponse
 from django.db.models import Sum, Avg, Count
 from datetime import datetime, timedelta
 from django.db.models import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
+import calendar
 # Create your views here.
 
 #-------VISTAS----------
@@ -1971,11 +1973,26 @@ def last_year():
     last_year = today - timedelta(days=365)
     return last_year
 
-
-from django.db.models.functions import ExtractMonth, ExtractYear
-import calendar
-
 def ventas_por_mes(request):
+    """
+    Esta función genera datos de ventas por mes y año y devuelve un JSON con etiquetas (labels) y datos (data).
+
+    Args:
+        request (HttpRequest): La solicitud HTTP realizada a la vista.
+
+    Returns:
+        JsonResponse: Un objeto JSON que contiene dos claves:
+            - 'labels': Una lista de cadenas que representan los nombres de los meses y años en español.
+            - 'data': Una lista de números enteros que representan el total de ventas para cada mes y año.
+
+    Funcionamiento:
+        Esta vista realiza una consulta a la base de datos para obtener datos de ventas por mes y año.
+        Luego, formatea los resultados en un formato JSON que puede ser utilizado para representar gráficamente los datos.
+
+    Ejemplo de uso:
+        Para utilizar esta vista, puedes hacer una solicitud HTTP GET a la URL correspondiente y luego procesar
+        la respuesta JSON para mostrar gráficamente los datos de ventas por mes y año en tu aplicación web.
+    """
     meses_espanol = [
         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -1997,6 +2014,7 @@ def ventas_por_mes(request):
     }
 
     return JsonResponse(data)
+
     
 #-----------------------------/APIS/-----------------------------------------
 

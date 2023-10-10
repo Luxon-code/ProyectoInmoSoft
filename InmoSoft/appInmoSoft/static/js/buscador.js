@@ -2,7 +2,7 @@ window.onload = () => {
     search()
 }
 function autoComplet(){
-    fetch("/listarProyectos/")
+    fetch("/listarProyectosModificar/")
         .then(response => response.json())
         .then(data => {
             let textoBuscar = document.getElementById("inputbuscar").value
