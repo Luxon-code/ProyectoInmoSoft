@@ -1807,7 +1807,7 @@ Returns:
             mensaje = "El Cliente se ha enviado a la lista de mora"
             
             # Configura los datos para enviar un correo electrónico de notificación.
-            asunto = 'Liberacion de Inmueble Sistema InmoSoft'
+            asunto = 'Lista de mora Sistema InmoSoft'
             mensajeCorreo = f'Cordial saludo, <b>{venta.venCliente.cliNombre} {venta.venCliente.cliApellido}</b>, nos permitimos\
             informarle que el inmueble que usted ha separado de un proyecto, actualmente se encuentra atrasado en su último pago.\
             Por favor, realice el pago lo antes posible.<br>\

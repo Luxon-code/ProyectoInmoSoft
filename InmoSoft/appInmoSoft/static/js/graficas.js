@@ -1,17 +1,6 @@
 const barras = document.getElementById('barras');
 const botones = document.querySelectorAll('button');
 
-// Función para generar colores aleatorios
-function generarColoresAleatorios(numeroColores) {
-  const colores = [];
-  for (let i = 0; i < numeroColores; i++) {
-    const color = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
-      Math.random() * 256
-    )}, ${Math.floor(Math.random() * 256)})`;
-    colores.push(color);
-  }
-  return colores;
-}
 
 botones.forEach((button) => {
   button.addEventListener('click', (event) => {
@@ -55,9 +44,6 @@ botones.forEach((button) => {
         const labels = numeroVentasPorAsesor.map((item) => item.username);
         const dataVentas = numeroVentasPorAsesor.map((item) => item.numeroVenta);
 
-        // Generar colores aleatorios para las barras
-        const coloresAleatorios = generarColoresAleatorios(labels.length);
-
         // Destruir la gráfica anterior si existe
         if (window.myChart) {
           window.myChart.destroy();
@@ -72,7 +58,24 @@ botones.forEach((button) => {
               {
                 label: 'Numero De ventas',
                 data: dataVentas,
-                backgroundColor: coloresAleatorios,
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(255, 205, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                  'rgb(54, 162, 235)',
+                  'rgb(153, 102, 255)',
+                  'rgb(201, 203, 207)'
+                ],
                 borderWidth: 1,
               },
             ],
@@ -116,6 +119,20 @@ fetch('/ventas-por-mes/')
       'rgb(128, 0, 128)',    // Cambia estos colores según tus preferencias
       'rgb(0, 128, 128)'     // Cambia estos colores según tus preferencias
     ];
+    const lineal = document.getElementById('lineal');
+    new Chart(lineal, {
+      type: 'line',
+      data:{
+        labels: data.labels,
+        datasets: [{
+          label: 'Ventas por Mes',
+          data: data.data,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      },
+    });
 
     const circular = document.getElementById('circular');
     new Chart(circular, {
@@ -131,3 +148,4 @@ fetch('/ventas-por-mes/')
       },
     });
   });
+
