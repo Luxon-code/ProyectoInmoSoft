@@ -862,7 +862,7 @@ def listarProyectos(request):
     try:
         proyectos = []
         proyects = Proyecto.objects.filter(proEstado=True).order_by('-profechaHoraCreacion').all()
-        elementos_por_pagina = 2
+        elementos_por_pagina = 6
         
         # Obtén el número de página actual desde la solicitud (por defecto es 1)
         pagina_actual = request.GET.get('page', 1)
