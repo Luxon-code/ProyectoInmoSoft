@@ -23,7 +23,7 @@ function readProyectos(page=null) {
                                     <p class="card-text text-secondary">Ubicacion: ${proyecto.ubicacion}</p>
                                     <p class="text-secondary">${limitarLongitud(proyecto.descripcion,100)}</p>
                                     <div class="border-bottom border-black"></div>
-                                    <p class="text-secondary fw-bold">Desde: $ ${proyecto.precio}</p>
+                                    <p class="text-secondary fw-bold">Desde: $ ${proyecto.precio} COP</p>
                                 </div>
                             </div>
                         </a>

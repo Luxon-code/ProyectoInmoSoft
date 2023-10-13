@@ -122,7 +122,7 @@
                 numeroCuotas = parseInt(data.registroPago.numCuotas);
                 document.getElementById('txtNumCuota').value = cuota;
                 document.getElementById('txtValorCuota').value = data.registroPago.valorPago;
-                document.getElementById('txtValorCuotaMostrar').value = data.registroPago.valorPago.toLocaleString('es-ES', { style: 'decimal' });
+                document.getElementById('txtValorCuotaMostrar').value = `$ ${data.registroPago.valorPago.toLocaleString('es-ES', { style: 'decimal' })} COP`;
                 valorpago= parseInt(data.registroPago.valorPago);
                 valorpendiente = parseInt(data.registroPago.valorPendiente)-valorpago;
                 valortotal = parseInt(data.registroPago.valorRecaudado)+valorpago;

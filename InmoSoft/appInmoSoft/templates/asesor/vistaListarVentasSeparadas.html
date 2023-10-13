@@ -127,9 +127,9 @@
                 document.getElementById('txtFechaInicial').value = data.planpago.fechaInicio;
                 document.getElementById('txtNumCuotas').value = data.planpago.numCuotas;
                 document.getElementById('txtCuotaInicial').value = data.planpago.valorCuotaInicial;
-                document.getElementById('txtCuotaInicialMostrar').value = data.planpago.valorCuotaInicial.toLocaleString('es-ES', { style: 'decimal' });
+                document.getElementById('txtCuotaInicialMostrar').value = `$ ${data.planpago.valorCuotaInicial.toLocaleString('es-ES', { style: 'decimal' })} COP`;
                 document.getElementById('txtValorCuotas').value = data.planpago.valorCuotas;
-                document.getElementById('txtValorCuotasMostrar').value = data.planpago.valorCuotas.toLocaleString('es-ES', { style: 'decimal' });
+                document.getElementById('txtValorCuotasMostrar').value = `$ ${data.planpago.valorCuotas.toLocaleString('es-ES', { style: 'decimal' })} COP`;
     
                 // Realizar el cálculo
                 const numCuotas = parseInt(data.planpago.numCuotas);

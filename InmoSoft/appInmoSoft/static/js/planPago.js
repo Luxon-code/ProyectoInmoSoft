@@ -42,9 +42,9 @@ document.getElementById("btnCalcularPlan").addEventListener("click", function ()
             const año = fecha.getFullYear();
 
             fechaCell.innerHTML = `${dia}/${mes}/${año}`;
-            planPagoCell.innerHTML = `$${cuotaInicial.toLocaleString('es-ES', { style: 'decimal' })}`;
+            planPagoCell.innerHTML = `$ ${cuotaInicial.toLocaleString('es-ES', { style: 'decimal' })} COP`;
             mesesCell.innerHTML = fecha.toLocaleString('default', { month: 'long' });
-            cuotaCell.innerHTML = `$${valorPorCuota.toLocaleString('es-ES', { style: 'decimal' })}`;
+            cuotaCell.innerHTML = `$ ${valorPorCuota.toLocaleString('es-ES', { style: 'decimal' })} COP`;
         }
 
         // Calcula la fecha final sumando el número de cuotas a la fecha inicial
