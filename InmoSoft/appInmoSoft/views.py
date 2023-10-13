@@ -427,8 +427,9 @@ def iniciarSesion(request):
         else:
             mensaje = "validar recapcha"
             return render(request, "inicioSesion.html", {"mensaje": mensaje})
-        
-def iniciarSesionAPI(request,usuario,contraseña):
+@csrf_exempt      
+def iniciarSesionAPI(request):
+    import json
     """
     Maneja el inicio de sesión de usuarios a través de una API.
 
@@ -440,8 +441,9 @@ def iniciarSesionAPI(request,usuario,contraseña):
     Returns:
         JsonResponse: Una respuesta JSON que indica si el inicio de sesión fue exitoso y contiene información del usuario o un mensaje de error.
     """
-    username = usuario
-    password = contraseña
+    data = json.loads(request.body)
+    username = data.get("usuario")
+    password = data.get("contraseña")
     user = authenticate(username=username, password=password)
     print(user)
     if user is not None:

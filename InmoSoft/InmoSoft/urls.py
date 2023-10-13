@@ -66,7 +66,7 @@ urlpatterns = [
     path('ObtenerListaMora/',views.ObtenerListaMora),
     path('RegistrarPagoInicial/<int:id>/',views.RegistrarPagoInicial),
     path('iniciarSesion/',views.iniciarSesion),
-    path('Api/inicioSesion/<str:usuario>/<str:contraseña>',views.iniciarSesionAPI),
+    path('Api/inicioSesion/',views.iniciarSesionAPI),
     path('Api/CotizarProyecto/<int:id>',views.apiEnviarCotizacion),
     path('cerrarSesion/',views.cerrarSesion),
     path('reset_password/',auth_views.PasswordResetView.as_view(template_name='recuperarPassword/PasswordResetView.html'),name='password_reset'),
