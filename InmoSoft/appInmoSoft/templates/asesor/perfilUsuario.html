@@ -109,13 +109,13 @@
             </button>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" id="txtNuevaContraseña" name="txtNuevaContraseña" placeholder="Nueva Contraseña" oninput="compararCampos()" required>
+            <input type="password" class="form-control" id="txtNuevaContraseña" name="txtNuevaContraseña" placeholder="Nueva Contraseña" oninput="validarContraseña()" required>
             <button class="btn btn-outline-secondary" type="button" id="btnNuevaContraseña">
               <i class="bi bi-eye-slash-fill"></i>
             </button>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" id="txtConfirmarContraseña" name="txtConfirmarContraseña" placeholder="Confirmar Contraseña" oninput="compararCampos()" required>
+            <input type="password" class="form-control" id="txtConfirmarContraseña" name="txtConfirmarContraseña" placeholder="Confirmar Contraseña" oninput="validarContraseña()" required>
             <button class="btn btn-outline-secondary" type="button" id="btnConfirmarContraseña">
               <i class="bi bi-eye-slash-fill"></i>
             </button>
@@ -222,18 +222,40 @@
         }, false)
       })
   })()
-function compararCampos() {
-  var campo1 = document.getElementById("txtNuevaContraseña").value;
-  var campo2 = document.getElementById("txtConfirmarContraseña").value;
+function validarContraseña() {
+  var contraseña = document.getElementById("txtNuevaContraseña").value;
+  var confirmarContraseña = document.getElementById("txtConfirmarContraseña").value;
   var mensaje = document.getElementById("mensajeAdvertencia");
   var btnCambiar = document.getElementById("btnCambiarContraseña");
-  if (campo1 !== campo2) {
+
+  // Verificar longitud mínima de la contraseña
+  if (contraseña.length < 8) {
+    mensaje.textContent = "La contraseña es demasiado corta. Debe contener al menos 8 caracteres.";
     mensaje.style.display = "block";
-    btnCambiar.type= "button";
-  } else {
-    mensaje.style.display = "none";
-    btnCambiar.type = "submit";
+    btnCambiar.type = "button";
+    return;
   }
+
+
+  // Verificar si las contraseñas coinciden
+  if (contraseña !== confirmarContraseña) {
+    mensaje.textContent = "Las contraseñas no coinciden.";
+    mensaje.style.display = "block";
+    btnCambiar.type = "button";
+    return;
+  }
+
+  // Verificar si la contraseña cumple con los requisitos adicionales
+  var regex = /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*])/;
+  if (!regex.test(contraseña)) {
+    mensaje.textContent = "La contraseña debe contener al menos un número, una letra mayúscula y caracteres especiales (!@#$%^&*).";
+    mensaje.style.display = "block";
+    btnCambiar.type = "button";
+    return;
+  }
+
+  mensaje.style.display = "none";
+  btnCambiar.type = "submit";
 }
 </script>
 {% if user.userFoto != "" %}
